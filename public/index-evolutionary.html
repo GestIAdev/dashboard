@@ -1,0 +1,2011 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧬 SELENE SYNERGY ENGINE - EVOLUTIONARY DASHBOARD</title>
+    
+    <!-- 📊 FASE 4.4: Chart.js for Evolutionary Metrics Visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Cyberpunk Colors */
+            --cyber-green: #00ff88;
+            --cyber-blue: #00aaff;
+            --cyber-purple: #9d4edd;
+            --cyber-gold: #ffd700;
+            --cyber-pink: #ff0088;
+            --cyber-cyan: #00ffff;
+            
+            /* Status Colors */
+            --risk-low: #00ff88;
+            --risk-medium: #ffaa00;
+            --risk-high: #ff4444;
+            
+            /* Backgrounds */
+            --bg-dark: #0a0a0a;
+            --bg-card: rgba(26, 26, 46, 0.8);
+            --bg-overlay: rgba(0, 0, 0, 0.9);
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: var(--cyber-green);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-card);
+            border-bottom: 2px solid var(--cyber-green);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-title {
+            font-size: 2em;
+            color: var(--cyber-green);
+            text-shadow: 0 0 20px var(--cyber-green);
+        }
+
+        .header-subtitle {
+            font-size: 0.9em;
+            color: var(--cyber-blue);
+            opacity: 0.8;
+        }
+
+        .mode-badge {
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            box-shadow: 0 0 15px currentColor;
+        }
+
+        .mode-badge.manual {
+            background: rgba(255, 170, 0, 0.2);
+            border: 2px solid var(--risk-medium);
+            color: var(--risk-medium);
+        }
+
+        .mode-badge.hybrid {
+            background: rgba(0, 255, 136, 0.2);
+            border: 2px solid var(--cyber-green);
+            color: var(--cyber-green);
+        }
+
+        .mode-badge.auto {
+            background: rgba(0, 170, 255, 0.2);
+            border: 2px solid var(--cyber-blue);
+            color: var(--cyber-blue);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        /* Main Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        /* Card Styles */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--cyber-green);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+        }
+
+        .card-title {
+            font-size: 1.5em;
+            color: var(--cyber-green);
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px var(--cyber-green);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Suggestion Card */
+        .suggestion-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .suggestion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .suggestion-title {
+            font-size: 1.4em; /* Aumentado de 1.2em */
+            color: var(--cyber-purple);
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .suggestion-type {
+            font-size: 0.95em; /* Aumentado de 0.8em */
+            color: var(--cyber-blue);
+            opacity: 0.9; /* Aumentado de 0.8 */
+        }
+
+        .risk-badge {
+            padding: 6px 14px; /* Aumentado padding */
+            border-radius: 15px;
+            font-size: 0.9em; /* Aumentado de 0.8em */
+            font-weight: bold;
+        }
+
+        .risk-badge.low {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--risk-low);
+            border: 1px solid var(--risk-low);
+        }
+
+        .risk-badge.medium {
+            background: rgba(255, 170, 0, 0.2);
+            color: var(--risk-medium);
+            border: 1px solid var(--risk-medium);
+        }
+
+        .risk-badge.high {
+            background: rgba(255, 68, 68, 0.2);
+            color: var(--risk-high);
+            border: 1px solid var(--risk-high);
+        }
+
+        .suggestion-description {
+            margin: 15px 0;
+        }
+
+        .description-section {
+            margin-bottom: 15px;
+        }
+
+        .description-label {
+            font-size: 1em; /* Aumentado de 0.9em */
+            color: var(--cyber-blue);
+            font-weight: bold;
+            margin-bottom: 8px; /* Aumentado de 5px */
+        }
+
+        .description-text {
+            color: #ffffff;
+            line-height: 1.6; /* Aumentado de 1.5 */
+            font-size: 1.05em; /* Aumentado de 0.95em */
+        }
+
+        .description-text.poetic {
+            font-style: italic;
+            color: var(--cyber-purple);
+            opacity: 0.95; /* Aumentado de 0.9 */
+            font-size: 1.1em; /* Más grande para destacar */
+        }
+
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .metric-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .metric-label {
+            font-size: 0.85em; /* Aumentado de 0.75em */
+            color: rgba(255, 255, 255, 0.8); /* Aumentado de 0.7 */
+            margin-bottom: 6px; /* Aumentado de 5px */
+        }
+
+        .metric-value {
+            font-size: 1.3em; /* Aumentado de 1.1em */
+            color: var(--cyber-gold);
+            font-weight: bold;
+        }
+
+        /* Feedback Panel */
+        .feedback-panel {
+            background: rgba(0, 170, 255, 0.1);
+            border: 1px solid var(--cyber-blue);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .feedback-title {
+            color: var(--cyber-blue);
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .slider-container {
+            margin: 15px 0;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        .quality-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, var(--risk-high), var(--risk-medium), var(--risk-low));
+            border-radius: 5px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .quality-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--cyber-green);
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--cyber-green);
+        }
+
+        .quality-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--cyber-green);
+            cursor: pointer;
+            border: none;
+        }
+
+        .feedback-textarea {
+            width: 100%;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #ffffff;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            resize: vertical;
+            min-height: 60px;
+            margin: 10px 0;
+        }
+
+        .feedback-textarea:focus {
+            outline: none;
+            border-color: var(--cyber-blue);
+            box-shadow: 0 0 10px rgba(0, 170, 255, 0.3);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .btn-approve {
+            background: var(--cyber-green);
+            color: #000;
+            flex: 1;
+        }
+
+        .btn-approve:hover {
+            box-shadow: 0 0 20px var(--cyber-green);
+            transform: scale(1.05);
+        }
+
+        .btn-reject {
+            background: var(--risk-high);
+            color: #fff;
+            flex: 1;
+        }
+
+        .btn-reject:hover {
+            box-shadow: 0 0 20px var(--risk-high);
+            transform: scale(1.05);
+        }
+
+        .btn-defer {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-defer:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Vitals Panel */
+        .vitals-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .vital-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .vital-label {
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .vital-value {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--cyber-green);
+        }
+
+        .vital-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .vital-fill {
+            height: 100%;
+            background: var(--cyber-green);
+            transition: width 0.3s ease;
+        }
+
+        /* Quota Status */
+        .quota-panel {
+            background: rgba(255, 170, 0, 0.1);
+            border: 1px solid var(--risk-medium);
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .quota-title {
+            color: var(--risk-medium);
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .quota-text {
+            font-size: 1.1em;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .quota-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .quota-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--cyber-green), var(--risk-medium), var(--risk-high));
+            transition: width 0.3s ease;
+        }
+
+        /* Safety Panel */
+        .safety-panel {
+            background: rgba(157, 78, 221, 0.1);
+            border: 1px solid var(--cyber-purple);
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .safety-title {
+            color: var(--cyber-purple);
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .safety-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .safety-label {
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .safety-value {
+            font-size: 1em;
+            font-weight: bold;
+            color: var(--cyber-purple);
+        }
+
+        /* 🛡️ FASE 4.3: Security Deep Dive Panel */
+        .security-deep-panel {
+            margin-top: 20px;
+            background: linear-gradient(135deg, rgba(157, 78, 221, 0.15) 0%, rgba(0, 170, 255, 0.1) 100%);
+            border: 2px solid var(--cyber-purple);
+            box-shadow: 0 0 20px rgba(157, 78, 221, 0.3);
+        }
+
+        .security-score-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 20px;
+        }
+
+        .security-score-display {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .score-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: conic-gradient(var(--cyber-green) 0deg, var(--cyber-purple) 360deg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        .score-circle::before {
+            content: '';
+            position: absolute;
+            width: 85px;
+            height: 85px;
+            background: var(--bg-secondary);
+            border-radius: 50%;
+        }
+
+        .score-value {
+            position: relative;
+            z-index: 1;
+            font-size: 1.8em;
+            font-weight: bold;
+            color: var(--cyber-green);
+        }
+
+        .alert-badge {
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            box-shadow: 0 0 15px currentColor;
+        }
+
+        .alert-badge.safe {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--cyber-green);
+            border: 2px solid var(--cyber-green);
+        }
+
+        .alert-badge.warning {
+            background: rgba(255, 215, 0, 0.2);
+            color: var(--cyber-gold);
+            border: 2px solid var(--cyber-gold);
+        }
+
+        .alert-badge.danger {
+            background: rgba(255, 0, 102, 0.2);
+            color: #ff0066;
+            border: 2px solid #ff0066;
+        }
+
+        .alert-badge.critical {
+            background: rgba(255, 0, 0, 0.3);
+            color: #ff0000;
+            border: 2px solid #ff0000;
+            animation: pulse-critical 1s infinite;
+        }
+
+        @keyframes pulse-critical {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .security-subsection {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .subsection-title {
+            color: var(--cyber-blue);
+            font-size: 1em;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+
+        .sanity-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .sanity-bar {
+            flex: 1;
+            height: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .sanity-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--cyber-purple), var(--cyber-blue));
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .sanity-percentage {
+            color: var(--cyber-green);
+            font-weight: bold;
+            min-width: 50px;
+            text-align: right;
+        }
+
+        .security-concerns {
+            margin-top: 10px;
+        }
+
+        .concern-item {
+            background: rgba(255, 0, 102, 0.1);
+            border-left: 3px solid #ff0066;
+            padding: 8px 12px;
+            margin-bottom: 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .rollback-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .stat-item {
+            background: rgba(0, 255, 136, 0.05);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        .stat-label {
+            display: block;
+            font-size: 0.85em;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--cyber-green);
+        }
+
+        .containment-levels {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .containment-level-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+        }
+
+        .containment-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9em;
+        }
+
+        .containment-count {
+            color: var(--cyber-purple);
+            font-weight: bold;
+        }
+
+        .quarantine-info {
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid var(--cyber-gold);
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quarantine-label {
+            color: var(--cyber-gold);
+            font-size: 0.9em;
+        }
+
+        .quarantine-count {
+            color: var(--cyber-gold);
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .incidents-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .incident-item {
+            background: rgba(255, 0, 0, 0.1);
+            border-left: 3px solid #ff0000;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+        }
+
+        .incident-time {
+            font-size: 0.8em;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 4px;
+        }
+
+        .incident-description {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9em;
+        }
+
+        .no-incidents {
+            text-align: center;
+            padding: 20px;
+            color: var(--cyber-green);
+            font-size: 0.9em;
+        }
+
+        /* Evolutionary Metrics */
+        .metrics-section {
+            margin-top: 30px;
+        }
+
+        .metrics-toggle {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .metrics-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--cyber-green);
+        }
+
+        .metrics-toggle-title {
+            color: var(--cyber-green);
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .metrics-content {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .metrics-content.expanded {
+            display: block;
+        }
+
+        .metrics-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-title {
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--cyber-gold);
+        }
+
+        .stat-label {
+            font-size: 0.8em;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 5px;
+        }
+
+        /* 📊 FASE 4.4: Charts Section */
+        .charts-section {
+            margin-top: 30px;
+        }
+
+        .section-subtitle {
+            color: var(--cyber-green);
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .chart-container {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0, 255, 136, 0.1);
+        }
+
+        .chart-title {
+            color: var(--cyber-blue);
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .chart-container canvas {
+            max-height: 300px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .empty-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .empty-title {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .empty-description {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        /* Status Indicator */
+        .status-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            z-index: 1000;
+            box-shadow: 0 0 15px currentColor;
+        }
+
+        .status-indicator.connected {
+            background: rgba(0, 255, 136, 0.9);
+            color: #000;
+        }
+
+        .status-indicator.disconnected {
+            background: rgba(255, 68, 68, 0.9);
+            color: #fff;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* 🔀 THE SWITCH - CONTROL PANEL STYLES */
+        .switch-panel {
+            margin-bottom: 30px;
+            border: 2px solid var(--cyber-purple);
+            box-shadow: 0 0 30px rgba(157, 78, 221, 0.3);
+        }
+
+        .switch-subtitle {
+            font-size: 0.6em;
+            color: var(--cyber-blue);
+            opacity: 0.8;
+            margin-left: 10px;
+        }
+
+        .switch-controls {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+            align-items: start;
+        }
+
+        .mode-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .mode-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mode-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .mode-btn:hover::before {
+            left: 100%;
+        }
+
+        .mode-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+        }
+
+        .mode-btn.active {
+            border-color: var(--cyber-green);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .mode-btn[data-mode="deterministic"]:hover,
+        .mode-btn[data-mode="deterministic"].active {
+            border-color: var(--cyber-blue);
+            box-shadow: 0 0 20px rgba(0, 170, 255, 0.4);
+        }
+
+        .mode-btn[data-mode="punk"]:hover,
+        .mode-btn[data-mode="punk"].active {
+            border-color: var(--cyber-pink);
+            box-shadow: 0 0 20px rgba(255, 0, 136, 0.4);
+        }
+
+        .mode-icon {
+            font-size: 2.5em;
+        }
+
+        .mode-name {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--cyber-green);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .mode-btn[data-mode="deterministic"] .mode-name {
+            color: var(--cyber-blue);
+        }
+
+        .mode-btn[data-mode="punk"] .mode-name {
+            color: var(--cyber-pink);
+        }
+
+        .mode-desc {
+            font-size: 0.85em;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .mode-stats {
+            font-size: 0.75em;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 5px;
+        }
+
+        .mode-info {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9em;
+        }
+
+        .info-value {
+            color: var(--cyber-green);
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .opcion-d-status {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, rgba(157, 78, 221, 0.1), rgba(0, 170, 255, 0.1));
+            border: 1px solid var(--cyber-purple);
+            border-radius: 10px;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .opcion-d-icon {
+            font-size: 2em;
+            animation: spin 4s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .opcion-d-title {
+            font-size: 1em;
+            font-weight: bold;
+            color: var(--cyber-purple);
+            margin-bottom: 4px;
+        }
+
+        .opcion-d-desc {
+            font-size: 0.85em;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .switch-controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .mode-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+
+        /* ============================================
+           SYNERGY HUB MONITORING STYLES
+           ============================================ */
+
+        /* Metrics Cards */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            border-color: var(--cyber-green);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+        }
+
+        .metric-title {
+            font-size: 0.9em;
+            color: var(--cyber-blue);
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .metric-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: var(--cyber-green);
+            margin-bottom: 5px;
+        }
+
+        .metric-description {
+            font-size: 0.8em;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* PM2 Monitor Styles */
+        .pm2-monitor {
+            margin: 20px 0;
+        }
+
+        .pm2-title {
+            color: var(--cyber-green);
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .pm2-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .pm2-summary-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .pm2-label {
+            font-size: 0.8em;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 5px;
+        }
+
+        .pm2-value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--cyber-green);
+        }
+
+        .pm2-processes {
+            display: grid;
+            gap: 10px;
+        }
+
+        .pm2-process {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .pm2-process-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .pm2-process-name {
+            font-weight: bold;
+            color: var(--cyber-green);
+        }
+
+        .pm2-process-status {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .pm2-process-status.online {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--cyber-green);
+        }
+
+        .pm2-process-status.offline {
+            background: rgba(255, 68, 68, 0.2);
+            color: var(--risk-high);
+        }
+
+        .pm2-process-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .pm2-metric {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .pm2-metric-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.8em;
+        }
+
+        .pm2-metric-value {
+            color: var(--cyber-blue);
+            font-weight: bold;
+        }
+
+        .pm2-process-logs {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            padding: 8px;
+        }
+
+        .pm2-logs-header {
+            font-size: 0.8em;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 5px;
+        }
+
+        .pm2-log-line {
+            font-size: 0.75em;
+            color: rgba(255, 255, 255, 0.8);
+            font-family: 'Courier New', monospace;
+        }
+
+        .pm2-loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--cyber-blue);
+        }
+
+        /* Charts Styles */
+        .charts-section {
+            margin: 30px 0;
+        }
+
+        .charts-title {
+            color: var(--cyber-green);
+            font-size: 1.3em;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .chart-container {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 255, 136, 0.1);
+        }
+
+        .chart-title {
+            color: var(--cyber-blue);
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .chart-container canvas {
+            max-height: 250px;
+            width: 100% !important;
+        }
+
+        /* Particles System Styles */
+        .particles-section {
+            margin: 30px 0;
+        }
+
+        .particles-title {
+            color: var(--cyber-green);
+            font-size: 1.3em;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .particles-container {
+            position: relative;
+            height: 300px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .particles-container canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .particles-info {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+
+        .particle-metric {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            min-width: 150px;
+        }
+
+        .particle-metric:last-child {
+            margin-bottom: 0;
+        }
+
+        .particle-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9em;
+        }
+
+        .particle-value {
+            color: var(--cyber-green);
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        /* Control Panel Styles */
+        .control-panel {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .control-title {
+            color: var(--cyber-green);
+            font-size: 1.3em;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .mode-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .mode-btn {
+            padding: 12px 25px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .mode-btn:hover {
+            border-color: var(--cyber-green);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+        }
+
+        .mode-btn.active {
+            border-color: var(--cyber-green);
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--cyber-green);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+        }
+
+        .current-mode {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            color: var(--cyber-blue);
+        }
+
+        .current-mode span {
+            color: var(--cyber-green);
+            font-weight: bold;
+        }
+
+        .suggestions-section {
+            margin-top: 20px;
+        }
+
+        .suggestions-title {
+            color: var(--cyber-purple);
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .suggestions-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .suggestion-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .suggestion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .suggestion-type {
+            color: var(--cyber-blue);
+            font-weight: bold;
+        }
+
+        .risk-badge {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .risk-badge.low {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--cyber-green);
+            border: 1px solid var(--cyber-green);
+        }
+
+        .risk-badge.medium {
+            background: rgba(255, 170, 0, 0.2);
+            color: var(--cyber-blue);
+            border: 1px solid var(--cyber-blue);
+        }
+
+        .risk-badge.high {
+            background: rgba(255, 68, 68, 0.2);
+            color: var(--risk-high);
+            border: 1px solid var(--risk-high);
+        }
+
+        .suggestion-text {
+            margin: 10px 0;
+        }
+
+        .suggestion-text strong {
+            color: var(--cyber-green);
+        }
+
+        .suggestion-poetic {
+            font-style: italic;
+            color: var(--cyber-purple);
+            margin: 10px 0;
+        }
+
+        .suggestion-details {
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.7);
+            margin: 10px 0;
+        }
+
+        .suggestion-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .suggestion-btn {
+            flex: 1;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .suggestion-btn.approve {
+            background: var(--cyber-green);
+            color: #000;
+        }
+
+        .suggestion-btn.approve:hover {
+            box-shadow: 0 0 15px var(--cyber-green);
+        }
+
+        .suggestion-btn.reject {
+            background: var(--risk-high);
+            color: #fff;
+        }
+
+        .suggestion-btn.reject:hover {
+            box-shadow: 0 0 15px var(--risk-high);
+        }
+
+        /* Action Feedback */
+        .action-feedback {
+            margin-top: 10px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .action-feedback.success {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--cyber-green);
+            border: 1px solid var(--cyber-green);
+        }
+
+        .action-feedback.error {
+            background: rgba(255, 68, 68, 0.2);
+            color: var(--risk-high);
+            border: 1px solid var(--risk-high);
+        }
+
+        /* Pulse Animation */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Status Indicator -->
+    <div class="status-indicator disconnected" id="status-indicator">
+        ● DISCONNECTED
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+        <div>
+            <div class="header-title">🧬 SELENE SYNERGY ENGINE</div>
+            <div class="header-subtitle">"Evolution Through Beauty and Intelligence"</div>
+        </div>
+        <div class="mode-badge hybrid" id="mode-badge">
+            ● HYBRID MODE
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- 🔀 THE SWITCH - MODE CONTROL PANEL -->
+        <div class="card switch-panel">
+            <h2 class="card-title">
+                🔀 THE SWITCH - EVOLUTIONARY MODE
+                <span class="switch-subtitle">Control Selene's chaos level</span>
+            </h2>
+            
+            <div class="switch-controls">
+                <!-- Mode Buttons -->
+                <div class="mode-buttons">
+                    <button class="mode-btn" data-mode="deterministic" id="btn-deterministic">
+                        <span class="mode-icon">🎯</span>
+                        <span class="mode-name">DETERMINISTIC</span>
+                        <span class="mode-desc">100% Reproducible</span>
+                        <span class="mode-stats">Entropy: 0% | Risk: Low</span>
+                    </button>
+                    
+                    <button class="mode-btn active" data-mode="balanced" id="btn-balanced">
+                        <span class="mode-icon">⚖️</span>
+                        <span class="mode-name">BALANCED</span>
+                        <span class="mode-desc">Hybrid Control</span>
+                        <span class="mode-stats">Entropy: 50% | Risk: Medium</span>
+                    </button>
+                    
+                    <button class="mode-btn" data-mode="punk" id="btn-punk">
+                        <span class="mode-icon">💀</span>
+                        <span class="mode-name">PUNK</span>
+                        <span class="mode-desc">Maximum Chaos</span>
+                        <span class="mode-stats">Entropy: 100% | Risk: High</span>
+                    </button>
+                </div>
+                
+                <!-- Current Mode Info -->
+                <div class="mode-info">
+                    <div class="info-row">
+                        <span class="info-label">Active Mode:</span>
+                        <span class="info-value" id="current-mode">BALANCED</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Entropy Factor:</span>
+                        <span class="info-value" id="current-entropy">50%</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Risk Threshold:</span>
+                        <span class="info-value" id="current-risk">40</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Punk Probability:</span>
+                        <span class="info-value" id="current-punk">30%</span>
+                    </div>
+                </div>
+                
+                <!-- Opción D Indicator -->
+                <div class="opcion-d-status">
+                    <span class="opcion-d-icon">🔄</span>
+                    <div>
+                        <div class="opcion-d-title">OPCIÓN D: Dualidad Adaptativa</div>
+                        <div class="opcion-d-desc">System auto-adjusts based on your ratings</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Grid -->
+        <div class="main-grid">
+            <!-- Left Column: Evolutionary Suggestions -->
+            <div class="card">
+                <h2 class="card-title">🧬 EVOLUTIONARY SUGGESTIONS</h2>
+                
+                <div id="suggestions-container">
+                    <!-- Suggestions will be dynamically loaded here -->
+                    <div class="empty-state">
+                        <div class="empty-icon">🌙</div>
+                        <div class="empty-title">Waiting for Evolution...</div>
+                        <div class="empty-description">
+                            Evolutionary suggestions will appear here when generated by the Synergy Engine
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: System Vitals & Status -->
+            <div class="vitals-container">
+                <!-- System Vitals -->
+                <div class="card">
+                    <h2 class="card-title">📊 SYSTEM VITALS</h2>
+                    <div id="vitals-content">
+                        <!-- SELENE Metrics Cards -->
+                        <div class="metrics-grid">
+                            <div class="metric-card">
+                                <div class="metric-title">⚖️ Consensus Quality</div>
+                                <div class="metric-value" id="consensus-quality">--</div>
+                                <div class="metric-description">Calidad del consenso</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-title">❤️ Harmony Score</div>
+                                <div class="metric-value" id="harmony-score">--</div>
+                                <div class="metric-description">Armonía del sistema</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-title">🐝 Active Nodes</div>
+                                <div class="metric-value" id="active-nodes">--</div>
+                                <div class="metric-description">Nodos activos en swarm</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-title">💾 Memory (MB)</div>
+                                <div class="metric-value" id="memory-mb">--</div>
+                                <div class="metric-description">Uso de memoria</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-title">🧠 Meta-Complexity</div>
+                                <div class="metric-value" id="meta-complexity">--</div>
+                                <div class="metric-description">Complejidad meta-cognitiva</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-title">⭐ XP Level</div>
+                                <div class="metric-value" id="xp">--</div>
+                                <div class="metric-description">Experiencia acumulada</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-title">🗂️ Heap Usage</div>
+                                <div class="metric-value" id="heap-usage">--</div>
+                                <div class="metric-description">Uso del heap de Node.js</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-title">⏱️ Event Loop Latency</div>
+                                <div class="metric-value" id="event-loop-latency">--</div>
+                                <div class="metric-description">Latencia del event loop</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PM2 Monitor -->
+                <div class="card">
+                    <h2 class="card-title">🔧 PM2 MONITOR</h2>
+                    <div id="pm2-monitor-content">
+                        <!-- PM2 content will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Historical Charts -->
+                <div class="card">
+                    <h2 class="card-title">📈 HISTORICAL CHARTS</h2>
+                    <div id="charts-content">
+                        <div class="charts-grid">
+                            <div class="chart-container">
+                                <h3 class="chart-title">Consensus Quality</h3>
+                                <canvas id="consensus-chart"></canvas>
+                            </div>
+                            <div class="chart-container">
+                                <h3 class="chart-title">Memory Usage</h3>
+                                <canvas id="memory-chart"></canvas>
+                            </div>
+                            <div class="chart-container">
+                                <h3 class="chart-title">CPU Usage</h3>
+                                <canvas id="cpu-chart"></canvas>
+                            </div>
+                            <div class="chart-container">
+                                <h3 class="chart-title">PM2 Memory</h3>
+                                <canvas id="pm2-memory-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SELENE Particle System -->
+                <div class="card">
+                    <h2 class="card-title">✨ SELENE PARTICLE SYSTEM</h2>
+                    <div id="particles-content">
+                        <div class="particles-container">
+                            <canvas id="particles-canvas"></canvas>
+                            <div class="particles-info">
+                                <div class="particle-metric">
+                                    <span class="particle-label">Harmony:</span>
+                                    <span class="particle-value" id="harmony-value">--</span>
+                                </div>
+                                <div class="particle-metric">
+                                    <span class="particle-label">Vitality:</span>
+                                    <span class="particle-value" id="vitality-value">--</span>
+                                </div>
+                                <div class="particle-metric">
+                                    <span class="particle-label">Memory:</span>
+                                    <span class="particle-value" id="memory-value">--</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quota Status -->
+                <div class="quota-panel">
+                    <div class="quota-title">🎯 QUOTA STATUS</div>
+                    <div class="quota-text" id="quota-text">
+                        Daily Usage: <span id="quota-used">0</span>/<span id="quota-limit">5</span>
+                    </div>
+                    <div class="quota-bar">
+                        <div class="quota-fill" id="quota-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Safety Status -->
+                <div class="safety-panel">
+                    <div class="safety-title">🛡️ SAFETY STATUS</div>
+                    <div class="safety-item">
+                        <span class="safety-label">Containment Level</span>
+                        <span class="safety-value" id="safety-containment">--</span>
+                    </div>
+                    <div class="safety-item">
+                        <span class="safety-label">Sanity Score</span>
+                        <span class="safety-value" id="safety-sanity">--</span>
+                    </div>
+                    <div class="safety-item">
+                        <span class="safety-label">Quarantine Count</span>
+                        <span class="safety-value" id="safety-quarantine">--</span>
+                    </div>
+                    <div class="safety-item">
+                        <span class="safety-label">Rollback Ready</span>
+                        <span class="safety-value" id="safety-rollback">✅</span>
+                    </div>
+                </div>
+
+                <!-- 🛡️🔒 FASE 4.3: Security Deep Dive Panel -->
+                <div class="card security-deep-panel">
+                    <h2 class="card-title">🛡️ SECURITY DEEP DIVE</h2>
+                    
+                    <!-- Security Score & Alert Level -->
+                    <div class="security-score-section">
+                        <div class="security-score-display">
+                            <div class="score-circle" id="security-score-circle">
+                                <span class="score-value" id="security-score-value">--</span>
+                            </div>
+                            <div class="alert-badge" id="alert-badge">
+                                <span id="alert-level-text">SAFE</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sanity Assessment -->
+                    <div class="security-subsection">
+                        <h3 class="subsection-title">🧠 Sanity Assessment</h3>
+                        <div class="sanity-bar-container">
+                            <div class="sanity-bar">
+                                <div class="sanity-fill" id="sanity-fill" style="width: 0%"></div>
+                            </div>
+                            <span class="sanity-percentage" id="sanity-percentage">0%</span>
+                        </div>
+                        <div class="security-concerns" id="sanity-concerns">
+                            <!-- Concerns will be dynamically loaded -->
+                        </div>
+                    </div>
+
+                    <!-- Rollback Stats -->
+                    <div class="security-subsection">
+                        <h3 class="subsection-title">🔄 Rollback Capacity</h3>
+                        <div class="rollback-stats">
+                            <div class="stat-item">
+                                <span class="stat-label">Registered</span>
+                                <span class="stat-value" id="rollback-registered">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Executed</span>
+                                <span class="stat-value" id="rollback-executed">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Success Rate</span>
+                                <span class="stat-value" id="rollback-success">100%</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Avg Recovery</span>
+                                <span class="stat-value" id="rollback-recovery">0ms</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Containment Status -->
+                    <div class="security-subsection">
+                        <h3 class="subsection-title">🏰 Active Containments</h3>
+                        <div class="containment-levels" id="containment-levels">
+                            <!-- Containment levels will be dynamically loaded -->
+                        </div>
+                        <div class="quarantine-info">
+                            <span class="quarantine-label">⚠️ Quarantined Patterns:</span>
+                            <span class="quarantine-count" id="quarantine-count">0</span>
+                        </div>
+                    </div>
+
+                    <!-- Security Incidents -->
+                    <div class="security-subsection">
+                        <h3 class="subsection-title">🚨 Recent Incidents</h3>
+                        <div class="incidents-list" id="incidents-list">
+                            <div class="no-incidents">✅ No incidents detected</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Evolutionary Metrics (Collapsible) -->
+        <div class="metrics-section">
+            <div class="metrics-toggle" id="metrics-toggle">
+                <span class="metrics-toggle-title">🎨 EVOLUTIONARY METRICS</span>
+                <span id="metrics-toggle-icon">▼</span>
+            </div>
+            <div class="metrics-content" id="metrics-content">
+                <div class="metrics-stats">
+                    <div class="stat-card">
+                        <div class="stat-title">📈 PATTERNS</div>
+                        <div class="stat-value" id="stat-patterns">--</div>
+                        <div class="stat-label">Generated</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">🎵 HARMONY</div>
+                        <div class="stat-value" id="stat-harmony">--</div>
+                        <div class="stat-label">Average</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">✨ NOVELTY</div>
+                        <div class="stat-value" id="stat-novelty">--</div>
+                        <div class="stat-label">Average</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">🛡️ SECURITY</div>
+                        <div class="stat-value" id="stat-security">--</div>
+                        <div class="stat-label">Safe %</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">🔄 FEEDBACK</div>
+                        <div class="stat-value" id="stat-feedback">--</div>
+                        <div class="stat-label">Approved %</div>
+                    </div>
+                </div>
+
+                <!-- 📊 FASE 4.4: Evolutionary Charts -->
+                <div class="charts-section">
+                    <h2 class="section-subtitle">📊 EVOLUTIONARY TRENDS</h2>
+                    
+                    <!-- Creativity & Novelty Timeline -->
+                    <div class="chart-container">
+                        <h3 class="chart-title">🎨 Creativity & Novelty Over Time</h3>
+                        <canvas id="creativity-chart"></canvas>
+                    </div>
+
+                    <!-- Musical Harmony & Risk -->
+                    <div class="chart-container">
+                        <h3 class="chart-title">🎵 Harmony & Risk Balance</h3>
+                        <canvas id="harmony-risk-chart"></canvas>
+                    </div>
+
+                    <!-- Zodiac Distribution -->
+                    <div class="chart-container">
+                        <h3 class="chart-title">⭐ Zodiac Sign Distribution</h3>
+                        <canvas id="zodiac-chart"></canvas>
+                    </div>
+
+                    <!-- Fibonacci Pattern Trends -->
+                    <div class="chart-container">
+                        <h3 class="chart-title">🌀 Fibonacci Pattern Evolution</h3>
+                        <canvas id="fibonacci-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SELENE Control Panel -->
+        <div class="control-panel">
+            <h2 class="control-title">🎛️ SELENE CONTROL PANEL</h2>
+
+            <div class="mode-selector">
+                <button class="mode-btn" data-mode="manual" id="mode-manual">Manual</button>
+                <button class="mode-btn active" data-mode="hybrid" id="mode-hybrid">Hybrid</button>
+                <button class="mode-btn" data-mode="auto" id="mode-auto">Auto</button>
+            </div>
+
+            <div class="current-mode">
+                Current: <span id="current-mode">HYBRID</span>
+            </div>
+
+            <div class="suggestions-section">
+                <h3 class="suggestions-title">💡 Pending Suggestions</h3>
+                <div id="suggestions-list">
+                    <p>No hay sugerencias pendientes</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Socket.IO Client -->
+    <script src="/socket.io/socket.io.js"></script>
+    
+    <!-- Synergy Hub JavaScript -->
+    <script src="js/shared/synergy-hub.js"></script>
+    
+    <!-- Dashboard JavaScript -->
+    <script src="evolutionary-dashboard.js"></script>
+</body>
+</html>

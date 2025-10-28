@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Tone.Midi Test - Minimal MIDI</title>
+    <script src="https://unpkg.com/@tonejs/midi@2.0.28/build/Midi.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            color: #0f0;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 { color: #ff00ff; }
+        .test-section {
+            border: 2px solid #0f0;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        button {
+            background: #ff00ff;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: bold;
+        }
+        button:hover { background: #0ff; }
+        .result {
+            background: #111;
+            border-left: 3px solid #0f0;
+            padding: 10px;
+            margin: 10px 0;
+            white-space: pre-wrap;
+            font-size: 12px;
+        }
+        .error {
+            border-left-color: #f00;
+            color: #f00;
+        }
+        .success {
+            border-left-color: #0f0;
+            color: #0f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Tone.Midi Parser Test Suite</h1>
+    
+    <div class="test-section">
+        <h2>Test 1: Minimal Hand-Crafted MIDI (62 bytes)</h2>
+        <p>Este MIDI fue construido byte a byte sin usar midi-writer-js</p>
+        <button onclick="testMinimalMIDI()">🎹 Test Minimal MIDI</button>
+        <div id="result-minimal" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 2: Backend Generated MIDI (midi-writer-js)</h2>
+        <p>Este es el MIDI problemático generado por el backend actual</p>
+        <button onclick="testBackendMIDI()">🔍 Test Backend MIDI</button>
+        <div id="result-backend" class="result"></div>
+    </div>
+
+    <script>
+        // Test 1: Minimal hand-crafted MIDI
+        async function testMinimalMIDI() {
+            const resultDiv = document.getElementById('result-minimal');
+            resultDiv.className = 'result';
+            resultDiv.textContent = '⏳ Loading test-minimal.mid...\n';
+            
+            try {
+                const response = await fetch('/test-minimal.mid');
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const arrayBuffer = await response.arrayBuffer();
+                const bytes = new Uint8Array(arrayBuffer);
+                
+                resultDiv.textContent += `✅ File loaded: ${bytes.length} bytes\n`;
+                resultDiv.textContent += `   Header: ${Array.from(bytes.slice(0, 14)).map(b => b.toString(16).padStart(2, '0')).join(' ')}\n\n`;
+                
+                resultDiv.textContent += '🎼 Parsing with Tone.Midi...\n';
+                
+                // Check what's available
+                resultDiv.textContent += `🔍 Available MIDI parsers:\n`;
+                resultDiv.textContent += `   window.Midi: ${typeof window.Midi}\n`;
+                resultDiv.textContent += `   Tone.Midi: ${typeof Tone.Midi}\n\n`;
+                
+                // Try @tonejs/midi first
+                let midi;
+                if (typeof window.Midi !== 'undefined') {
+                    resultDiv.textContent += '📌 Using @tonejs/midi (separate package)...\n';
+                    midi = new window.Midi(arrayBuffer);
+                } else if (typeof Tone.Midi !== 'undefined') {
+                    resultDiv.textContent += '📌 Using Tone.Midi (built-in)...\n';
+                    midi = new Tone.Midi(arrayBuffer);
+                } else {
+                    throw new Error('No MIDI parser available!');
+                }
+                
+                resultDiv.className = 'result success';
+                resultDiv.textContent += '✅ PARSE SUCCESS!\n\n';
+                resultDiv.textContent += `🔍 MIDI Object Structure:\n`;
+                resultDiv.textContent += `   Type: ${midi.constructor.name}\n`;
+                resultDiv.textContent += `   Keys: ${Object.keys(midi).join(', ')}\n`;
+                resultDiv.textContent += `   Has .tracks: ${midi.tracks !== undefined}\n`;
+                resultDiv.textContent += `   tracks type: ${typeof midi.tracks}\n`;
+                resultDiv.textContent += `   tracks is Array: ${Array.isArray(midi.tracks)}\n\n`;
+                
+                resultDiv.textContent += `Name: ${midi.name || 'N/A'}\n`;
+                
+                // Safe access to tracks
+                if (midi.tracks && Array.isArray(midi.tracks)) {
+                    resultDiv.textContent += `Tracks: ${midi.tracks.length}\n`;
+                    resultDiv.textContent += `Duration: ${midi.duration}s\n`;
+                    resultDiv.textContent += `Duration Ticks: ${midi.durationTicks}\n`;
+                    resultDiv.textContent += `PPQ: ${midi.header.ppq}\n`;
+                    resultDiv.textContent += `Tempos: ${midi.header.tempos.length}\n\n`;
+                    
+                    midi.tracks.forEach((track, idx) => {
+                        resultDiv.textContent += `Track ${idx}: "${track.name}" - ${track.notes.length} notes\n`;
+                        track.notes.forEach((note, noteIdx) => {
+                            resultDiv.textContent += `  Note ${noteIdx}: ${note.name} (${note.midi}) @ ${note.time.toFixed(3)}s, dur: ${note.duration.toFixed(3)}s, vel: ${note.velocity.toFixed(2)}\n`;
+                        });
+                    });
+                } else {
+                    resultDiv.textContent += `⚠️ tracks property not an array or undefined\n`;
+                    resultDiv.textContent += `   Trying to introspect object...\n`;
+                    for (let key in midi) {
+                        resultDiv.textContent += `   ${key}: ${typeof midi[key]} = ${JSON.stringify(midi[key]).slice(0, 100)}\n`;
+                    }
+                }
+                
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent += `\n❌ ERROR: ${error.message}\n`;
+                resultDiv.textContent += `   Name: ${error.name}\n`;
+                resultDiv.textContent += `   Stack: ${error.stack}\n`;
+            }
+        }
+        
+        // Test 2: Backend generated MIDI
+        async function testBackendMIDI() {
+            const resultDiv = document.getElementById('result-backend');
+            resultDiv.className = 'result';
+            resultDiv.textContent = '⏳ Generating MIDI from backend...\n';
+            
+            try {
+                const response = await fetch('http://localhost:3004/api/music/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        stylePreset: 'lofi-minimalist',
+                        duration: 10,
+                        complexity: 30,
+                        beauty: 50
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const result = await response.json();
+                
+                if (!result.midiBuffer) {
+                    throw new Error('No midiBuffer in response');
+                }
+                
+                // Decode base64
+                const binaryString = atob(result.midiBuffer);
+                const bytes = new Uint8Array(binaryString.length);
+                for (let i = 0; i < binaryString.length; i++) {
+                    bytes[i] = binaryString.charCodeAt(i);
+                }
+                
+                resultDiv.textContent += `✅ MIDI received: ${bytes.length} bytes\n`;
+                resultDiv.textContent += `   Header: ${Array.from(bytes.slice(0, 14)).map(b => b.toString(16).padStart(2, '0')).join(' ')}\n`;
+                resultDiv.textContent += `   Last 32 bytes: ${Array.from(bytes.slice(-32)).map(b => b.toString(16).padStart(2, '0')).join(' ')}\n\n`;
+                
+                resultDiv.textContent += '🎼 Parsing with Tone.Midi...\n';
+                
+                // Check what's available
+                resultDiv.textContent += `🔍 Available MIDI parsers:\n`;
+                resultDiv.textContent += `   window.Midi: ${typeof window.Midi}\n`;
+                resultDiv.textContent += `   Tone.Midi: ${typeof Tone.Midi}\n\n`;
+                
+                // Try @tonejs/midi first
+                let midi;
+                if (typeof window.Midi !== 'undefined') {
+                    resultDiv.textContent += '📌 Using @tonejs/midi (separate package)...\n';
+                    midi = new window.Midi(bytes.buffer);
+                } else if (typeof Tone.Midi !== 'undefined') {
+                    resultDiv.textContent += '📌 Using Tone.Midi (built-in)...\n';
+                    midi = new Tone.Midi(bytes.buffer);
+                } else {
+                    throw new Error('No MIDI parser available!');
+                }
+                
+                resultDiv.className = 'result success';
+                resultDiv.textContent += '✅ PARSE SUCCESS!\n\n';
+                resultDiv.textContent += `🔍 MIDI Object Structure:\n`;
+                resultDiv.textContent += `   Type: ${midi.constructor.name}\n`;
+                resultDiv.textContent += `   Keys: ${Object.keys(midi).join(', ')}\n`;
+                resultDiv.textContent += `   Has .tracks: ${midi.tracks !== undefined}\n`;
+                resultDiv.textContent += `   tracks type: ${typeof midi.tracks}\n`;
+                resultDiv.textContent += `   tracks is Array: ${Array.isArray(midi.tracks)}\n\n`;
+                
+                resultDiv.textContent += `Name: ${midi.name || 'N/A'}\n`;
+                
+                // Safe access to tracks
+                if (midi.tracks && Array.isArray(midi.tracks)) {
+                    resultDiv.textContent += `Tracks: ${midi.tracks.length}\n`;
+                    resultDiv.textContent += `Duration: ${midi.duration}s\n`;
+                    resultDiv.textContent += `Duration Ticks: ${midi.durationTicks}\n`;
+                    resultDiv.textContent += `PPQ: ${midi.header.ppq}\n`;
+                    resultDiv.textContent += `Tempos: ${midi.header.tempos.length}\n\n`;
+                    
+                    midi.tracks.forEach((track, idx) => {
+                        resultDiv.textContent += `Track ${idx}: "${track.name}" - ${track.notes.length} notes\n`;
+                        if (track.notes.length > 0 && track.notes.length <= 10) {
+                            track.notes.forEach((note, noteIdx) => {
+                                resultDiv.textContent += `  Note ${noteIdx}: ${note.name} (${note.midi}) @ ${note.time.toFixed(3)}s, dur: ${note.duration.toFixed(3)}s, vel: ${note.velocity.toFixed(2)}\n`;
+                            });
+                        } else if (track.notes.length > 10) {
+                            resultDiv.textContent += `  (Showing first 5 notes...)\n`;
+                            track.notes.slice(0, 5).forEach((note, noteIdx) => {
+                                resultDiv.textContent += `  Note ${noteIdx}: ${note.name} (${note.midi}) @ ${note.time.toFixed(3)}s, dur: ${note.duration.toFixed(3)}s, vel: ${note.velocity.toFixed(2)}\n`;
+                            });
+                        }
+                    });
+                } else {
+                    resultDiv.textContent += `⚠️ tracks property not an array or undefined\n`;
+                    resultDiv.textContent += `   Trying to introspect object...\n`;
+                    for (let key in midi) {
+                        resultDiv.textContent += `   ${key}: ${typeof midi[key]} = ${JSON.stringify(midi[key]).slice(0, 100)}\n`;
+                    }
+                }
+                
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent += `\n❌ ERROR: ${error.message}\n`;
+                resultDiv.textContent += `   Name: ${error.name}\n`;
+                resultDiv.textContent += `   Stack: ${error.stack}\n`;
+            }
+        }
+    </script>
+</body>
+</html>

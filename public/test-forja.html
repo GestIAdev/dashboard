@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Dashboard FORJA</title>
+</head>
+<body>
+    <h1>Testing Dashboard FORJA Loading</h1>
+    <div id="test-results"></div>
+
+    <script>
+        async function testFORJA() {
+            const results = document.getElementById('test-results');
+            results.innerHTML = 'Testing FORJA data loading...<br>';
+
+            try {
+                // Test stats endpoint
+                const statsRes = await fetch('/api/forja/stats');
+                const stats = await statsRes.json();
+                results.innerHTML += `✅ FORJA stats: ${stats.data.totalArt} total items<br>`;
+
+                // Test experimental endpoint
+                const expRes = await fetch('/api/art/experimental?limit=3');
+                const exp = await expRes.json();
+                results.innerHTML += `✅ Experimental: ${exp.data.items.length} items<br>`;
+
+                // Test legendary endpoint
+                const legRes = await fetch('/api/art/legendary?limit=3');
+                const leg = await legRes.json();
+                results.innerHTML += `✅ Legendary: ${leg.data.items.length} items<br>`;
+
+                // Test common endpoint
+                const comRes = await fetch('/api/art/common?limit=3');
+                const com = await comRes.json();
+                results.innerHTML += `✅ Common: ${com.data.items.length} items<br>`;
+
+                results.innerHTML += '<br>🎯 All endpoints working! Data is available.';
+
+            } catch (error) {
+                results.innerHTML += `❌ Error: ${error.message}`;
+            }
+        }
+
+        // Test immediately
+        testFORJA();
+
+        // Also test WebSocket
+        setTimeout(() => {
+            const ws = new WebSocket('ws://localhost:3003');
+            ws.onopen = () => {
+                document.getElementById('test-results').innerHTML += '<br>✅ WebSocket connected';
+                ws.close();
+            };
+            ws.onerror = (error) => {
+                document.getElementById('test-results').innerHTML += '<br>❌ WebSocket error';
+            };
+        }, 1000);
+    </script>
+</body>
+</html>

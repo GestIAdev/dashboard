@@ -3,6 +3,8 @@
  * "CÓDIGO = ARTE = BELLEZA = FUNCIONALIDAD"
  */
 
+import { MIDIPlayer } from './aura-player.js'
+
 // Global state
 const state = {
     currentGeneration: null,
@@ -112,7 +114,7 @@ async function loadPresets() {
  */
 async function loadCurrentMode() {
     try {
-        const response = await fetch('/api/synergy/current-mode')
+        const response = await fetch('/api/music/synergy-mode')
         const data = await response.json()
 
         state.currentMode = data.mode

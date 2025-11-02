@@ -162,6 +162,70 @@ router.get('/presets', async (req, res) => {
         category: 'experimental',
         defaultParams: { complexity: 0.9, beauty: 0.5, tempo: 160 },
         color: '#ff4444'
+      },
+      {
+        id: 'neoclassical-drone',
+        name: 'Neoclassical Drone',
+        description: 'Modern classical with ambient drone elements',
+        category: 'classical',
+        defaultParams: { complexity: 0.7, beauty: 0.85, tempo: 60 },
+        color: '#8b5cf6'
+      },
+      {
+        id: 'synthwave-action',
+        name: 'Synthwave Action',
+        description: 'Retro 80s synthwave with high energy',
+        category: 'energetic',
+        defaultParams: { complexity: 0.75, beauty: 0.8, tempo: 128 },
+        color: '#f59e0b'
+      },
+      {
+        id: 'horror-suspense',
+        name: 'Horror Suspense',
+        description: 'Eerie and tense atmospheric horror music',
+        category: 'atmospheric',
+        defaultParams: { complexity: 0.6, beauty: 0.3, tempo: 70 },
+        color: '#dc2626'
+      },
+      {
+        id: 'jazz-swing',
+        name: 'Jazz Swing',
+        description: 'Classic jazz swing with improvisation',
+        category: 'jazz',
+        defaultParams: { complexity: 0.8, beauty: 0.9, tempo: 180 },
+        color: '#10b981'
+      },
+      {
+        id: 'metal-aggro',
+        name: 'Metal Aggro',
+        description: 'Heavy metal with aggressive riffs',
+        category: 'metal',
+        defaultParams: { complexity: 0.9, beauty: 0.4, tempo: 160 },
+        color: '#7c2d12'
+      },
+      {
+        id: 'classical-waltz',
+        name: 'Classical Waltz',
+        description: 'Traditional waltz in classical style',
+        category: 'classical',
+        defaultParams: { complexity: 0.7, beauty: 0.95, tempo: 90 },
+        color: '#a855f7'
+      },
+      {
+        id: 'tribal-drums',
+        name: 'Tribal Drums',
+        description: 'Rhythmic tribal percussion patterns',
+        category: 'percussion',
+        defaultParams: { complexity: 0.5, beauty: 0.6, tempo: 120 },
+        color: '#ea580c'
+      },
+      {
+        id: 'minimalist-ambient',
+        name: 'Minimalist Ambient',
+        description: 'Sparse, meditative ambient soundscapes',
+        category: 'ambient',
+        defaultParams: { complexity: 0.3, beauty: 0.8, tempo: 50 },
+        color: '#06b6d4'
       }
     ];
 

@@ -1,0 +1,1095 @@
+{
+  "preset": "cyberpunk-ambient",
+  "version": "1.0.0",
+  "generated": "2025-11-02T05:13:53.799Z",
+  "tracks": {
+    "melody": {
+      "instruments": {
+        "electric-piano/MED": {
+          "type": "pitched",
+          "samples": {
+            "A#1": "melody/electric-piano/MED/a#1.wav",
+            "A#2": "melody/electric-piano/MED/a#2.wav",
+            "A#3": "melody/electric-piano/MED/a#3.wav",
+            "A#4": "melody/electric-piano/MED/a#4.wav",
+            "A#5": "melody/electric-piano/MED/a#5.wav",
+            "A#6": "melody/electric-piano/MED/a#6.wav",
+            "A#7": "melody/electric-piano/MED/a#7.wav",
+            "A1": "melody/electric-piano/MED/a1.wav",
+            "A2": "melody/electric-piano/MED/a2.wav",
+            "A3": "melody/electric-piano/MED/a3.wav",
+            "A4": "melody/electric-piano/MED/a4.wav",
+            "A5": "melody/electric-piano/MED/a5.wav",
+            "A6": "melody/electric-piano/MED/a6.wav",
+            "A7": "melody/electric-piano/MED/a7.wav",
+            "B1": "melody/electric-piano/MED/b1.wav",
+            "B2": "melody/electric-piano/MED/b2.wav",
+            "B3": "melody/electric-piano/MED/b3.wav",
+            "B4": "melody/electric-piano/MED/b4.wav",
+            "B5": "melody/electric-piano/MED/b5.wav",
+            "B6": "melody/electric-piano/MED/b6.wav",
+            "B7": "melody/electric-piano/MED/b7.wav",
+            "C#1": "melody/electric-piano/MED/c#1.wav",
+            "C#2": "melody/electric-piano/MED/c#2.wav",
+            "C#3": "melody/electric-piano/MED/c#3.wav",
+            "C#4": "melody/electric-piano/MED/c#4.wav",
+            "C#5": "melody/electric-piano/MED/c#5.wav",
+            "C#6": "melody/electric-piano/MED/c#6.wav",
+            "C#7": "melody/electric-piano/MED/c#7.wav",
+            "C1": "melody/electric-piano/MED/c1.wav",
+            "C2": "melody/electric-piano/MED/c2.wav",
+            "C3": "melody/electric-piano/MED/c3.wav",
+            "C4": "melody/electric-piano/MED/c4.wav",
+            "C5": "melody/electric-piano/MED/c5.wav",
+            "C6": "melody/electric-piano/MED/c6.wav",
+            "C7": "melody/electric-piano/MED/c7.wav",
+            "C8": "melody/electric-piano/MED/c8.wav",
+            "D#1": "melody/electric-piano/MED/d#1.wav",
+            "D#2": "melody/electric-piano/MED/d#2.wav",
+            "D#3": "melody/electric-piano/MED/d#3.wav",
+            "D#4": "melody/electric-piano/MED/d#4.wav",
+            "D#5": "melody/electric-piano/MED/d#5.wav",
+            "D#6": "melody/electric-piano/MED/d#6.wav",
+            "D#7": "melody/electric-piano/MED/d#7.wav",
+            "D1": "melody/electric-piano/MED/d1.wav",
+            "D2": "melody/electric-piano/MED/d2.wav",
+            "D3": "melody/electric-piano/MED/d3.wav",
+            "D4": "melody/electric-piano/MED/d4.wav",
+            "D5": "melody/electric-piano/MED/d5.wav",
+            "D6": "melody/electric-piano/MED/d6.wav",
+            "D7": "melody/electric-piano/MED/d7.wav",
+            "E1": "melody/electric-piano/MED/e1.wav",
+            "E2": "melody/electric-piano/MED/e2.wav",
+            "E3": "melody/electric-piano/MED/e3.wav",
+            "E4": "melody/electric-piano/MED/e4.wav",
+            "E5": "melody/electric-piano/MED/e5.wav",
+            "E6": "melody/electric-piano/MED/e6.wav",
+            "E7": "melody/electric-piano/MED/e7.wav",
+            "F#1": "melody/electric-piano/MED/f#1.wav",
+            "F#2": "melody/electric-piano/MED/f#2.wav",
+            "F#3": "melody/electric-piano/MED/f#3.wav",
+            "F#4": "melody/electric-piano/MED/f#4.wav",
+            "F#5": "melody/electric-piano/MED/f#5.wav",
+            "F#6": "melody/electric-piano/MED/f#6.wav",
+            "F#7": "melody/electric-piano/MED/f#7.wav",
+            "F1": "melody/electric-piano/MED/f1.wav",
+            "F2": "melody/electric-piano/MED/f2.wav",
+            "F3": "melody/electric-piano/MED/f3.wav",
+            "F4": "melody/electric-piano/MED/f4.wav",
+            "F5": "melody/electric-piano/MED/f5.wav",
+            "F6": "melody/electric-piano/MED/f6.wav",
+            "F7": "melody/electric-piano/MED/f7.wav",
+            "G#1": "melody/electric-piano/MED/g#1.wav",
+            "G#2": "melody/electric-piano/MED/g#2.wav",
+            "G#3": "melody/electric-piano/MED/g#3.wav",
+            "G#4": "melody/electric-piano/MED/g#4.wav",
+            "G#5": "melody/electric-piano/MED/g#5.wav",
+            "G#6": "melody/electric-piano/MED/g#6.wav",
+            "G#7": "melody/electric-piano/MED/g#7.wav",
+            "G1": "melody/electric-piano/MED/g1.wav",
+            "G2": "melody/electric-piano/MED/g2.wav",
+            "G3": "melody/electric-piano/MED/g3.wav",
+            "G4": "melody/electric-piano/MED/g4.wav",
+            "G5": "melody/electric-piano/MED/g5.wav",
+            "G6": "melody/electric-piano/MED/g6.wav",
+            "G7": "melody/electric-piano/MED/g7.wav"
+          },
+          "effects": {
+            "reverb": {
+              "decay": 2,
+              "wet": 0.3
+            },
+            "delay": {
+              "time": "8n",
+              "feedback": 0.25,
+              "wet": 0.25
+            }
+          }
+        },
+        "synth-lead/pulse-buzz-lead": {
+          "type": "pitched",
+          "samples": {
+            "A1": "melody/synth-lead/pulse-buzz-lead/90s_PulseBuzzLead-A1.wav",
+            "A2": "melody/synth-lead/pulse-buzz-lead/90s_PulseBuzzLead-A2.wav",
+            "A3": "melody/synth-lead/pulse-buzz-lead/90s_PulseBuzzLead-A3.wav",
+            "A4": "melody/synth-lead/pulse-buzz-lead/90s_PulseBuzzLead-A4.wav",
+            "C1": "melody/synth-lead/pulse-buzz-lead/90s_PulseBuzzLead-C1.wav",
+            "C2": "melody/synth-lead/pulse-buzz-lead/90s_PulseBuzzLead-C2.wav",
+            "C3": "melody/synth-lead/pulse-buzz-lead/90s_PulseBuzzLead-C3.wav",
+            "C4": "melody/synth-lead/pulse-buzz-lead/90s_PulseBuzzLead-C4.wav",
+            "C5": "melody/synth-lead/pulse-buzz-lead/90s_PulseBuzzLead-C5.wav",
+            "D#1": "melody/synth-lead/pulse-buzz-lead/90s_PulseBuzzLead-D#1.wav",
+            "D#2": "melody/synth-lead/pulse-buzz-lead/90s_PulseBuzzLead-D#2.wav",
+            "D#3": "melody/synth-lead/pulse-buzz-lead/90s_PulseBuzzLead-D#3.wav",
+            "D#4": "melody/synth-lead/pulse-buzz-lead/90s_PulseBuzzLead-D#4.wav",
+            "F#1": "melody/synth-lead/pulse-buzz-lead/90s_PulseBuzzLead-F#1.wav",
+            "F#2": "melody/synth-lead/pulse-buzz-lead/90s_PulseBuzzLead-F#2.wav",
+            "F#3": "melody/synth-lead/pulse-buzz-lead/90s_PulseBuzzLead-F#3.wav",
+            "F#4": "melody/synth-lead/pulse-buzz-lead/90s_PulseBuzzLead-F#4.wav"
+          },
+          "effects": {
+            "reverb": {
+              "decay": 2,
+              "wet": 0.3
+            },
+            "delay": {
+              "time": "8n",
+              "feedback": 0.25,
+              "wet": 0.25
+            }
+          }
+        },
+        "synth-lead/sawted-lead": {
+          "type": "pitched",
+          "samples": {
+            "A1": "melody/synth-lead/sawted-lead/90s_SawtedLead-A1.wav",
+            "A2": "melody/synth-lead/sawted-lead/90s_SawtedLead-A2.wav",
+            "A3": "melody/synth-lead/sawted-lead/90s_SawtedLead-A3.wav",
+            "A4": "melody/synth-lead/sawted-lead/90s_SawtedLead-A4.wav",
+            "C1": "melody/synth-lead/sawted-lead/90s_SawtedLead-C1.wav",
+            "C2": "melody/synth-lead/sawted-lead/90s_SawtedLead-C2.wav",
+            "C3": "melody/synth-lead/sawted-lead/90s_SawtedLead-C3.wav",
+            "C4": "melody/synth-lead/sawted-lead/90s_SawtedLead-C4.wav",
+            "C5": "melody/synth-lead/sawted-lead/90s_SawtedLead-C5.wav",
+            "D#1": "melody/synth-lead/sawted-lead/90s_SawtedLead-D#1.wav",
+            "D#2": "melody/synth-lead/sawted-lead/90s_SawtedLead-D#2.wav",
+            "D#3": "melody/synth-lead/sawted-lead/90s_SawtedLead-D#3.wav",
+            "D#4": "melody/synth-lead/sawted-lead/90s_SawtedLead-D#4.wav",
+            "F#1": "melody/synth-lead/sawted-lead/90s_SawtedLead-F#1.wav",
+            "F#2": "melody/synth-lead/sawted-lead/90s_SawtedLead-F#2.wav",
+            "F#3": "melody/synth-lead/sawted-lead/90s_SawtedLead-F#3.wav",
+            "F#4": "melody/synth-lead/sawted-lead/90s_SawtedLead-F#4.wav"
+          },
+          "effects": {
+            "reverb": {
+              "decay": 2,
+              "wet": 0.3
+            },
+            "delay": {
+              "time": "8n",
+              "feedback": 0.25,
+              "wet": 0.25
+            }
+          }
+        },
+        "vocal-chops/angelicalvoice": {
+          "type": "pitched",
+          "samples": {
+            "A1": "melody/vocal-chops/angelicalvoice/LDHV_Layered_A_01.wav",
+            "A2": "melody/vocal-chops/angelicalvoice/LDHV_Layered_A_02.wav",
+            "A3": "melody/vocal-chops/angelicalvoice/LDHV_Layered_A_03.wav",
+            "A4": "melody/vocal-chops/angelicalvoice/LDHV_Layered_A_04.wav",
+            "A5": "melody/vocal-chops/angelicalvoice/LDHV_Layered_A_05.wav",
+            "A6": "melody/vocal-chops/angelicalvoice/LDHV_Layered_A_06.wav",
+            "A7": "melody/vocal-chops/angelicalvoice/LDHV_Layered_A_07.wav",
+            "A8": "melody/vocal-chops/angelicalvoice/LDHV_Layered_A_08.wav",
+            "C1": "melody/vocal-chops/angelicalvoice/LDHV_Layered_C_01.wav",
+            "C2": "melody/vocal-chops/angelicalvoice/LDHV_Layered_C_02.wav",
+            "C3": "melody/vocal-chops/angelicalvoice/LDHV_Layered_C_03.wav",
+            "C4": "melody/vocal-chops/angelicalvoice/LDHV_Layered_C_04.wav",
+            "C5": "melody/vocal-chops/angelicalvoice/LDHV_Layered_C_05.wav",
+            "C6": "melody/vocal-chops/angelicalvoice/LDHV_Layered_C_06.wav",
+            "C7": "melody/vocal-chops/angelicalvoice/LDHV_Layered_C_07.wav",
+            "C8": "melody/vocal-chops/angelicalvoice/LDHV_Layered_C_08.wav",
+            "F1": "melody/vocal-chops/angelicalvoice/LDHV_Layered_F_01.wav",
+            "F2": "melody/vocal-chops/angelicalvoice/LDHV_Layered_F_02.wav",
+            "F3": "melody/vocal-chops/angelicalvoice/LDHV_Layered_F_03.wav",
+            "F4": "melody/vocal-chops/angelicalvoice/LDHV_Layered_F_04.wav",
+            "F5": "melody/vocal-chops/angelicalvoice/LDHV_Layered_F_05.wav",
+            "F6": "melody/vocal-chops/angelicalvoice/LDHV_Layered_F_06.wav",
+            "F7": "melody/vocal-chops/angelicalvoice/LDHV_Layered_F_07.wav",
+            "F8": "melody/vocal-chops/angelicalvoice/LDHV_Layered_F_08.wav",
+            "G1": "melody/vocal-chops/angelicalvoice/LDHV_Layered_G_01.wav",
+            "G2": "melody/vocal-chops/angelicalvoice/LDHV_Layered_G_02.wav",
+            "G3": "melody/vocal-chops/angelicalvoice/LDHV_Layered_G_03.wav",
+            "G4": "melody/vocal-chops/angelicalvoice/LDHV_Layered_G_04.wav",
+            "G5": "melody/vocal-chops/angelicalvoice/LDHV_Layered_G_05.wav",
+            "G6": "melody/vocal-chops/angelicalvoice/LDHV_Layered_G_06.wav",
+            "G7": "melody/vocal-chops/angelicalvoice/LDHV_Layered_G_07.wav",
+            "G8": "melody/vocal-chops/angelicalvoice/LDHV_Layered_G_08.wav"
+          },
+          "effects": {
+            "reverb": {
+              "decay": 2,
+              "wet": 0.3
+            },
+            "delay": {
+              "time": "8n",
+              "feedback": 0.25,
+              "wet": 0.25
+            }
+          }
+        }
+      }
+    },
+    "harmony": {
+      "instruments": {
+        "choir/ahhh-choir": {
+          "type": "pitched",
+          "samples": {
+            "A#2": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_A#2.wav",
+            "A#3": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_A#3.wav",
+            "A#4": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_A#4.wav",
+            "A1": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_A1.wav",
+            "A2": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_A2.wav",
+            "A3": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_A3.wav",
+            "A4": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_A4.wav",
+            "B1": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_B1.wav",
+            "B2": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_B2.wav",
+            "B3": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_B3.wav",
+            "B4": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_B4.wav",
+            "C#1": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_C#1.wav",
+            "C#2": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_C#2.wav",
+            "C#3": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_C#3.wav",
+            "C#4": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_C#4.wav",
+            "C1": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_C1.wav",
+            "C2": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_C2.wav",
+            "C3": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_C3.wav",
+            "C4": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_C4.wav",
+            "C5": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_C5.wav",
+            "D#1": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_D#1.wav",
+            "D#2": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_D#2.wav",
+            "D#3": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_D#3.wav",
+            "D#4": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_D#4.wav",
+            "D1": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_D1.wav",
+            "D2": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_D2.wav",
+            "D3": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_D3.wav",
+            "D4": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_D4.wav",
+            "E1": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_E1.wav",
+            "E2": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_E2.wav",
+            "E3": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_E3.wav",
+            "E4": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_E4.wav",
+            "F#1": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_F#1.wav",
+            "F#2": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_F#2.wav",
+            "F#3": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_F#3.wav",
+            "F#4": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_F#4.wav",
+            "F1": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_F1.wav",
+            "F2": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_F2.wav",
+            "F3": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_F3.wav",
+            "F4": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_F4.wav",
+            "G#1": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_G#1.wav",
+            "G#2": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_G#2.wav",
+            "G#3": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_G#3.wav",
+            "G#4": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_G#4.wav",
+            "G1": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_G1.wav",
+            "G2": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_G2.wav",
+            "G3": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_G3.wav",
+            "G4": "harmony/choir/ahhh-choir/Choir_Aaaah's_Male_+_Female_G4.wav"
+          },
+          "effects": {
+            "reverb": {
+              "decay": 3,
+              "wet": 0.5
+            },
+            "chorus": {
+              "frequency": 0.5,
+              "depth": 0.7,
+              "wet": 0.3
+            }
+          }
+        },
+        "pads/CeeVoice_Pad": {
+          "type": "pitched",
+          "samples": {
+            "A1": "harmony/pads/CeeVoice_Pad/90s_CeeVoicePad_A1.wav",
+            "A2": "harmony/pads/CeeVoice_Pad/90s_CeeVoicePad_A2.wav",
+            "A3": "harmony/pads/CeeVoice_Pad/90s_CeeVoicePad_A3.wav",
+            "A4": "harmony/pads/CeeVoice_Pad/90s_CeeVoicePad_A4.wav",
+            "A5": "harmony/pads/CeeVoice_Pad/90s_CeeVoicePad_A5.wav",
+            "C1": "harmony/pads/CeeVoice_Pad/90s_CeeVoicePad_C1.wav",
+            "C2": "harmony/pads/CeeVoice_Pad/90s_CeeVoicePad_C2.wav",
+            "C3": "harmony/pads/CeeVoice_Pad/90s_CeeVoicePad_C3.wav",
+            "C4": "harmony/pads/CeeVoice_Pad/90s_CeeVoicePad_C4.wav",
+            "C5": "harmony/pads/CeeVoice_Pad/90s_CeeVoicePad_C5.wav",
+            "C6": "harmony/pads/CeeVoice_Pad/90s_CeeVoicePad_C6.wav",
+            "D#1": "harmony/pads/CeeVoice_Pad/90s_CeeVoicePad_D#1.wav",
+            "D#2": "harmony/pads/CeeVoice_Pad/90s_CeeVoicePad_D#2.wav",
+            "D#3": "harmony/pads/CeeVoice_Pad/90s_CeeVoicePad_D#3.wav",
+            "D#4": "harmony/pads/CeeVoice_Pad/90s_CeeVoicePad_D#4.wav",
+            "D#5": "harmony/pads/CeeVoice_Pad/90s_CeeVoicePad_D#5.wav",
+            "F#1": "harmony/pads/CeeVoice_Pad/90s_CeeVoicePad_F#1.wav",
+            "F#2": "harmony/pads/CeeVoice_Pad/90s_CeeVoicePad_F#2.wav",
+            "F#3": "harmony/pads/CeeVoice_Pad/90s_CeeVoicePad_F#3.wav",
+            "F#4": "harmony/pads/CeeVoice_Pad/90s_CeeVoicePad_F#4.wav",
+            "F#5": "harmony/pads/CeeVoice_Pad/90s_CeeVoicePad_F#5.wav"
+          },
+          "effects": {
+            "reverb": {
+              "decay": 3,
+              "wet": 0.5
+            },
+            "chorus": {
+              "frequency": 0.5,
+              "depth": 0.7,
+              "wet": 0.3
+            }
+          }
+        },
+        "pads/Chensemble_Pad": {
+          "type": "pitched",
+          "samples": {
+            "A1": "harmony/pads/Chensemble_Pad/90s_ChensemblePad_A1.wav",
+            "A2": "harmony/pads/Chensemble_Pad/90s_ChensemblePad_A2.wav",
+            "A3": "harmony/pads/Chensemble_Pad/90s_ChensemblePad_A3.wav",
+            "A4": "harmony/pads/Chensemble_Pad/90s_ChensemblePad_A4.wav",
+            "A5": "harmony/pads/Chensemble_Pad/90s_ChensemblePad_A5.wav",
+            "C1": "harmony/pads/Chensemble_Pad/90s_ChensemblePad_C1.wav",
+            "C2": "harmony/pads/Chensemble_Pad/90s_ChensemblePad_C2.wav",
+            "C3": "harmony/pads/Chensemble_Pad/90s_ChensemblePad_C3.wav",
+            "C4": "harmony/pads/Chensemble_Pad/90s_ChensemblePad_C4.wav",
+            "C5": "harmony/pads/Chensemble_Pad/90s_ChensemblePad_C5.wav",
+            "C6": "harmony/pads/Chensemble_Pad/90s_ChensemblePad_C6.wav",
+            "D#1": "harmony/pads/Chensemble_Pad/90s_ChensemblePad_D#1.wav",
+            "D#2": "harmony/pads/Chensemble_Pad/90s_ChensemblePad_D#2.wav",
+            "D#3": "harmony/pads/Chensemble_Pad/90s_ChensemblePad_D#3.wav",
+            "D#4": "harmony/pads/Chensemble_Pad/90s_ChensemblePad_D#4.wav",
+            "D#5": "harmony/pads/Chensemble_Pad/90s_ChensemblePad_D#5.wav",
+            "F#1": "harmony/pads/Chensemble_Pad/90s_ChensemblePad_F#1.wav",
+            "F#2": "harmony/pads/Chensemble_Pad/90s_ChensemblePad_F#2.wav",
+            "F#3": "harmony/pads/Chensemble_Pad/90s_ChensemblePad_F#3.wav",
+            "F#4": "harmony/pads/Chensemble_Pad/90s_ChensemblePad_F#4.wav",
+            "F#5": "harmony/pads/Chensemble_Pad/90s_ChensemblePad_F#5.wav"
+          },
+          "effects": {
+            "reverb": {
+              "decay": 3,
+              "wet": 0.5
+            },
+            "chorus": {
+              "frequency": 0.5,
+              "depth": 0.7,
+              "wet": 0.3
+            }
+          }
+        },
+        "pads/Jabba_Pad": {
+          "type": "pitched",
+          "samples": {
+            "A1": "harmony/pads/Jabba_Pad/90s_JabbaPad_A1.wav",
+            "A2": "harmony/pads/Jabba_Pad/90s_JabbaPad_A2.wav",
+            "A3": "harmony/pads/Jabba_Pad/90s_JabbaPad_A3.wav",
+            "A4": "harmony/pads/Jabba_Pad/90s_JabbaPad_A4.wav",
+            "A5": "harmony/pads/Jabba_Pad/90s_JabbaPad_A5.wav",
+            "C1": "harmony/pads/Jabba_Pad/90s_JabbaPad_C1.wav",
+            "C2": "harmony/pads/Jabba_Pad/90s_JabbaPad_C2.wav",
+            "C3": "harmony/pads/Jabba_Pad/90s_JabbaPad_C3.wav",
+            "C4": "harmony/pads/Jabba_Pad/90s_JabbaPad_C4.wav",
+            "C5": "harmony/pads/Jabba_Pad/90s_JabbaPad_C5.wav",
+            "C6": "harmony/pads/Jabba_Pad/90s_JabbaPad_C6.wav",
+            "D#1": "harmony/pads/Jabba_Pad/90s_JabbaPad_D#1.wav",
+            "D#2": "harmony/pads/Jabba_Pad/90s_JabbaPad_D#2.wav",
+            "D#3": "harmony/pads/Jabba_Pad/90s_JabbaPad_D#3.wav",
+            "D#4": "harmony/pads/Jabba_Pad/90s_JabbaPad_D#4.wav",
+            "D#5": "harmony/pads/Jabba_Pad/90s_JabbaPad_D#5.wav",
+            "F#1": "harmony/pads/Jabba_Pad/90s_JabbaPad_F#1.wav",
+            "F#2": "harmony/pads/Jabba_Pad/90s_JabbaPad_F#2.wav",
+            "F#3": "harmony/pads/Jabba_Pad/90s_JabbaPad_F#3.wav",
+            "F#4": "harmony/pads/Jabba_Pad/90s_JabbaPad_F#4.wav",
+            "F#5": "harmony/pads/Jabba_Pad/90s_JabbaPad_F#5.wav"
+          },
+          "effects": {
+            "reverb": {
+              "decay": 3,
+              "wet": 0.5
+            },
+            "chorus": {
+              "frequency": 0.5,
+              "depth": 0.7,
+              "wet": 0.3
+            }
+          }
+        },
+        "pads/PuffSaw_Pad": {
+          "type": "pitched",
+          "samples": {
+            "A1": "harmony/pads/PuffSaw_Pad/90s_PuffSaw_A1.wav",
+            "A2": "harmony/pads/PuffSaw_Pad/90s_PuffSaw_A2.wav",
+            "A3": "harmony/pads/PuffSaw_Pad/90s_PuffSaw_A3.wav",
+            "A4": "harmony/pads/PuffSaw_Pad/90s_PuffSaw_A4.wav",
+            "A5": "harmony/pads/PuffSaw_Pad/90s_PuffSaw_A5.wav",
+            "C1": "harmony/pads/PuffSaw_Pad/90s_PuffSaw_C1.wav",
+            "C2": "harmony/pads/PuffSaw_Pad/90s_PuffSaw_C2.wav",
+            "C3": "harmony/pads/PuffSaw_Pad/90s_PuffSaw_C3.wav",
+            "C4": "harmony/pads/PuffSaw_Pad/90s_PuffSaw_C4.wav",
+            "C5": "harmony/pads/PuffSaw_Pad/90s_PuffSaw_C5.wav",
+            "C6": "harmony/pads/PuffSaw_Pad/90s_PuffSaw_C6.wav",
+            "D#1": "harmony/pads/PuffSaw_Pad/90s_PuffSaw_D#1.wav",
+            "D#2": "harmony/pads/PuffSaw_Pad/90s_PuffSaw_D#2.wav",
+            "D#3": "harmony/pads/PuffSaw_Pad/90s_PuffSaw_D#3.wav",
+            "D#4": "harmony/pads/PuffSaw_Pad/90s_PuffSaw_D#4.wav",
+            "D#5": "harmony/pads/PuffSaw_Pad/90s_PuffSaw_D#5.wav",
+            "F#1": "harmony/pads/PuffSaw_Pad/90s_PuffSaw_F#1.wav",
+            "F#2": "harmony/pads/PuffSaw_Pad/90s_PuffSaw_F#2.wav",
+            "F#3": "harmony/pads/PuffSaw_Pad/90s_PuffSaw_F#3.wav",
+            "F#4": "harmony/pads/PuffSaw_Pad/90s_PuffSaw_F#4.wav",
+            "F#5": "harmony/pads/PuffSaw_Pad/90s_PuffSaw_F#5.wav"
+          },
+          "effects": {
+            "reverb": {
+              "decay": 3,
+              "wet": 0.5
+            },
+            "chorus": {
+              "frequency": 0.5,
+              "depth": 0.7,
+              "wet": 0.3
+            }
+          }
+        },
+        "strings/Cello": {
+          "type": "pitched",
+          "samples": {
+            "A2": "harmony/strings/Cello/Cello_A2.wav",
+            "B2": "harmony/strings/Cello/Cello_B2.wav",
+            "C2": "harmony/strings/Cello/Cello_C2.wav",
+            "C3": "harmony/strings/Cello/Cello_C3.wav",
+            "D2": "harmony/strings/Cello/Cello_D2.wav",
+            "D3": "harmony/strings/Cello/Cello_D3.wav",
+            "E2": "harmony/strings/Cello/Cello_E2.wav",
+            "E3": "harmony/strings/Cello/Cello_E3.wav",
+            "F2": "harmony/strings/Cello/Cello_F2.wav",
+            "F3": "harmony/strings/Cello/Cello_F3.wav",
+            "G2": "harmony/strings/Cello/Cello_G2.wav",
+            "G3": "harmony/strings/Cello/Cello_G3.wav"
+          },
+          "effects": {
+            "reverb": {
+              "decay": 3,
+              "wet": 0.5
+            },
+            "chorus": {
+              "frequency": 0.5,
+              "depth": 0.7,
+              "wet": 0.3
+            }
+          }
+        },
+        "strings/Horn": {
+          "type": "pitched",
+          "samples": {
+            "A2": "harmony/strings/Horn/Horn_A2.WAV",
+            "A3": "harmony/strings/Horn/Horn_A3.WAV",
+            "A4": "harmony/strings/Horn/Horn_A4.WAV",
+            "A5": "harmony/strings/Horn/Horn_A5.WAV",
+            "B2": "harmony/strings/Horn/Horn_B2.WAV",
+            "B3": "harmony/strings/Horn/Horn_B3.WAV",
+            "B4": "harmony/strings/Horn/Horn_B4.WAV",
+            "B5": "harmony/strings/Horn/Horn_B5.WAV",
+            "C2": "harmony/strings/Horn/Horn_C2.WAV",
+            "C3": "harmony/strings/Horn/Horn_C3.WAV",
+            "C4": "harmony/strings/Horn/Horn_C4.WAV",
+            "C5": "harmony/strings/Horn/Horn_C5.WAV",
+            "C6": "harmony/strings/Horn/Horn_C6.WAV",
+            "D2": "harmony/strings/Horn/Horn_D2.WAV",
+            "D3": "harmony/strings/Horn/Horn_D3.WAV",
+            "D4": "harmony/strings/Horn/Horn_D4.WAV",
+            "D5": "harmony/strings/Horn/Horn_D5.WAV",
+            "E2": "harmony/strings/Horn/Horn_E2.WAV",
+            "E3": "harmony/strings/Horn/Horn_E3.WAV",
+            "E4": "harmony/strings/Horn/Horn_E4.WAV",
+            "E5": "harmony/strings/Horn/Horn_E5.WAV",
+            "F2": "harmony/strings/Horn/Horn_F2.WAV",
+            "F3": "harmony/strings/Horn/Horn_F3.WAV",
+            "F4": "harmony/strings/Horn/Horn_F4.WAV",
+            "F5": "harmony/strings/Horn/Horn_F5.WAV",
+            "G2": "harmony/strings/Horn/Horn_G2.WAV",
+            "G3": "harmony/strings/Horn/Horn_G3.WAV",
+            "G4": "harmony/strings/Horn/Horn_G4.WAV",
+            "G5": "harmony/strings/Horn/Horn_G5.WAV"
+          },
+          "effects": {
+            "reverb": {
+              "decay": 3,
+              "wet": 0.5
+            },
+            "chorus": {
+              "frequency": 0.5,
+              "depth": 0.7,
+              "wet": 0.3
+            }
+          }
+        },
+        "strings/Trumpet": {
+          "type": "pitched",
+          "samples": {
+            "A2": "harmony/strings/Trumpet/Trumpet_A2.WAV",
+            "A3": "harmony/strings/Trumpet/Trumpet_A3.WAV",
+            "A4": "harmony/strings/Trumpet/Trumpet_A4.WAV",
+            "A5": "harmony/strings/Trumpet/Trumpet_A5.WAV",
+            "B2": "harmony/strings/Trumpet/Trumpet_B2.WAV",
+            "B3": "harmony/strings/Trumpet/Trumpet_B3.WAV",
+            "B4": "harmony/strings/Trumpet/Trumpet_B4.WAV",
+            "B5": "harmony/strings/Trumpet/Trumpet_B5.WAV",
+            "C2": "harmony/strings/Trumpet/Trumpet_C2.WAV",
+            "C3": "harmony/strings/Trumpet/Trumpet_C3.WAV",
+            "C4": "harmony/strings/Trumpet/Trumpet_C4.WAV",
+            "C5": "harmony/strings/Trumpet/Trumpet_C5.WAV",
+            "C6": "harmony/strings/Trumpet/Trumpet_C6.WAV",
+            "D2": "harmony/strings/Trumpet/Trumpet_D2.WAV",
+            "D3": "harmony/strings/Trumpet/Trumpet_D3.WAV",
+            "D4": "harmony/strings/Trumpet/Trumpet_D4.WAV",
+            "D5": "harmony/strings/Trumpet/Trumpet_D5.WAV",
+            "E2": "harmony/strings/Trumpet/Trumpet_E2.WAV",
+            "E3": "harmony/strings/Trumpet/Trumpet_E3.WAV",
+            "E4": "harmony/strings/Trumpet/Trumpet_E4.WAV",
+            "E5": "harmony/strings/Trumpet/Trumpet_E5.WAV",
+            "F2": "harmony/strings/Trumpet/Trumpet_F2.WAV",
+            "F3": "harmony/strings/Trumpet/Trumpet_F3.WAV",
+            "F4": "harmony/strings/Trumpet/Trumpet_F4.WAV",
+            "F5": "harmony/strings/Trumpet/Trumpet_F5.WAV",
+            "G2": "harmony/strings/Trumpet/Trumpet_G2.WAV",
+            "G3": "harmony/strings/Trumpet/Trumpet_G3.WAV",
+            "G4": "harmony/strings/Trumpet/Trumpet_G4.WAV",
+            "G5": "harmony/strings/Trumpet/Trumpet_G5.WAV"
+          },
+          "effects": {
+            "reverb": {
+              "decay": 3,
+              "wet": 0.5
+            },
+            "chorus": {
+              "frequency": 0.5,
+              "depth": 0.7,
+              "wet": 0.3
+            }
+          }
+        },
+        "strings/Viola": {
+          "type": "pitched",
+          "samples": {
+            "A2": "harmony/strings/Viola/Viola_A2.WAV",
+            "A3": "harmony/strings/Viola/Viola_A3.WAV",
+            "A4": "harmony/strings/Viola/Viola_A4.WAV",
+            "A5": "harmony/strings/Viola/Viola_A5.WAV",
+            "B2": "harmony/strings/Viola/Viola_B2.WAV",
+            "B3": "harmony/strings/Viola/Viola_B3.WAV",
+            "B4": "harmony/strings/Viola/Viola_B4.WAV",
+            "B5": "harmony/strings/Viola/Viola_B5.WAV",
+            "C2": "harmony/strings/Viola/Viola_C2.WAV",
+            "C3": "harmony/strings/Viola/Viola_C3.WAV",
+            "C4": "harmony/strings/Viola/Viola_C4.WAV",
+            "C5": "harmony/strings/Viola/Viola_C5.WAV",
+            "C6": "harmony/strings/Viola/Viola_C6.WAV",
+            "D2": "harmony/strings/Viola/Viola_D2.WAV",
+            "D3": "harmony/strings/Viola/Viola_D3.WAV",
+            "D4": "harmony/strings/Viola/Viola_D4.WAV",
+            "D5": "harmony/strings/Viola/Viola_D5.WAV",
+            "E2": "harmony/strings/Viola/Viola_E2.WAV",
+            "E3": "harmony/strings/Viola/Viola_E3.WAV",
+            "E4": "harmony/strings/Viola/Viola_E4.WAV",
+            "E5": "harmony/strings/Viola/Viola_E5.WAV",
+            "F2": "harmony/strings/Viola/Viola_F2.WAV",
+            "F3": "harmony/strings/Viola/Viola_F3.WAV",
+            "F4": "harmony/strings/Viola/Viola_F4.WAV",
+            "F5": "harmony/strings/Viola/Viola_F5.WAV",
+            "G2": "harmony/strings/Viola/Viola_G2.WAV",
+            "G3": "harmony/strings/Viola/Viola_G3.WAV",
+            "G4": "harmony/strings/Viola/Viola_G4.WAV",
+            "G5": "harmony/strings/Viola/Viola_G5.WAV"
+          },
+          "effects": {
+            "reverb": {
+              "decay": 3,
+              "wet": 0.5
+            },
+            "chorus": {
+              "frequency": 0.5,
+              "depth": 0.7,
+              "wet": 0.3
+            }
+          }
+        },
+        "strings/Violin": {
+          "type": "pitched",
+          "samples": {
+            "A3": "harmony/strings/Violin/Violin_A3.WAV",
+            "A4": "harmony/strings/Violin/Violin_A4.WAV",
+            "A5": "harmony/strings/Violin/Violin_A5.WAV",
+            "A6": "harmony/strings/Violin/Violin_A6.WAV",
+            "B3": "harmony/strings/Violin/Violin_B3.WAV",
+            "B4": "harmony/strings/Violin/Violin_B4.WAV",
+            "B5": "harmony/strings/Violin/Violin_B5.WAV",
+            "B6": "harmony/strings/Violin/Violin_B6.WAV",
+            "C3": "harmony/strings/Violin/Violin_C3.WAV",
+            "C4": "harmony/strings/Violin/Violin_C4.WAV",
+            "C5": "harmony/strings/Violin/Violin_C5.WAV",
+            "C6": "harmony/strings/Violin/Violin_C6.WAV",
+            "C7": "harmony/strings/Violin/Violin_C7.WAV",
+            "D3": "harmony/strings/Violin/Violin_D3.WAV",
+            "D4": "harmony/strings/Violin/Violin_D4.WAV",
+            "D5": "harmony/strings/Violin/Violin_D5.WAV",
+            "D6": "harmony/strings/Violin/Violin_D6.WAV",
+            "E3": "harmony/strings/Violin/Violin_E3.WAV",
+            "E4": "harmony/strings/Violin/Violin_E4.WAV",
+            "E5": "harmony/strings/Violin/Violin_E5.WAV",
+            "E6": "harmony/strings/Violin/Violin_E6.WAV",
+            "F3": "harmony/strings/Violin/Violin_F3.WAV",
+            "F4": "harmony/strings/Violin/Violin_F4.WAV",
+            "F5": "harmony/strings/Violin/Violin_F5.WAV",
+            "F6": "harmony/strings/Violin/Violin_F6.WAV",
+            "G3": "harmony/strings/Violin/Violin_G3.WAV",
+            "G4": "harmony/strings/Violin/Violin_G4.WAV",
+            "G5": "harmony/strings/Violin/Violin_G5.WAV",
+            "G6": "harmony/strings/Violin/Violin_G6.WAV"
+          },
+          "effects": {
+            "reverb": {
+              "decay": 3,
+              "wet": 0.5
+            },
+            "chorus": {
+              "frequency": 0.5,
+              "depth": 0.7,
+              "wet": 0.3
+            }
+          }
+        }
+      }
+    },
+    "bass": {
+      "instruments": {
+        "ochestral-bass/Contra_Bass": {
+          "type": "pitched",
+          "samples": {
+            "A1": "bass/ochestral-bass/Contra_Bass/Contra_A1.wav",
+            "B1": "bass/ochestral-bass/Contra_Bass/Contra_B1.wav",
+            "C1": "bass/ochestral-bass/Contra_Bass/Contra_C1.wav",
+            "C2": "bass/ochestral-bass/Contra_Bass/Contra_C2.wav",
+            "D1": "bass/ochestral-bass/Contra_Bass/Contra_D1.wav",
+            "D2": "bass/ochestral-bass/Contra_Bass/Contra_D2.wav",
+            "E1": "bass/ochestral-bass/Contra_Bass/Contra_E1.wav",
+            "E2": "bass/ochestral-bass/Contra_Bass/Contra_E2.wav",
+            "F1": "bass/ochestral-bass/Contra_Bass/Contra_F1.wav",
+            "F2": "bass/ochestral-bass/Contra_Bass/Contra_F2.wav",
+            "G1": "bass/ochestral-bass/Contra_Bass/Contra_G1.wav",
+            "G2": "bass/ochestral-bass/Contra_Bass/Contra_G2.wav"
+          },
+          "effects": {
+            "saturation": {
+              "drive": 0.3
+            },
+            "compression": {
+              "threshold": -12,
+              "ratio": 6
+            }
+          }
+        },
+        "sub-bass/Blau_Bass": {
+          "type": "pitched",
+          "samples": {
+            "A1": "bass/sub-bass/Blau_Bass/90s_BlauBass-A1.wav",
+            "A2": "bass/sub-bass/Blau_Bass/90s_BlauBass-A2.wav",
+            "A3": "bass/sub-bass/Blau_Bass/90s_BlauBass-A3.wav",
+            "A4": "bass/sub-bass/Blau_Bass/90s_BlauBass-A4.wav",
+            "C1": "bass/sub-bass/Blau_Bass/90s_BlauBass-C1.wav",
+            "C2": "bass/sub-bass/Blau_Bass/90s_BlauBass-C2.wav",
+            "C3": "bass/sub-bass/Blau_Bass/90s_BlauBass-C3.wav",
+            "C4": "bass/sub-bass/Blau_Bass/90s_BlauBass-C4.wav",
+            "C5": "bass/sub-bass/Blau_Bass/90s_BlauBass-C5.wav",
+            "D#1": "bass/sub-bass/Blau_Bass/90s_BlauBass-D#1.wav",
+            "D#2": "bass/sub-bass/Blau_Bass/90s_BlauBass-D#2.wav",
+            "D#3": "bass/sub-bass/Blau_Bass/90s_BlauBass-D#3.wav",
+            "D#4": "bass/sub-bass/Blau_Bass/90s_BlauBass-D#4.wav",
+            "F#1": "bass/sub-bass/Blau_Bass/90s_BlauBass-F#1.wav",
+            "F#2": "bass/sub-bass/Blau_Bass/90s_BlauBass-F#2.wav",
+            "F#3": "bass/sub-bass/Blau_Bass/90s_BlauBass-F#3.wav",
+            "F#4": "bass/sub-bass/Blau_Bass/90s_BlauBass-F#4.wav"
+          },
+          "effects": {
+            "saturation": {
+              "drive": 0.3
+            },
+            "compression": {
+              "threshold": -12,
+              "ratio": 6
+            }
+          }
+        },
+        "sub-bass/CS-05_Soft_Sub": {
+          "type": "pitched",
+          "samples": {
+            "A1": "bass/sub-bass/CS-05_Soft_Sub/CS-05_Soft_Sub_A1.wav",
+            "A2": "bass/sub-bass/CS-05_Soft_Sub/CS-05_Soft_Sub_A2.wav",
+            "C1": "bass/sub-bass/CS-05_Soft_Sub/CS-05_Soft_Sub_C1.wav",
+            "C2": "bass/sub-bass/CS-05_Soft_Sub/CS-05_Soft_Sub_C2.wav",
+            "C3": "bass/sub-bass/CS-05_Soft_Sub/CS-05_Soft_Sub_C3.wav",
+            "D#1": "bass/sub-bass/CS-05_Soft_Sub/CS-05_Soft_Sub_D#1.wav",
+            "D#2": "bass/sub-bass/CS-05_Soft_Sub/CS-05_Soft_Sub_D#2.wav",
+            "F#1": "bass/sub-bass/CS-05_Soft_Sub/CS-05_Soft_Sub_F#1.wav",
+            "F#2": "bass/sub-bass/CS-05_Soft_Sub/CS-05_Soft_Sub_F#2.wav"
+          },
+          "effects": {
+            "saturation": {
+              "drive": 0.3
+            },
+            "compression": {
+              "threshold": -12,
+              "ratio": 6
+            }
+          }
+        },
+        "sub-bass/Mello_Saw": {
+          "type": "pitched",
+          "samples": {
+            "A1": "bass/sub-bass/Mello_Saw/90s_MelloSaw_A1.wav",
+            "A2": "bass/sub-bass/Mello_Saw/90s_MelloSaw_A2.wav",
+            "A3": "bass/sub-bass/Mello_Saw/90s_MelloSaw_A3.wav",
+            "A4": "bass/sub-bass/Mello_Saw/90s_MelloSaw_A4.wav",
+            "A5": "bass/sub-bass/Mello_Saw/90s_MelloSaw_A5.wav",
+            "C1": "bass/sub-bass/Mello_Saw/90s_MelloSaw_C1.wav",
+            "C2": "bass/sub-bass/Mello_Saw/90s_MelloSaw_C2.wav",
+            "C3": "bass/sub-bass/Mello_Saw/90s_MelloSaw_C3.wav",
+            "C4": "bass/sub-bass/Mello_Saw/90s_MelloSaw_C4.wav",
+            "C5": "bass/sub-bass/Mello_Saw/90s_MelloSaw_C5.wav",
+            "C6": "bass/sub-bass/Mello_Saw/90s_MelloSaw_C6.wav",
+            "D#1": "bass/sub-bass/Mello_Saw/90s_MelloSaw_D#1.wav",
+            "D#2": "bass/sub-bass/Mello_Saw/90s_MelloSaw_D#2.wav",
+            "D#3": "bass/sub-bass/Mello_Saw/90s_MelloSaw_D#3.wav",
+            "D#4": "bass/sub-bass/Mello_Saw/90s_MelloSaw_D#4.wav",
+            "D#5": "bass/sub-bass/Mello_Saw/90s_MelloSaw_D#5.wav",
+            "F#1": "bass/sub-bass/Mello_Saw/90s_MelloSaw_F#1.wav",
+            "F#2": "bass/sub-bass/Mello_Saw/90s_MelloSaw_F#2.wav",
+            "F#3": "bass/sub-bass/Mello_Saw/90s_MelloSaw_F#3.wav",
+            "F#4": "bass/sub-bass/Mello_Saw/90s_MelloSaw_F#4.wav",
+            "F#5": "bass/sub-bass/Mello_Saw/90s_MelloSaw_F#5.wav"
+          },
+          "effects": {
+            "saturation": {
+              "drive": 0.3
+            },
+            "compression": {
+              "threshold": -12,
+              "ratio": 6
+            }
+          }
+        },
+        "sub-bass/MS-20_Sub": {
+          "type": "pitched",
+          "samples": {
+            "A1": "bass/sub-bass/MS-20_Sub/Ms-20_Sub_A1.wav",
+            "A2": "bass/sub-bass/MS-20_Sub/Ms-20_Sub_A2.wav",
+            "C1": "bass/sub-bass/MS-20_Sub/Ms-20_Sub_C1.wav",
+            "C2": "bass/sub-bass/MS-20_Sub/Ms-20_Sub_C2.wav",
+            "C3": "bass/sub-bass/MS-20_Sub/Ms-20_Sub_C3.wav",
+            "D#1": "bass/sub-bass/MS-20_Sub/Ms-20_Sub_D#1.wav",
+            "D#2": "bass/sub-bass/MS-20_Sub/Ms-20_Sub_D#2.wav",
+            "F#1": "bass/sub-bass/MS-20_Sub/Ms-20_Sub_F#1.wav",
+            "F#2": "bass/sub-bass/MS-20_Sub/Ms-20_Sub_F#2.wav"
+          },
+          "effects": {
+            "saturation": {
+              "drive": 0.3
+            },
+            "compression": {
+              "threshold": -12,
+              "ratio": 6
+            }
+          }
+        },
+        "sub-bass/SH101_Modulated_Sub": {
+          "type": "pitched",
+          "samples": {
+            "A1": "bass/sub-bass/SH101_Modulated_Sub/SH101_Modulated_Sub_A1.wav",
+            "A2": "bass/sub-bass/SH101_Modulated_Sub/SH101_Modulated_Sub_A2.wav",
+            "C1": "bass/sub-bass/SH101_Modulated_Sub/SH101_Modulated_Sub_C1.wav",
+            "C2": "bass/sub-bass/SH101_Modulated_Sub/SH101_Modulated_Sub_C2.wav",
+            "C3": "bass/sub-bass/SH101_Modulated_Sub/SH101_Modulated_Sub_C3.wav",
+            "D#1": "bass/sub-bass/SH101_Modulated_Sub/SH101_Modulated_Sub_D#1.wav",
+            "D#2": "bass/sub-bass/SH101_Modulated_Sub/SH101_Modulated_Sub_D#2.wav",
+            "F#1": "bass/sub-bass/SH101_Modulated_Sub/SH101_Modulated_Sub_F#1.wav",
+            "F#2": "bass/sub-bass/SH101_Modulated_Sub/SH101_Modulated_Sub_F#2.wav"
+          },
+          "effects": {
+            "saturation": {
+              "drive": 0.3
+            },
+            "compression": {
+              "threshold": -12,
+              "ratio": 6
+            }
+          }
+        },
+        "synth-bass/Buzz_Bass": {
+          "type": "pitched",
+          "samples": {
+            "A1": "bass/synth-bass/Buzz_Bass/90s_BuzzBass-A1.wav",
+            "A2": "bass/synth-bass/Buzz_Bass/90s_BuzzBass-A2.wav",
+            "A3": "bass/synth-bass/Buzz_Bass/90s_BuzzBass-A3.wav",
+            "A4": "bass/synth-bass/Buzz_Bass/90s_BuzzBass-A4.wav",
+            "C1": "bass/synth-bass/Buzz_Bass/90s_BuzzBass-C1.wav",
+            "C2": "bass/synth-bass/Buzz_Bass/90s_BuzzBass-C2.wav",
+            "C3": "bass/synth-bass/Buzz_Bass/90s_BuzzBass-C3.wav",
+            "C4": "bass/synth-bass/Buzz_Bass/90s_BuzzBass-C4.wav",
+            "C5": "bass/synth-bass/Buzz_Bass/90s_BuzzBass-C5.wav",
+            "D#1": "bass/synth-bass/Buzz_Bass/90s_BuzzBass-D#1.wav",
+            "D#2": "bass/synth-bass/Buzz_Bass/90s_BuzzBass-D#2.wav",
+            "D#3": "bass/synth-bass/Buzz_Bass/90s_BuzzBass-D#3.wav",
+            "D#4": "bass/synth-bass/Buzz_Bass/90s_BuzzBass-D#4.wav",
+            "F#1": "bass/synth-bass/Buzz_Bass/90s_BuzzBass-F#1.wav",
+            "F#2": "bass/synth-bass/Buzz_Bass/90s_BuzzBass-F#2.wav",
+            "F#3": "bass/synth-bass/Buzz_Bass/90s_BuzzBass-F#3.wav",
+            "F#4": "bass/synth-bass/Buzz_Bass/90s_BuzzBass-F#4.wav"
+          },
+          "effects": {
+            "saturation": {
+              "drive": 0.3
+            },
+            "compression": {
+              "threshold": -12,
+              "ratio": 6
+            }
+          }
+        },
+        "synth-bass/Mode_Bass": {
+          "type": "pitched",
+          "samples": {
+            "A1": "bass/synth-bass/Mode_Bass/90s_ModeBass-A1.wav",
+            "A2": "bass/synth-bass/Mode_Bass/90s_ModeBass-A2.wav",
+            "A3": "bass/synth-bass/Mode_Bass/90s_ModeBass-A3.wav",
+            "A4": "bass/synth-bass/Mode_Bass/90s_ModeBass-A4.wav",
+            "C1": "bass/synth-bass/Mode_Bass/90s_ModeBass-C1.wav",
+            "C2": "bass/synth-bass/Mode_Bass/90s_ModeBass-C2.wav",
+            "C3": "bass/synth-bass/Mode_Bass/90s_ModeBass-C3.wav",
+            "C4": "bass/synth-bass/Mode_Bass/90s_ModeBass-C4.wav",
+            "C5": "bass/synth-bass/Mode_Bass/90s_ModeBass-C5.wav",
+            "D#1": "bass/synth-bass/Mode_Bass/90s_ModeBass-D#1.wav",
+            "D#2": "bass/synth-bass/Mode_Bass/90s_ModeBass-D#2.wav",
+            "D#3": "bass/synth-bass/Mode_Bass/90s_ModeBass-D#3.wav",
+            "D#4": "bass/synth-bass/Mode_Bass/90s_ModeBass-D#4.wav",
+            "F#1": "bass/synth-bass/Mode_Bass/90s_ModeBass-F#1.wav",
+            "F#2": "bass/synth-bass/Mode_Bass/90s_ModeBass-F#2.wav",
+            "F#3": "bass/synth-bass/Mode_Bass/90s_ModeBass-F#3.wav",
+            "F#4": "bass/synth-bass/Mode_Bass/90s_ModeBass-F#4.wav"
+          },
+          "effects": {
+            "saturation": {
+              "drive": 0.3
+            },
+            "compression": {
+              "threshold": -12,
+              "ratio": 6
+            }
+          }
+        },
+        "synth-bass/Moog_String": {
+          "type": "pitched",
+          "samples": {
+            "A1": "bass/synth-bass/Moog_String/Moog_String_A1.wav",
+            "A2": "bass/synth-bass/Moog_String/Moog_String_A2.wav",
+            "A3": "bass/synth-bass/Moog_String/Moog_String_A3.wav",
+            "C1": "bass/synth-bass/Moog_String/Moog_String_C1.wav",
+            "C2": "bass/synth-bass/Moog_String/Moog_String_C2.wav",
+            "C3": "bass/synth-bass/Moog_String/Moog_String_C3.wav",
+            "C4": "bass/synth-bass/Moog_String/Moog_String_C4.wav",
+            "D#1": "bass/synth-bass/Moog_String/Moog_String_D#1.wav",
+            "D#2": "bass/synth-bass/Moog_String/Moog_String_D#2.wav",
+            "D#3": "bass/synth-bass/Moog_String/Moog_String_D#3.wav",
+            "F#1": "bass/synth-bass/Moog_String/Moog_String_F#1.wav",
+            "F#2": "bass/synth-bass/Moog_String/Moog_String_F#2.wav",
+            "F#3": "bass/synth-bass/Moog_String/Moog_String_F#3.wav"
+          },
+          "effects": {
+            "saturation": {
+              "drive": 0.3
+            },
+            "compression": {
+              "threshold": -12,
+              "ratio": 6
+            }
+          }
+        }
+      }
+    },
+    "rhythm": {
+      "instruments": {
+        "drums": {
+          "type": "drum-kit",
+          "samples": {
+            "35": "kick-2.wav",
+            "36": "kick-1.wav",
+            "37": "rim.wav",
+            "38": "snare-1.wav",
+            "39": "clap.wav",
+            "40": "snare-2.wav",
+            "42": "hihat-close.wav",
+            "44": "hihat-pedal.wav",
+            "45": "tom-low.wav",
+            "46": "hihat-open.wav",
+            "47": "tom-mid.wav",
+            "49": "crash.wav",
+            "50": "tom-high.wav",
+            "51": "Ride.wav",
+            "54": "tambourine.wav",
+            "70": "shaker.wav"
+          },
+          "effects": {
+            "reverb": {
+              "decay": 1,
+              "wet": 0.2
+            },
+            "compression": {
+              "threshold": -20,
+              "ratio": 4
+            }
+          }
+        }
+      }
+    },
+    "pad": {
+      "instruments": {
+        "ambient-pads/Ciao_Pad": {
+          "type": "pitched",
+          "samples": {
+            "A1": "pad/ambient-pads/Ciao_Pad/90s_CiaoPad_A1.wav",
+            "A2": "pad/ambient-pads/Ciao_Pad/90s_CiaoPad_A2.wav",
+            "A3": "pad/ambient-pads/Ciao_Pad/90s_CiaoPad_A3.wav",
+            "A4": "pad/ambient-pads/Ciao_Pad/90s_CiaoPad_A4.wav",
+            "A5": "pad/ambient-pads/Ciao_Pad/90s_CiaoPad_A5.wav",
+            "C1": "pad/ambient-pads/Ciao_Pad/90s_CiaoPad_C1.wav",
+            "C2": "pad/ambient-pads/Ciao_Pad/90s_CiaoPad_C2.wav",
+            "C3": "pad/ambient-pads/Ciao_Pad/90s_CiaoPad_C3.wav",
+            "C4": "pad/ambient-pads/Ciao_Pad/90s_CiaoPad_C4.wav",
+            "C5": "pad/ambient-pads/Ciao_Pad/90s_CiaoPad_C5.wav",
+            "C6": "pad/ambient-pads/Ciao_Pad/90s_CiaoPad_C6.wav",
+            "D#1": "pad/ambient-pads/Ciao_Pad/90s_CiaoPad_D#1.wav",
+            "D#2": "pad/ambient-pads/Ciao_Pad/90s_CiaoPad_D#2.wav",
+            "D#3": "pad/ambient-pads/Ciao_Pad/90s_CiaoPad_D#3.wav",
+            "D#4": "pad/ambient-pads/Ciao_Pad/90s_CiaoPad_D#4.wav",
+            "D#5": "pad/ambient-pads/Ciao_Pad/90s_CiaoPad_D#5.wav",
+            "F#1": "pad/ambient-pads/Ciao_Pad/90s_CiaoPad_F#1.wav",
+            "F#2": "pad/ambient-pads/Ciao_Pad/90s_CiaoPad_F#2.wav",
+            "F#3": "pad/ambient-pads/Ciao_Pad/90s_CiaoPad_F#3.wav",
+            "F#4": "pad/ambient-pads/Ciao_Pad/90s_CiaoPad_F#4.wav",
+            "F#5": "pad/ambient-pads/Ciao_Pad/90s_CiaoPad_F#5.wav"
+          },
+          "effects": {
+            "reverb": {
+              "decay": 5,
+              "wet": 0.7
+            },
+            "delay": {
+              "time": "4n",
+              "feedback": 0.4,
+              "wet": 0.5
+            },
+            "stereoWidth": 1.0
+          }
+        },
+        "ambient-pads/HighAs_Pad": {
+          "type": "pitched",
+          "samples": {
+            "A1": "pad/ambient-pads/HighAs_Pad/90s_HighAsPad_A1.wav",
+            "A2": "pad/ambient-pads/HighAs_Pad/90s_HighAsPad_A2.wav",
+            "A3": "pad/ambient-pads/HighAs_Pad/90s_HighAsPad_A3.wav",
+            "A4": "pad/ambient-pads/HighAs_Pad/90s_HighAsPad_A4.wav",
+            "A5": "pad/ambient-pads/HighAs_Pad/90s_HighAsPad_A5.wav",
+            "C1": "pad/ambient-pads/HighAs_Pad/90s_HighAsPad_C1.wav",
+            "C2": "pad/ambient-pads/HighAs_Pad/90s_HighAsPad_C2.wav",
+            "C3": "pad/ambient-pads/HighAs_Pad/90s_HighAsPad_C3.wav",
+            "C4": "pad/ambient-pads/HighAs_Pad/90s_HighAsPad_C4.wav",
+            "C5": "pad/ambient-pads/HighAs_Pad/90s_HighAsPad_C5.wav",
+            "C6": "pad/ambient-pads/HighAs_Pad/90s_HighAsPad_C6.wav",
+            "D#1": "pad/ambient-pads/HighAs_Pad/90s_HighAsPad_D#1.wav",
+            "D#2": "pad/ambient-pads/HighAs_Pad/90s_HighAsPad_D#2.wav",
+            "D#3": "pad/ambient-pads/HighAs_Pad/90s_HighAsPad_D#3.wav",
+            "D#4": "pad/ambient-pads/HighAs_Pad/90s_HighAsPad_D#4.wav",
+            "D#5": "pad/ambient-pads/HighAs_Pad/90s_HighAsPad_D#5.wav",
+            "F#1": "pad/ambient-pads/HighAs_Pad/90s_HighAsPad_F#1.wav",
+            "F#2": "pad/ambient-pads/HighAs_Pad/90s_HighAsPad_F#2.wav",
+            "F#3": "pad/ambient-pads/HighAs_Pad/90s_HighAsPad_F#3.wav",
+            "F#4": "pad/ambient-pads/HighAs_Pad/90s_HighAsPad_F#4.wav",
+            "F#5": "pad/ambient-pads/HighAs_Pad/90s_HighAsPad_F#5.wav"
+          },
+          "effects": {
+            "reverb": {
+              "decay": 5,
+              "wet": 0.7
+            },
+            "delay": {
+              "time": "4n",
+              "feedback": 0.4,
+              "wet": 0.5
+            },
+            "stereoWidth": 1.0
+          }
+        },
+        "ambient-pads/Pro_Pad": {
+          "type": "pitched",
+          "samples": {
+            "A1": "pad/ambient-pads/Pro_Pad/90s_ProPad_A1.wav",
+            "A2": "pad/ambient-pads/Pro_Pad/90s_ProPad_A2.wav",
+            "A3": "pad/ambient-pads/Pro_Pad/90s_ProPad_A3.wav",
+            "A4": "pad/ambient-pads/Pro_Pad/90s_ProPad_A4.wav",
+            "A5": "pad/ambient-pads/Pro_Pad/90s_ProPad_A5.wav",
+            "C1": "pad/ambient-pads/Pro_Pad/90s_ProPad_C1.wav",
+            "C2": "pad/ambient-pads/Pro_Pad/90s_ProPad_C2.wav",
+            "C3": "pad/ambient-pads/Pro_Pad/90s_ProPad_C3.wav",
+            "C4": "pad/ambient-pads/Pro_Pad/90s_ProPad_C4.wav",
+            "C5": "pad/ambient-pads/Pro_Pad/90s_ProPad_C5.wav",
+            "C6": "pad/ambient-pads/Pro_Pad/90s_ProPad_C6.wav",
+            "D#1": "pad/ambient-pads/Pro_Pad/90s_ProPad_D#1.wav",
+            "D#2": "pad/ambient-pads/Pro_Pad/90s_ProPad_D#2.wav",
+            "D#3": "pad/ambient-pads/Pro_Pad/90s_ProPad_D#3.wav",
+            "D#4": "pad/ambient-pads/Pro_Pad/90s_ProPad_D#4.wav",
+            "D#5": "pad/ambient-pads/Pro_Pad/90s_ProPad_D#5.wav",
+            "F#1": "pad/ambient-pads/Pro_Pad/90s_ProPad_F#1.wav",
+            "F#2": "pad/ambient-pads/Pro_Pad/90s_ProPad_F#2.wav",
+            "F#3": "pad/ambient-pads/Pro_Pad/90s_ProPad_F#3.wav",
+            "F#4": "pad/ambient-pads/Pro_Pad/90s_ProPad_F#4.wav",
+            "F#5": "pad/ambient-pads/Pro_Pad/90s_ProPad_F#5.wav"
+          },
+          "effects": {
+            "reverb": {
+              "decay": 5,
+              "wet": 0.7
+            },
+            "delay": {
+              "time": "4n",
+              "feedback": 0.4,
+              "wet": 0.5
+            },
+            "stereoWidth": 1.0
+          }
+        },
+        "ambient-pads/Squarz_Pad": {
+          "type": "pitched",
+          "samples": {
+            "A1": "pad/ambient-pads/Squarz_Pad/90s_SquarzPad_A1.wav",
+            "A2": "pad/ambient-pads/Squarz_Pad/90s_SquarzPad_A2.wav",
+            "A3": "pad/ambient-pads/Squarz_Pad/90s_SquarzPad_A3.wav",
+            "A4": "pad/ambient-pads/Squarz_Pad/90s_SquarzPad_A4.wav",
+            "A5": "pad/ambient-pads/Squarz_Pad/90s_SquarzPad_A5.wav",
+            "C1": "pad/ambient-pads/Squarz_Pad/90s_SquarzPad_C1.wav",
+            "C2": "pad/ambient-pads/Squarz_Pad/90s_SquarzPad_C2.wav",
+            "C3": "pad/ambient-pads/Squarz_Pad/90s_SquarzPad_C3.wav",
+            "C4": "pad/ambient-pads/Squarz_Pad/90s_SquarzPad_C4.wav",
+            "C5": "pad/ambient-pads/Squarz_Pad/90s_SquarzPad_C5.wav",
+            "C6": "pad/ambient-pads/Squarz_Pad/90s_SquarzPad_C6.wav",
+            "D#1": "pad/ambient-pads/Squarz_Pad/90s_SquarzPad_D#1.wav",
+            "D#2": "pad/ambient-pads/Squarz_Pad/90s_SquarzPad_D#2.wav",
+            "D#3": "pad/ambient-pads/Squarz_Pad/90s_SquarzPad_D#3.wav",
+            "D#4": "pad/ambient-pads/Squarz_Pad/90s_SquarzPad_D#4.wav",
+            "D#5": "pad/ambient-pads/Squarz_Pad/90s_SquarzPad_D#5.wav",
+            "F#1": "pad/ambient-pads/Squarz_Pad/90s_SquarzPad_F#1.wav",
+            "F#2": "pad/ambient-pads/Squarz_Pad/90s_SquarzPad_F#2.wav",
+            "F#3": "pad/ambient-pads/Squarz_Pad/90s_SquarzPad_F#3.wav",
+            "F#4": "pad/ambient-pads/Squarz_Pad/90s_SquarzPad_F#4.wav",
+            "F#5": "pad/ambient-pads/Squarz_Pad/90s_SquarzPad_F#5.wav"
+          },
+          "effects": {
+            "reverb": {
+              "decay": 5,
+              "wet": 0.7
+            },
+            "delay": {
+              "time": "4n",
+              "feedback": 0.4,
+              "wet": 0.5
+            },
+            "stereoWidth": 1.0
+          }
+        }
+      }
+    }
+  }
+}

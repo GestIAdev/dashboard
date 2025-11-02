@@ -67,8 +67,14 @@ setInterval(() => {
   });
 }, 1000); // Check every second
 
-// 🎨 Servir archivos estáticos
-app.use(express.static('public'));
+// 🎨 Servir archivos estáticos (SIN CACHÉ durante desarrollo)
+app.use(express.static('public', {
+  etag: false,
+  maxAge: 0,
+  setHeaders: (res) => {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private')
+  }
+}));
 app.use(express.json());
 
 // ============================================

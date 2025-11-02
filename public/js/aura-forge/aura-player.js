@@ -1,7 +1,15 @@
 /**
  * 🎸 SELENE MIDI PLAYER - TONE.JS INTEGRATION
  * "CÓDIGO = ARTE = BELLEZA = FUNCIONALIDAD"
+ * 
+ * FASE 2.B: INTEGRACIÓN CON SAMPLELOADER + DRUMPATTERNENGINE
+ * - ✅ Samples reales (646 samples cyberpunk-ambient)
+ * - ✅ Drums estructurados (no caos)
+ * - ✅ FX chains profesionales
  */
+
+import { SampleLoader } from './SampleLoader.js'
+import { DrumPatternEngine } from './DrumPatternEngine.js'
 
 class MIDIPlayer {
     constructor() {
@@ -9,40 +17,76 @@ class MIDIPlayer {
         this.isPlaying = false
         this.isPaused = false
         this.currentMidi = null
-        this.synth = null
+        this.synthRack = {} // Rack de sintetizadores por track (LEGACY - deprecado)
+        this.instruments = {} // NUEVO: Instrumentos cargados desde SampleLoader
+        this.sampleLoader = new SampleLoader()
+        this.drumEngine = null // Se inicializará con sampler y tempo
         this.startTime = 0
         this.pauseTime = 0
         this.duration = 0
         this.animationFrame = null
-        this.currentPlaybackObject = null
+        this.currentPlaybackObjects = [] // Array de objetos de reproducción por track
+        this.currentPreset = 'cyberpunk-ambient' // Preset activo
     }
 
     /**
-     * Initialize Tone.js audio context
+     * Initialize Tone.js audio context and load sample library
+     * FASE 2.B: USA SAMPLELOADER EN LUGAR DE SYNTHS SINTÉTICOS
      */
-    async init() {
+    async init(presetName = 'cyberpunk-ambient') {
         if (this.isInitialized) return
 
         try {
             // Remove automatic Tone.start() call - will be called on user interaction
             console.log('🎹 Tone.js initialized (AudioContext deferred)')
 
-            // Create polyphonic synth for piano
-            this.synth = new Tone.PolySynth(Tone.Synth, {
-                oscillator: {
-                    type: 'triangle'
-                },
-                envelope: {
-                    attack: 0.005,
-                    decay: 0.1,
-                    sustain: 0.3,
-                    release: 1
-                }
-            }).toDestination()
+            // FASE 2.B: CARGAR PRESET CON SAMPLELOADER
+            console.log(`🔧 Loading preset: ${presetName}...`)
+            this.currentPreset = presetName
+            
+            await this.sampleLoader.loadPreset(presetName)
+            console.log(`✅ Preset "${presetName}" config loaded`)
+
+            // CARGAR INSTRUMENTOS POR TRACK
+            console.log('🎹 Loading instruments...')
+            
+            // Track 0: Melody - Electric Piano (85 samples cromáticos)
+            this.instruments.melody = await this.sampleLoader.getInstrument('melody', 'electric-piano/MED')
+            console.log('✅ Melody instrument loaded: electric-piano/MED (85 samples)')
+
+            // Track 2: Harmony - Warm Pad (21 samples)
+            this.instruments.harmony = await this.sampleLoader.getInstrument('harmony', 'pads/CeeVoice_Pad')
+            console.log('✅ Harmony instrument loaded: pads/CeeVoice_Pad (21 samples)')
+
+            // Track 4: Bass - Sub Bass (17 samples)
+            this.instruments.bass = await this.sampleLoader.getInstrument('bass', 'sub-bass/Blau_Bass')
+            console.log('✅ Bass instrument loaded: sub-bass/Blau_Bass (17 samples)')
+
+            // Track 5: Rhythm - Drums (16 samples General MIDI)
+            this.instruments.rhythm = await this.sampleLoader.getInstrument('rhythm', 'drums')
+            console.log('✅ Rhythm instrument loaded: drums (16 samples, General MIDI)')
+
+            // Track 6/7: Pad - Ambient Pad (21 samples)
+            this.instruments.pad = await this.sampleLoader.getInstrument('pad', 'ambient-pads/Ciao_Pad')
+            console.log('✅ Pad instrument loaded: ambient-pads/Ciao_Pad (21 samples)')
+
+            // Inicializar DrumPatternEngine (se usa en generateRhythmLayer del backend)
+            // Aquí solo lo creamos para que esté disponible si se necesita
+            this.drumEngine = new DrumPatternEngine(this.instruments.rhythm, 70)
+            console.log('✅ DrumPatternEngine initialized at 70 BPM')
+
+            console.log('🎛️ Sample library loaded! 635 samples ready.')
+            console.log('📊 Instruments:', {
+                melody: 'electric-piano/MED (85)',
+                harmony: 'pads/CeeVoice_Pad (21)',
+                bass: 'sub-bass/Blau_Bass (17)',
+                rhythm: 'drums (16)',
+                pad: 'ambient-pads/Ciao_Pad (21)'
+            })
 
             this.isInitialized = true
         } catch (error) {
-            console.error('❌ Failed to initialize Tone.js:', error)
+            console.error('❌ Failed to initialize player:', error)
             throw error
         }
     }
@@ -217,63 +261,130 @@ class MIDIPlayer {
         const now = Tone.now()
         this.startTime = now - offset
 
-        // Limpiar objeto de reproducción anterior si existe
-        if (this.currentPlaybackObject) {
-            try {
-                this.currentPlaybackObject.stop()
-                this.currentPlaybackObject.dispose()
-                console.log('✅ Previous playback object cleaned up')
-            } catch (e) {
-                console.error('Error cleaning up previous playback object:', e)
-            }
-            this.currentPlaybackObject = null
-        }
+        // Limpiar objetos de reproducción anteriores
+        this.cleanupPlaybackObjects()
 
         // Asegurar que Tone.Transport esté corriendo
         if (Tone.Transport.state !== 'started') {
+            // IMPLEMENTAR LOOKAHEAD PARA MITIGAR BUFFER UNDERRUNS
+            Tone.Transport.lookAhead = 0.5; // 500ms buffer para Web Audio API
+            console.log('🎯 LookAhead set to 500ms for buffer underrun prevention')
             Tone.Transport.start()
             console.log('🎼 Tone.Transport started')
         }
 
-        // Crear array de eventos para Tone.Part
-        const events = []
+        // Crear Tone.Part para cada track usando su sintetizador dedicado
+        this.currentPlaybackObjects = []
 
-        // Schedule all notes from all tracks
         this.currentMidi.tracks.forEach((track, trackIndex) => {
+            if (track.notes.length === 0) {
+                console.log(`⚠️ Track ${trackIndex} (${track.name || 'Unnamed'}) has no notes, skipping`)
+                return
+            }
+
+            // Crear eventos para este track
+            const events = []
+            const pitchRange = { min: 127, max: 0 } // Diagnóstico de rango
+            
             track.notes.forEach(note => {
-                // Only schedule notes that haven't been played yet (after offset)
                 if (note.time >= offset) {
                     const eventTime = note.time - offset
-                    
-                    // Añadir evento al array con pitch MIDI y tiempo absoluto
                     events.push({
                         time: Tone.Transport.seconds + eventTime,
                         midi: note.midi,
                         duration: note.duration,
                         velocity: note.velocity
                     })
+                    // Track pitch range
+                    pitchRange.min = Math.min(pitchRange.min, note.midi)
+                    pitchRange.max = Math.max(pitchRange.max, note.midi)
                 }
             })
+
+            if (events.length === 0) {
+                console.log(`⚠️ Track ${trackIndex} has no events after offset, skipping`)
+                return
+            }
+            
+            console.log(`🎵 Track ${trackIndex} pitch range: ${pitchRange.min}-${pitchRange.max} (${Tone.Frequency(pitchRange.min, 'midi').toNote()} to ${Tone.Frequency(pitchRange.max, 'midi').toNote()})`)
+
+            // Seleccionar sintetizador basado en el índice específico del track MIDI
+            // FASE 2.B: MAPEO DE INSTRUMENTOS (SAMPLES REALES)
+            let instrument
+            switch (trackIndex) {
+                case 0: // Melody track
+                    instrument = this.instruments.melody
+                    console.log(`🎵 Track ${trackIndex} (Melody) → electric-piano/MED (85 samples)`)
+                    break
+                case 2: // Harmony track
+                    instrument = this.instruments.harmony
+                    console.log(`🎵 Track ${trackIndex} (Harmony) → pads/CeeVoice Pad (21 samples)`)
+                    break
+                case 4: // Bass track
+                    instrument = this.instruments.bass
+                    console.log(`🎵 Track ${trackIndex} (Bass) → sub-bass/Blau Bass (17 samples)`)
+                    break
+                case 5: // Rhythm track
+                    instrument = this.instruments.rhythm
+                    console.log(`🎵 Track ${trackIndex} (Rhythm) → drums (16 samples, General MIDI)`)
+                    break
+                case 6: // Pad track
+                    instrument = this.instruments.pad
+                    console.log(`🎵 Track ${trackIndex} (Pad) → ambient-pads/Ciao Pad (21 samples)`)
+                    break
+                case 7: // Pad track (duplicate mapping)
+                    instrument = this.instruments.pad
+                    console.log(`🎵 Track ${trackIndex} (Pad) → ambient-pads/Ciao Pad (21 samples)`)
+                    break
+
+                default:
+                    console.log(`⚠️ Track ${trackIndex} has no assigned instrument, skipping`)
+                    return // Skip tracks that don't match our mapping
+            }
+
+            // Crear Tone.Part para este track
+            const part = new Tone.Part((time, event) => {
+                // FASE 2.B: TODOS LOS INSTRUMENTOS SON SAMPLERS AHORA
+                // Para drums (rhythm), usar MIDI note directamente (General MIDI mapping)
+                if (trackIndex === 5) {
+                    instrument.triggerAttackRelease(event.midi, event.duration, time, event.velocity)
+                } else {
+                    // Para instrumentos melódicos, convertir MIDI a nota (ej. "C4")
+                    const noteName = Tone.Frequency(event.midi, 'midi').toNote()
+                    instrument.triggerAttackRelease(noteName, event.duration, time, event.velocity)
+                }
+            }, events)
+
+            // Iniciar la reproducción inmediatamente
+            part.start()
+            this.currentPlaybackObjects.push(part)
+
+            console.log(`▶️ Track ${trackIndex} playback started: ${events.length} events`)
         })
-
-        // Crear Tone.Part para controlar la reproducción
-        this.currentPlaybackObject = new Tone.Part((time, event) => {
-            // Convertir MIDI a frecuencia en el callback
-            const frequency = Tone.Frequency(event.midi, 'midi').toFrequency()
-            this.synth.triggerAttackRelease(
-                frequency,
-                event.duration,
-                time,
-                event.velocity
-            )
-        }, events)
-
-        // Iniciar la reproducción inmediatamente
-        this.currentPlaybackObject.start()
 
         this.startProgressTracking()
 
-        console.log('▶️ Playback started with Tone.Part')
+        console.log('▶️ Multi-track playback started with synthesizer rack')
+    }
+
+    /**
+     * Cleanup all current playback objects
+     */
+    cleanupPlaybackObjects() {
+        if (this.currentPlaybackObjects && this.currentPlaybackObjects.length > 0) {
+            this.currentPlaybackObjects.forEach((part, index) => {
+                try {
+                    // FIX: Sanitizar tiempo para evitar valores negativos microscópicos
+                    const stopTime = Math.max(0, Tone.now())
+                    part.stop(stopTime)
+                    part.dispose()
+                    console.log(`✅ Playback object ${index} cleaned up`)
+                } catch (e) {
+                    console.error(`Error cleaning up playback object ${index}:`, e)
+                }
+            })
+            this.currentPlaybackObjects = []
+        }
     }
 
     /**
@@ -326,15 +437,8 @@ class MIDIPlayer {
         // DETENER el transporte
         Tone.Transport.stop()
 
-        // Detener el objeto de reproducción actual
-        if (this.currentPlaybackObject) {
-            try {
-                this.currentPlaybackObject.stop()
-                console.log('✅ Playback object paused')
-            } catch (e) {
-                console.error('Error pausing playback object:', e)
-            }
-        }
+        // Detener los objetos de reproducción actuales
+        this.cleanupPlaybackObjects()
 
         if (this.animationFrame) {
             cancelAnimationFrame(this.animationFrame)
@@ -357,22 +461,15 @@ class MIDIPlayer {
         // DETENER y resetear el transporte
         Tone.Transport.stop()
 
-        // Detener y destruir la secuencia/parte activa
-        if (this.currentPlaybackObject) {
-            try {
-                this.currentPlaybackObject.stop() // Detener la secuencia/parte
-                this.currentPlaybackObject.dispose() // Liberar recursos
-                console.log('✅ Playback object stopped and disposed')
-            } catch (e) {
-                console.error('Error stopping/disposing playback object:', e)
-            }
-            this.currentPlaybackObject = null // Limpiar referencia
-        }
+        // Detener y destruir los objetos de reproducción activos
+        this.cleanupPlaybackObjects()
 
         // Release all synth voices to stop any hanging notes
-        if (this.synth) {
-            this.synth.releaseAll()
-        }
+        Object.values(this.synthRack).forEach(synth => {
+            if (synth && typeof synth.releaseAll === 'function') {
+                synth.releaseAll()
+            }
+        })
 
         if (this.animationFrame) {
             cancelAnimationFrame(this.animationFrame)
@@ -389,7 +486,10 @@ class MIDIPlayer {
         const wasPlaying = this.isPlaying
 
         if (wasPlaying) {
-            this.stopPlayback()
+            // Solo limpiar objetos de reproducción, no resetear estado completo
+            this.cleanupPlaybackObjects()
+            Tone.Transport.cancel()
+            Tone.Transport.stop()
         }
 
         this.pauseTime = Math.min(Math.max(time, 0), this.duration)
@@ -428,3 +528,6 @@ class MIDIPlayer {
 
 // Export for use in other scripts
 window.MIDIPlayer = MIDIPlayer
+
+// ES6 module export
+export { MIDIPlayer }

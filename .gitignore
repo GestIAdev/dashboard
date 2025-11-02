@@ -14,3 +14,7 @@ build/
 backup/
 generated/
 docs/
+
+# Ignorar samples (archivos .wav grandes - ~700MB)
+public/samples/**/*.wav
+public/samples/**/*.WAV

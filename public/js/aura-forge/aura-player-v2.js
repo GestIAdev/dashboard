@@ -8,8 +8,9 @@
  * - ✅ FX chains profesionales
  */
 
-import { SampleLoader } from './SampleLoader.js'
-import { DrumPatternEngine } from './DrumPatternEngine.js'
+// 🏛️ ARQUITECTURA FIX (DIRECTIVA 30B): Import desde selene-core/ (source of truth)
+import { SampleLoader } from './SampleLoader-v3.js' // Frontend-specific (stays in aura-forge/)
+import { DrumPatternEngine } from '../selene-core/rhythm/DrumPatternEngine.js' // Backend sync'd module
 
 class MIDIPlayer {
     constructor() {
@@ -308,44 +309,60 @@ class MIDIPlayer {
             
             console.log(`🎵 Track ${trackIndex} pitch range: ${pitchRange.min}-${pitchRange.max} (${Tone.Frequency(pitchRange.min, 'midi').toNote()} to ${Tone.Frequency(pitchRange.max, 'midi').toNote()})`)
 
-            // Seleccionar sintetizador basado en el índice específico del track MIDI
-            // FASE 2.B: MAPEO DE INSTRUMENTOS (SAMPLES REALES)
-            // 🔧 BUG #24 FIX: Rhythm está en trackIndex=3 (Channel 9), no en 5
+            // 🔥 HOTFIX 26B: Mapear por trackIndex (posición), NO por track.channel
+            // @tonejs/midi re-asigna channels aleatoriamente al parsear MIDI
+            // Backend genera tracks secuenciales: 0,1,2,3,4 pero midi-writer-js crea gaps (0, vacío, 2, vacío, 4, 5, vacío, 7)
+            // Frontend debe mapear por POSICIÓN en el array parseado (trackIndex)
             let instrument
             switch (trackIndex) {
-                case 0: // Melody track
+                case 0: // Melody (Backend Track 0)
                     instrument = this.instruments.melody
-                    console.log(`🎵 Track ${trackIndex} (Melody) → electric-piano/MED (85 samples)`)
+                    console.log(`🎵 Track ${trackIndex} (Melody) → electric-piano/MED`)
                     break
-                case 1: // Harmony track (changed from case 2)
+                case 2: // Harmony (Backend Track 1, frontend index 2)
                     instrument = this.instruments.harmony
-                    console.log(`🎵 Track ${trackIndex} (Harmony) → pads/CeeVoice Pad (21 samples)`)
+                    console.log(`🎵 Track ${trackIndex} (Harmony) → pads/CeeVoice Pad`)
                     break
-                case 2: // Bass track (changed from case 4)
+                case 4: // Bass (Backend Track 2, frontend index 4)
                     instrument = this.instruments.bass
-                    console.log(`🎵 Track ${trackIndex} (Bass) → sub-bass/Blau Bass (17 samples)`)
+                    console.log(`🎵 Track ${trackIndex} (Bass) → sub-bass/Blau Bass`)
                     break
-                case 3: // Rhythm track (changed from case 5)
+                case 5: // Rhythm (Backend Track 3, frontend index 5)
                     instrument = this.instruments.rhythm
-                    console.log(`🎵 Track ${trackIndex} (Rhythm) → drums (16 samples, General MIDI)`)
+                    console.log(`🎵 Track ${trackIndex} (Rhythm) → drums (16 samples, GM)`)
                     break
-                case 4: // Pad track (changed from case 6)
+                case 7: // Pad (Backend Track 4, frontend index 7)
                     instrument = this.instruments.pad
-                    console.log(`🎵 Track ${trackIndex} (Pad) → ambient-pads/Ciao Pad (21 samples)`)
+                    console.log(`🎵 Track ${trackIndex} (Pad) → ambient-pads/Ciao Pad`)
                     break
 
                 default:
                     console.log(`⚠️ Track ${trackIndex} has no assigned instrument, skipping`)
-                    return // Skip tracks that don't match our mapping
+                    return // Skip tracks (1, 3, 6 están vacíos)
             }
 
             // Crear Tone.Part para este track
             const part = new Tone.Part((time, event) => {
-                // FASE 2.B: TODOS LOS INSTRUMENTOS SON SAMPLERS AHORA
-                // Para drums (rhythm), usar MIDI note directamente (General MIDI mapping)
-                // 🔧 BUG #24 FIX: Rhythm track es trackIndex=3, no 5
-                if (trackIndex === 3) {
-                    instrument.triggerAttackRelease(event.midi, event.duration, time, event.velocity)
+                // 🔥 BUG #24 FIX: Si es Track 5 (Rhythm), convertir MIDI a NOTE NAME
+                // Drums usan General MIDI mapping (36=kick, 38=snare, 42=hihat)
+                // Tone.Sampler espera NOTE NAMES ("C2", "D2") para mapear correctamente
+                // MIDI numbers o strings causan pitch-shifting y todos suenan como kick
+                if (trackIndex === 5) {
+                    // Convertir MIDI number a note name
+                    const noteName = Tone.Frequency(event.midi, 'midi').toNote()
+                    
+                    // 🔊 BOOST: Amplificar velocity de drums (snare/hihat muy bajos en samples)
+                    // Mantener kick (36) normal, amplificar otros drums x1.5
+                    let velocityBoost = event.velocity
+                    if (event.midi !== 36) {
+                        velocityBoost = Math.min(1.0, event.velocity * 1.5) // Max 1.0 (normalizado)
+                    }
+                    // Solo log primeros 5 drums para no spammear consola
+                    if (events.indexOf(event) < 5) {
+                        console.log(`🥁 Track 5 - Drum MIDI ${event.midi} → ${noteName} → velocity ${velocityBoost.toFixed(2)}`)
+                    }
+                    // CRITICAL: Pasar noteName (ej. "C2"), NO event.midi
+                    instrument.triggerAttackRelease(noteName, event.duration, time, velocityBoost)
                 } else {
                     // Para instrumentos melódicos, convertir MIDI a nota (ej. "C4")
                     const noteName = Tone.Frequency(event.midi, 'midi').toNote()

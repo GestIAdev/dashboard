@@ -181,13 +181,15 @@ export class SampleLoader {
         const urls = {}
         const baseUrl = `${this.basePath}/${this.activePreset}/drums/`
 
-        // 🔥 BUG #24 FIX FINAL: Convertir MIDI numbers de string a number
-        // Tone.Sampler espera keys como numbers (36, 38) NO strings ("36", "38")
-        // Cuando recibe strings, usa "nearest neighbor" y TODO suena como kick
+        // 🔥 BUG #24 FIX FINAL: Convertir MIDI numbers a NOTE NAMES
+        // Tone.Sampler NO funciona bien con MIDI numbers directos
+        // Espera note names tipo "C2", "D2", "E2" para mapear correctamente
         for (const [midiNote, filename] of Object.entries(config.samples)) {
             const midiNumber = parseInt(midiNote, 10)
-            urls[midiNumber] = filename
-            console.log(`🔧 [SampleLoader] Mapping MIDI ${midiNumber} → ${filename}`)
+            // Convertir MIDI number a note name usando Tone.Frequency
+            const noteName = Tone.Frequency(midiNumber, 'midi').toNote()
+            urls[noteName] = filename
+            console.log(`🔧 [SampleLoader] Mapping MIDI ${midiNumber} → ${noteName} → ${filename}`)
         }
 
         return new Promise((resolve, reject) => {
@@ -199,28 +201,32 @@ export class SampleLoader {
                 release: 0.3,  // 🔧 Release corto (300ms)
                 onload: () => {
                     console.log(`✅ [SampleLoader] Drum kit loaded: ${Object.keys(urls).length} samples`)
-                    console.log(`🔍 [SampleLoader] Available drum MIDI keys:`, Object.keys(urls))
+                    console.log(`🔍 [SampleLoader] Available drum NOTE keys:`, Object.keys(urls))
                     console.log(`🔊 [SampleLoader] Drum volume: +6dB boost applied`)
                     
                     // 🧪 TEST: Verificar que samples se cargaron correctamente
                     console.log(`🧪 [SampleLoader] Testing drum samples...`)
                     setTimeout(() => {
-                        console.log(`🥁 TEST: Trigger kick (36)`)
-                        sampler.triggerAttackRelease(36, 0.1, undefined, 1)
+                        const kick = Tone.Frequency(36, 'midi').toNote()
+                        console.log(`🥁 TEST: Trigger kick (36 = ${kick})`)
+                        sampler.triggerAttackRelease(kick, 0.1, undefined, 1)
                         
                         setTimeout(() => {
-                            console.log(`🥁 TEST: Trigger snare (38)`)
-                            sampler.triggerAttackRelease(38, 0.1, undefined, 1)
+                            const snare = Tone.Frequency(38, 'midi').toNote()
+                            console.log(`🥁 TEST: Trigger snare (38 = ${snare})`)
+                            sampler.triggerAttackRelease(snare, 0.1, undefined, 1)
                         }, 500)
                         
                         setTimeout(() => {
-                            console.log(`🥁 TEST: Trigger hihat-close (42)`)
-                            sampler.triggerAttackRelease(42, 0.1, undefined, 1)
+                            const hihatClose = Tone.Frequency(42, 'midi').toNote()
+                            console.log(`🥁 TEST: Trigger hihat-close (42 = ${hihatClose})`)
+                            sampler.triggerAttackRelease(hihatClose, 0.1, undefined, 1)
                         }, 1000)
                         
                         setTimeout(() => {
-                            console.log(`🥁 TEST: Trigger hihat-open (46)`)
-                            sampler.triggerAttackRelease(46, 0.1, undefined, 1)
+                            const hihatOpen = Tone.Frequency(46, 'midi').toNote()
+                            console.log(`🥁 TEST: Trigger hihat-open (46 = ${hihatOpen})`)
+                            sampler.triggerAttackRelease(hihatOpen, 0.1, undefined, 1)
                         }, 1500)
                     }, 1000) // Esperar 1s después de cargar
                     

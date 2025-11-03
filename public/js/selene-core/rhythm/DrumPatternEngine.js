@@ -27,8 +27,8 @@ export class DrumPatternEngine {
     patterns;
     tempo;
     prng;
-    swingAmount = 0.08; // 8% swing (8ms @ 60bpm)
-    humanizationFactor = 0.10; // 10% variación en velocity
+    swingAmount = 0.12; // 🎭 SCHERZO: 12% swing (más shuffle feel en cyberpunk)
+    humanizationFactor = 0.06; // 🎭 SCHERZO: 6% variación (menos saltos bruscos)
     constructor(tempo, seed = 12345) {
         this.tempo = tempo;
         this.prng = new SeededRandom(seed);
@@ -237,30 +237,34 @@ export class DrumPatternEngine {
                 ]
             },
             // ═══════════════════════════════════════════════════════════
-            // BUILDUP PATTERN (Glitchy/Espaciado - NO METRALLETA)
+            // BUILDUP PATTERN (Glitchy/Tenso/Crescendo - NO BOMBARDEO)
+            // 🎭 SCHERZO SONORO: Builds atmosférico con crescendo gradual
             // ═══════════════════════════════════════════════════════════
             buildup: {
                 bars: 4,
                 notes: [
-                    // Bar 1: Kick + Hi-Hat espaciado
-                    { beat: 1, midi: 36, velocity: 105 }, // Kick
-                    { beat: 1, midi: 42, velocity: 75 }, // HH closed
-                    { beat: 2.5, midi: 38, velocity: 90 }, // Snare
-                    { beat: 3.5, midi: 36, velocity: 100 }, // Kick
-                    { beat: 4, midi: 42, velocity: 70 }, // HH closed
-                    // Bar 2: Añadir crash y clap (glitch)
-                    { beat: 5, midi: 49, velocity: 95 }, // Crash (glitch)
-                    { beat: 6.5, midi: 39, velocity: 85 }, // Clap
-                    { beat: 7.5, midi: 36, velocity: 105 }, // Kick
-                    // Bar 3: Intensificar (roll corto en snare)
-                    { beat: 9, midi: 36, velocity: 110 }, // Kick
-                    { beat: 10.5, midi: 38, velocity: 95 }, // Snare
-                    { beat: 11, midi: 38, velocity: 75 }, // Snare (ghost roll)
-                    { beat: 11.25, midi: 38, velocity: 65 }, // Snare (ghost roll)
-                    { beat: 11.5, midi: 49, velocity: 100 }, // Crash
-                    // Bar 4: Final (preparar drop)
-                    { beat: 13, midi: 36, velocity: 115 }, // Kick final
-                    { beat: 14.5, midi: 38, velocity: 100 } // Snare final
+                    // Bar 1: Minimal (HH + Kick suaves - tensión inicial)
+                    { beat: 1, midi: 36, velocity: 80 }, // Kick (suave)
+                    { beat: 1, midi: 42, velocity: 68 }, // HH closed
+                    { beat: 2.5, midi: 38, velocity: 75 }, // Snare (ghost)
+                    { beat: 3.5, midi: 42, velocity: 72 }, // HH closed
+                    { beat: 4, midi: 42, velocity: 65 }, // HH closed (ghost)
+                    // Bar 2: Añadir glitches (shaker + clap ligeros)
+                    { beat: 5, midi: 70, velocity: 70 }, // Shaker (glitch)
+                    { beat: 6.5, midi: 39, velocity: 72 }, // Clap (suave)
+                    { beat: 7.5, midi: 36, velocity: 85 }, // Kick (subiendo)
+                    { beat: 8, midi: 42, velocity: 75 }, // HH closed
+                    // Bar 3: Intensificar (más hihats, snare roll)
+                    { beat: 9, midi: 36, velocity: 92 }, // Kick (creciendo)
+                    { beat: 9, midi: 42, velocity: 80 }, // HH closed
+                    { beat: 10.5, midi: 38, velocity: 80 }, // Snare
+                    { beat: 11, midi: 38, velocity: 68 }, // Snare (ghost roll)
+                    { beat: 11.25, midi: 38, velocity: 60 }, // Snare (ghost roll)
+                    { beat: 11.5, midi: 42, velocity: 85 }, // HH closed (acelerando)
+                    // Bar 4: Clímax moderado (preparar drop, NO explotar)
+                    { beat: 13, midi: 36, velocity: 98 }, // Kick (forte pero no máximo)
+                    { beat: 13, midi: 49, velocity: 90 }, // Crash (moderado)
+                    { beat: 14.5, midi: 38, velocity: 95 } // Snare final (transición)
                 ]
             },
             // ═══════════════════════════════════════════════════════════
@@ -281,6 +285,7 @@ export class DrumPatternEngine {
     }
     /**
      * 🎵 Generar notas de drums con GROOVE + HUMANIZACIÓN
+     * ✅ BUG #24 FIX (SCHERZO SONORO): Maneja secciones de 5, 6, 7 compases inteligentemente
      */
     generateForSection(section, baseVelocity = 60) {
         const patternName = this.selectPattern(section.type);
@@ -292,47 +297,45 @@ export class DrumPatternEngine {
         const notes = [];
         const beatDuration = (60 / this.tempo); // Segundos por beat (4/4)
         const barDuration = beatDuration * 4; // 4 beats por bar
-        // Calcular cuántas repeticiones del patrón necesitamos
-        const patternDuration = barDuration * pattern.bars;
-        const numRepeats = Math.ceil(section.duration / patternDuration);
-        // Generar notas para cada repetición
-        for (let repeat = 0; repeat < numRepeats; repeat++) {
-            const repeatOffset = repeat * patternDuration;
-            pattern.notes.forEach(note => {
-                let noteTime = section.startTime + repeatOffset + ((note.beat - 1) * beatDuration);
-                // 🎭 SWING: Desplazar off-beats (1.5, 2.5, 3.5, 4.5) ligeramente
-                const beatPosition = note.beat % 1;
-                if (beatPosition === 0.5) {
-                    // Off-beat: añadir swing (8-12ms delay)
-                    const swingDelay = this.swingAmount * beatDuration;
-                    noteTime += swingDelay;
-                }
-                // No agregar notas que excedan la duración de la sección
-                if (noteTime < section.startTime + section.duration) {
-                    // Aplicar fade en outro
-                    let velocity = note.velocity;
-                    if (patternName === 'outro') {
-                        const fadeProgress = (noteTime - section.startTime) / section.duration;
-                        velocity = note.velocity * (1 - fadeProgress * 0.6); // Fade 60%
-                    }
-                    // 🎨 HUMANIZACIÓN: Variación aleatoria ±10% en velocity
-                    // (pero determinista via SeededRandom)
-                    const humanizationVariation = (this.prng.next() - 0.5) * 2 * this.humanizationFactor;
-                    velocity = velocity * (1 + humanizationVariation);
-                    // ✅ VELOCITIES PROFESIONALES: Ya vienen correctas del patrón (60-120 MIDI)
-                    const scaledVelocity = Math.floor(velocity);
-                    const finalVelocity = Math.max(35, Math.min(127, scaledVelocity));
-                    // 🔥 RHYTHM LOGGER: Partitura exacta con Swing + Humanización
-                    console.log(`🥁 [RHYTHM DIVINE] Section: ${section.type}, Pattern: ${patternName}, MIDI: ${note.midi}, Beat: ${note.beat.toFixed(2)}, Time(s): ${noteTime.toFixed(3)}, Velocity: ${finalVelocity}`);
-                    notes.push({
-                        pitch: note.midi,
-                        velocity: finalVelocity,
-                        startTime: noteTime,
-                        duration: 0.1, // Percusión = corta
-                        channel: 9 // Channel 9 = drums
-                    });
-                }
-            });
+        // ✅ BUG #24 FIX: Adaptar patrones a secciones de duración variable
+        const sectionBars = section.bars || Math.round(section.duration / barDuration);
+        const patternBars = pattern.bars;
+        // Calcular cuántas repeticiones completas del patrón caben
+        const fullRepeats = Math.floor(sectionBars / patternBars);
+        const remainingBars = sectionBars % patternBars;
+        console.log(`🥁 [RHYTHM DIVINE] Section "${section.type}" has ${sectionBars} bars, pattern "${patternName}" has ${patternBars} bars. Full repeats: ${fullRepeats}, remaining: ${remainingBars}`);
+        // Generar repeticiones completas del patrón
+        for (let repeat = 0; repeat < fullRepeats; repeat++) {
+            const repeatOffset = repeat * (barDuration * patternBars);
+            this.generatePatternNotes(pattern, patternName, section, repeatOffset, beatDuration, notes);
+        }
+        // ✅ BUG #24 FIX: Si hay compases sobrantes (5, 6, 7 bars), rellenar inteligentemente
+        if (remainingBars > 0) {
+            const remainingOffset = fullRepeats * (barDuration * patternBars);
+            const remainingDuration = remainingBars * barDuration;
+            // Estrategia: Usar patrón adaptado (truncado) + fill opcional
+            // Si quedan 1-2 compases: usar solo inicio del patrón
+            // Si quedan 3+ compases: usar patrón completo truncado + fill
+            if (remainingBars <= 2) {
+                // Truncar patrón a los primeros N compases
+                const truncatedPattern = {
+                    ...pattern,
+                    bars: remainingBars,
+                    notes: pattern.notes.filter(note => note.beat <= (remainingBars * 4) + 0.01)
+                };
+                console.log(`🥁 [RHYTHM DIVINE] Truncating pattern to ${remainingBars} bars for remaining section`);
+                this.generatePatternNotes(truncatedPattern, `${patternName}_trunc`, section, remainingOffset, beatDuration, notes);
+            }
+            else {
+                // Usar patrón completo truncado sin fill (para evitar "caos")
+                const truncatedPattern = {
+                    ...pattern,
+                    bars: remainingBars,
+                    notes: pattern.notes.filter(note => note.beat <= (remainingBars * 4) + 0.01)
+                };
+                console.log(`🥁 [RHYTHM DIVINE] Using full pattern truncated to ${remainingBars} bars`);
+                this.generatePatternNotes(truncatedPattern, `${patternName}_adapted`, section, remainingOffset, beatDuration, notes);
+            }
         }
         // Agregar fill al final si corresponde
         if (this.shouldAddFill(section)) {
@@ -340,6 +343,47 @@ export class DrumPatternEngine {
             notes.push(...fillNotes);
         }
         return notes;
+    }
+    /**
+     * 🔧 HELPER: Generar notas de un patrón con offset
+     * Extraído para reutilización en BUG #24 FIX
+     */
+    generatePatternNotes(pattern, patternName, section, repeatOffset, beatDuration, notes) {
+        pattern.notes.forEach(note => {
+            let noteTime = section.startTime + repeatOffset + ((note.beat - 1) * beatDuration);
+            // 🎭 SWING: Desplazar off-beats (1.5, 2.5, 3.5, 4.5) ligeramente
+            const beatPosition = note.beat % 1;
+            if (beatPosition === 0.5) {
+                // Off-beat: añadir swing (8-12ms delay)
+                const swingDelay = this.swingAmount * beatDuration;
+                noteTime += swingDelay;
+            }
+            // No agregar notas que excedan la duración de la sección
+            if (noteTime < section.startTime + section.duration) {
+                // Aplicar fade en outro
+                let velocity = note.velocity;
+                if (patternName.startsWith('outro')) {
+                    const fadeProgress = (noteTime - section.startTime) / section.duration;
+                    velocity = note.velocity * (1 - fadeProgress * 0.6); // Fade 60%
+                }
+                // 🎨 HUMANIZACIÓN: Variación aleatoria ±10% en velocity
+                // (pero determinista via SeededRandom)
+                const humanizationVariation = (this.prng.next() - 0.5) * 2 * this.humanizationFactor;
+                velocity = velocity * (1 + humanizationVariation);
+                // ✅ VELOCITIES PROFESIONALES: Ya vienen correctas del patrón (60-120 MIDI)
+                const scaledVelocity = Math.floor(velocity);
+                const finalVelocity = Math.max(35, Math.min(127, scaledVelocity));
+                // 🔥 RHYTHM LOGGER: Partitura exacta con Swing + Humanización
+                console.log(`🥁 [RHYTHM DIVINE] Section: ${section.type}, Pattern: ${patternName}, MIDI: ${note.midi}, Beat: ${note.beat.toFixed(2)}, Time(s): ${noteTime.toFixed(3)}, Velocity: ${finalVelocity}`);
+                notes.push({
+                    pitch: note.midi,
+                    velocity: finalVelocity,
+                    startTime: noteTime,
+                    duration: 0.1, // Percusión = corta
+                    channel: 9 // Channel 9 = drums
+                });
+            }
+        });
     }
     /**
      * 🎯 Seleccionar patrón con variaciones A/B/C (determinista)
@@ -397,12 +441,12 @@ export class DrumPatternEngine {
         const fillType = this.prng.choice(['hihat_roll', 'snare_build']);
         const notes = [];
         if (fillType === 'hihat_roll') {
-            // Hi-hat roll: 6-7 notas rápidas (16avos) + crash opcional
-            const rollLength = this.prng.choice([6, 7]);
+            // 🎭 SCHERZO SONORO: Hi-hat roll glitchy (4 notas espaciadas, no metralleta)
+            const rollLength = 4; // Reducido de 6-7 a 4 (menos densidad)
             for (let i = 0; i < rollLength; i++) {
                 // 🔧 BUG #24 FIX: Velocities fijas (65-85), no escalar
                 const finalVelocity = 65 + Math.floor((i / rollLength) * 20); // 65 → 85 gradual
-                const noteTime = fillStart + (i * beatDuration * 0.125);
+                const noteTime = fillStart + (i * beatDuration * 0.1875); // 32avos en vez de 16avos (más espaciado)
                 // 🔥 RHYTHM LOGGER: Fill hi-hat roll
                 console.log(`🥁 [RHYTHM DIVINE] Section: ${section.type}, Pattern: FILL_HIHAT, MIDI: 42, Beat: ${(noteTime / beatDuration).toFixed(2)}, Time(s): ${noteTime.toFixed(3)}, Velocity: ${finalVelocity}`);
                 notes.push({
@@ -415,7 +459,7 @@ export class DrumPatternEngine {
             }
             // Crash final (50% chance)
             if (this.prng.next() > 0.5) {
-                const crashTime = fillStart + (rollLength * beatDuration * 0.125);
+                const crashTime = fillStart + (rollLength * beatDuration * 0.1875); // Ajustado timing
                 const crashVelocity = 110; // 🔧 BUG #24 FIX: Fijo, no escalar
                 console.log(`🥁 [RHYTHM DIVINE] Section: ${section.type}, Pattern: FILL_CRASH, MIDI: 49, Beat: ${(crashTime / beatDuration).toFixed(2)}, Time(s): ${crashTime.toFixed(3)}, Velocity: ${crashVelocity}`);
                 notes.push({
@@ -428,29 +472,29 @@ export class DrumPatternEngine {
             }
         }
         else {
-            // Snare build: 4 ghost snares + acento final
-            for (let i = 0; i < 4; i++) {
-                // 🔧 BUG #24 FIX: Velocities fijas (45-69), no escalar
-                const finalVelocity = 45 + (i * 8); // 45 → 53 → 61 → 69 (ghost → audible)
-                const noteTime = fillStart + (i * beatDuration * 0.25);
-                console.log(`🥁 [RHYTHM DIVINE] Section: ${section.type}, Pattern: FILL_SNARE_BUILD, MIDI: 38, Beat: ${(noteTime / beatDuration).toFixed(2)}, Time(s): ${noteTime.toFixed(3)}, Velocity: ${finalVelocity}`);
+            // 🎭 DIRECTIVA 32A: Snare accent minimalista (2 ghost + 1 acento, NO metralleta)
+            // Solo 2 ghost snares muy suaves + acento final
+            for (let i = 0; i < 2; i++) {
+                const finalVelocity = 50 + (i * 10); // 50 → 60 (ghost suaves)
+                const noteTime = fillStart + (i * beatDuration * 0.375); // Más espaciado (3/8 beats)
+                console.log(`🥁 [RHYTHM DIVINE] Section: ${section.type}, Pattern: FILL_SNARE_GHOST, MIDI: 38, Beat: ${(noteTime / beatDuration).toFixed(2)}, Time(s): ${noteTime.toFixed(3)}, Velocity: ${finalVelocity}`);
                 notes.push({
                     pitch: 38, // Snare
                     velocity: finalVelocity,
                     startTime: noteTime,
-                    duration: 0.15,
+                    duration: 0.12,
                     channel: 9
                 });
             }
-            // Acento final
-            const accentTime = fillStart + (4 * beatDuration * 0.25);
-            const accentVelocity = 105; // 🔧 BUG #24 FIX: Fijo, no escalar
+            // Acento final (más suave que antes)
+            const accentTime = fillStart + (2 * beatDuration * 0.375);
+            const accentVelocity = 95; // 🎭 SCHERZO: Reducido de 105 a 95 (menos agresivo)
             console.log(`🥁 [RHYTHM DIVINE] Section: ${section.type}, Pattern: FILL_SNARE_ACCENT, MIDI: 38, Beat: ${(accentTime / beatDuration).toFixed(2)}, Time(s): ${accentTime.toFixed(3)}, Velocity: ${accentVelocity}`);
             notes.push({
                 pitch: 38, // Snare
                 velocity: accentVelocity,
                 startTime: accentTime,
-                duration: 0.2,
+                duration: 0.18,
                 channel: 9
             });
         }

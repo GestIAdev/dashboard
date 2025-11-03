@@ -3,7 +3,8 @@
  * "CÓDIGO = ARTE = BELLEZA = FUNCIONALIDAD"
  */
 
-import { MIDIPlayer } from './aura-player.js'
+// 🔧 BUG #24 FIX: Import from aura-player-v2.js to force cache-bust
+import { MIDIPlayer } from './aura-player-v2.js'
 
 // Global state
 const state = {

@@ -362,14 +362,14 @@ export const CYBERPUNK_PRESET = {
         chill: {
             minLayers: 2,
             maxLayers: 3,
-            pools: ['strings', 'plucks', 'vocals'], // Atmosférico: strings base + plucks o vocals
-            weights: [0.4, 0.3, 0.3] // Preferencia strings (40%), resto balanceado
+            pools: ['strings', 'leads', 'plucks', 'vocals'], // Atmosférico: strings + leads (más interesantes)
+            weights: [0.45, 0.25, 0.15, 0.15] // Strings 45%, leads 25%, plucks/vocals 15% (menos aburrido)
         },
         dubchill: {
             minLayers: 3,
             maxLayers: 4,
-            pools: ['strings', 'plucks', 'vocals', 'leads'], // Más denso: agregar leads
-            weights: [0.25, 0.25, 0.25, 0.25] // Balanceado (todos 25%)
+            pools: ['strings', 'leads', 'plucks', 'vocals'], // Más denso: todos los pools
+            weights: [0.30, 0.30, 0.20, 0.20] // Strings + leads dominantes (60% combinado)
         }
     }
 };

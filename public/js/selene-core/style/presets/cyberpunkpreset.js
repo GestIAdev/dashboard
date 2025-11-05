@@ -184,7 +184,11 @@ export const CYBERPUNK_PRESET = {
         ],
         // ==================== ENERGÍA DINÁMICA ====================
         // 🔊 BASS CHILL (Intensity < 0.7): Sub-Bass oneshots (33 samples = 24 + 9 multisampled)
+        // 🐛 BUG FIX #3 (FASE 6.0b): Priorizar LOOPS al inicio (intensity < 0.3 → loops)
         bass_chill: [
+            // 🔁 2 Sub-Bass LOOPS (modulateloop - FASE 6.0 FRENTE #B)
+            { key: 'Bass/sub-bass/loops/modulateloop-1', type: 'multisample' }, // Index 0 (intensity=0)
+            { key: 'Bass/sub-bass/loops/modulateloop-2', type: 'multisample' }, // Index 1 (intensity=0.04)
             // 24 Sub-Bass oneshots (oneshot2)
             { key: 'Bass/sub-bass/oneshot/oneshot2/subs-1', type: 'oneshot' },
             { key: 'Bass/sub-bass/oneshot/oneshot2/subs-2', type: 'oneshot' },
@@ -233,33 +237,33 @@ export const CYBERPUNK_PRESET = {
                 key: 'chill-kit-1',
                 type: 'drumkit',
                 samples: {
-                    36: 'rythm/soft-kick1', // Kick (C2)
-                    38: 'rythm/snare1', // Snare (D2)
-                    42: 'rythm/closehat1', // Hi-hat closed (F#2)
-                    46: 'rythm/shortopenhat', // Hi-hat open (A#2)
-                    49: 'rythm/closehat2' // Crash cymbal = closed hat variant (C#3)
+                    36: 'rhythm/soft-kick1', // Kick (C2)
+                    38: 'rhythm/snare1', // Snare (D2)
+                    42: 'rhythm/closehat1', // Hi-hat closed (F#2)
+                    46: 'rhythm/shortopenhat', // Hi-hat open (A#2)
+                    49: 'rhythm/closehat2' // Crash cymbal = closed hat variant (C#3)
                 }
             },
             {
                 key: 'ambient-kit-1',
                 type: 'drumkit',
                 samples: {
-                    36: 'rythm/ambient-kit-1/sub-kick1', // Kick (C2) - Sub-bass pesado
-                    35: 'rythm/ambient-kit-1/sub-kick2', // Kick alt (B1)
-                    33: 'rythm/ambient-kit-1/sub-kick3', // Kick variant (A1)
-                    41: 'rythm/ambient-kit-1/sub-kick4', // Low tom = Kick 4 (F2)
-                    38: 'rythm/ambient-kit-1/snare1', // Snare (D2)
-                    40: 'rythm/ambient-kit-1/snare2', // Snare alt (E2)
-                    37: 'rythm/ambient-kit-1/snare3', // Rim shot = Snare 3 (C#2)
-                    39: 'rythm/ambient-kit-1/snare4', // Clap = Snare 4 (D#2)
-                    42: 'rythm/ambient-kit-1/closehat1', // Hi-hat closed (F#2)
-                    44: 'rythm/ambient-kit-1/closehat2', // Hi-hat pedal = Closehat 2 (G#2)
-                    49: 'rythm/ambient-kit-1/crash-long1', // Crash 1 (C#3) - REVERB LARGO (Tron!)
-                    52: 'rythm/ambient-kit-1/crash-long2', // Crash 2 (E3) - REVERB LARGO
-                    55: 'rythm/ambient-kit-1/crash-long3', // Splash = Crash 3 (G3) - REVERB LARGO
-                    51: 'rythm/ambient-kit-1/ride-atmos1', // Ride 1 (D#3) - Atmosférico
-                    59: 'rythm/ambient-kit-1/ride-atmos2', // Ride 2 (B3) - Atmosférico
-                    43: 'rythm/ambient-kit-1/snare-reverb' // Tom low = Snare reverb (G2)
+                    36: 'rhythm/ambient-kit-1/sub-kick1', // Kick (C2) - Sub-bass pesado
+                    35: 'rhythm/ambient-kit-1/sub-kick2', // Kick alt (B1)
+                    33: 'rhythm/ambient-kit-1/sub-kick3', // Kick variant (A1)
+                    41: 'rhythm/ambient-kit-1/sub-kick4', // Low tom = Kick 4 (F2)
+                    38: 'rhythm/ambient-kit-1/snare1', // Snare (D2)
+                    40: 'rhythm/ambient-kit-1/snare2', // Snare alt (E2)
+                    37: 'rhythm/ambient-kit-1/snare3', // Rim shot = Snare 3 (C#2)
+                    39: 'rhythm/ambient-kit-1/snare4', // Clap = Snare 4 (D#2)
+                    42: 'rhythm/ambient-kit-1/closehat1', // Hi-hat closed (F#2)
+                    44: 'rhythm/ambient-kit-1/closehat2', // Hi-hat pedal = Closehat 2 (G#2)
+                    49: 'rhythm/ambient-kit-1/crash-long1', // Crash 1 (C#3) - REVERB LARGO (Tron!)
+                    52: 'rhythm/ambient-kit-1/crash-long2', // Crash 2 (E3) - REVERB LARGO
+                    55: 'rhythm/ambient-kit-1/crash-long3', // Splash = Crash 3 (G3) - REVERB LARGO
+                    51: 'rhythm/ambient-kit-1/ride-atmos1', // Ride 1 (D#3) - Atmosférico
+                    59: 'rhythm/ambient-kit-1/ride-atmos2', // Ride 2 (B3) - Atmosférico
+                    43: 'rhythm/ambient-kit-1/snare-reverb' // Tom low = Snare reverb (G2)
                 }
             }
         ],
@@ -270,16 +274,16 @@ export const CYBERPUNK_PRESET = {
                 key: 'dubchill-kit-1',
                 type: 'drumkit',
                 samples: {
-                    36: 'rythm/hard-kick1', // Kick (C2)
-                    38: 'rythm/snare-reverb', // Snare (D2)
-                    42: 'rythm/glitch1', // Hi-hat closed = Glitch (F#2)
-                    46: 'rythm/longopenhat', // Hi-hat open (A#2)
-                    49: 'rythm/glitch5', // Crash cymbal = Glitch explosivo (C#3)
-                    37: 'rythm/snare3', // Rim shot = Snare agresivo (C#2)
-                    39: 'rythm/glitch2', // Clap = Glitch (D#2)
-                    50: 'rythm/glitch3', // Tom high = Glitch (D3)
-                    47: 'rythm/glitch4', // Tom mid = Glitch (B2)
-                    51: 'rythm/medopenhat' // Ride = Hat medio (D#3)
+                    36: 'rhythm/hard-kick1', // Kick (C2)
+                    38: 'rhythm/snare-reverb', // Snare (D2)
+                    42: 'rhythm/glitch1', // Hi-hat closed = Glitch (F#2)
+                    46: 'rhythm/longopenhat', // Hi-hat open (A#2)
+                    49: 'rhythm/glitch5', // Crash cymbal = Glitch explosivo (C#3)
+                    37: 'rhythm/snare3', // Rim shot = Snare agresivo (C#2)
+                    39: 'rhythm/glitch2', // Clap = Glitch (D#2)
+                    50: 'rhythm/glitch3', // Tom high = Glitch (D3)
+                    47: 'rhythm/glitch4', // Tom mid = Glitch (B2)
+                    51: 'rhythm/medopenhat' // Ride = Hat medio (D#3)
                 }
             }
         ],

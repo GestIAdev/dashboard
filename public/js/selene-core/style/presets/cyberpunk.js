@@ -133,34 +133,34 @@ export const CYBERPUNK_INSTRUMENTS = {
     // RHYTHM CHILL: Soft kicks, hats delicados
     rhythm_chill: [
         { key: 'drumkit-chill-1', type: 'drumkit', samples: {
-                36: 'rythm/soft-kick1.wav',
-                38: 'rythm/snare-reverb.wav',
-                42: 'rythm/closed-hat.wav',
-                46: 'rythm/open-hat.wav'
+                36: 'rhythm/soft-kick1.wav',
+                38: 'rhythm/snare-reverb.wav',
+                42: 'rhythm/closed-hat.wav',
+                46: 'rhythm/open-hat.wav'
             } },
         { key: 'drumkit-chill-2', type: 'drumkit', samples: {
-                36: 'rythm/soft-kick2.wav',
-                38: 'rythm/snare-reverb.wav',
-                42: 'rythm/closed-hat.wav',
-                46: 'rythm/open-hat.wav',
-                49: 'rythm/crash.wav'
+                36: 'rhythm/soft-kick2.wav',
+                38: 'rhythm/snare-reverb.wav',
+                42: 'rhythm/closed-hat.wav',
+                46: 'rhythm/open-hat.wav',
+                49: 'rhythm/crash.wav'
             } }
     ],
     // RHYTHM DUBCHILL: Hard kicks, glitches agresivos
     rhythm_dubchill: [
         { key: 'drumkit-dubchill-1', type: 'drumkit', samples: {
-                36: 'rythm/hard-kick1.wav',
-                38: 'rythm/snare-agressive.wav',
-                42: 'rythm/closed-hat.wav',
-                46: 'rythm/open-hat.wav',
-                49: 'rythm/crash.wav'
+                36: 'rhythm/hard-kick1.wav',
+                38: 'rhythm/snare-agressive.wav',
+                42: 'rhythm/closed-hat.wav',
+                46: 'rhythm/open-hat.wav',
+                49: 'rhythm/crash.wav'
             } },
         { key: 'drumkit-dubchill-2', type: 'drumkit', samples: {
-                36: 'rythm/hard-kick2.wav',
-                38: 'rythm/snare-glitch.wav',
-                42: 'rythm/closed-hat.wav',
-                46: 'rythm/open-hat.wav',
-                49: 'rythm/crash.wav'
+                36: 'rhythm/hard-kick2.wav',
+                38: 'rhythm/snare-glitch.wav',
+                42: 'rhythm/closed-hat.wav',
+                46: 'rhythm/open-hat.wav',
+                49: 'rhythm/crash.wav'
             } }
     ],
     // LEGACY: Pad independiente (mantener para retrocompatibilidad)

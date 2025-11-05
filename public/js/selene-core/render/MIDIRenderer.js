@@ -66,8 +66,11 @@ export class MIDIRenderer {
         console.log(`[MIDI RENDERER DEBUG] Processing ${tracks.size} layers for Style ${style.id}`);
         for (const [layerName, notes] of Array.from(tracks.entries())) {
             let targetChannel;
-            // LÓGICA DE CANAL CORREGIDA:
-            if (layerName.toLowerCase() === 'rhythm') {
+            // 🔧 FASE 3.10 (Contrato Definitivo): layerName ya es simple lowercase (sin ::)
+            // layerName = "melody", "harmony", "bass", "pad", "rhythm"
+            const trackType = layerName.toLowerCase();
+            // LÓGICA DE CANAL:
+            if (trackType === 'rhythm') {
                 targetChannel = 9; // Fuerza canal 9 para ritmo
             }
             else {
@@ -83,11 +86,12 @@ export class MIDIRenderer {
                 }
             }
             console.log(`[MIDI RENDERER DEBUG] Layer: ${layerName}, Notes: ${notes.length}, Target Channel: ${targetChannel}`); // Log actualizado
-            const program = this.getProgramForLayer(layerName, style.id);
+            const program = this.getProgramForLayer(trackType, style.id);
             // Asegúrate de pasar el 'targetChannel' correcto a createTrack
             const midiTrack = this.createTrack(notes, layerName, targetChannel, program, tempo);
             midiTracks.push(midiTrack);
         }
+        console.log(`🔧 [MIDIRenderer] Total tracks to write: ${midiTracks.length} (1 tempo + ${tracks.size} music)`);
         const writer = new MidiWriter.Writer(midiTracks);
         const midiData = writer.buildFile();
         // Convert to Buffer properly - buildFile() returns Uint8Array
@@ -119,13 +123,17 @@ export class MIDIRenderer {
     createTrack(notes, layerName, channel, program, tempo = 120) {
         const track = new MidiWriter.Track();
         console.log(`🔍 [MIDIRenderer] createTrack for "${layerName}" - Tempo: ${tempo}, Channel: ${channel}, Notes: ${notes.length}`);
-        // Set track name (TrackNameEvent requiere objeto {text})
-        track.addEvent(new MidiWriter.TextEvent({ text: layerName }));
-        // AÑADIR PROGRAM CHANGE AL PRINCIPIO (TICK 0)
+        // 🔧 FASE 3.12: DIAGNÓSTICO - Comentar TrackNameEvent para ver si causa tracks fantasma
+        // HIPÓTESIS: @tonejs/midi está parseando el TrackNameEvent como un track separado
+        // Si eliminarlo soluciona el problema, usaremos otro método para nombrar tracks
+        // track.addEvent(new MidiWriter.TrackNameEvent({ text: layerName }))
+        console.log(`📝 [MIDIRenderer] Track name "${layerName}" SKIPPED (testing phantom tracks bug)`);
+        // Program Change al principio (tick 0 implícito para channels melódicos)
         if (channel !== 9) {
-            console.log(`[MIDI RENDERER DEBUG] Assigning Program ${program} to Channel ${channel} for Layer ${layerName}`);
-            track.addEvent(new MidiWriter.ProgramChangeEvent({ program: program, channel: channel, tick: 0 })); // Especifica canal y tick 0
-        } // Sort notes by start time
+            track.addEvent(new MidiWriter.ProgramChangeEvent({ program: program, channel: channel }));
+            console.log(`🎼 [MIDIRenderer] Program ${program} assigned to channel ${channel}`);
+        }
+        // Sort notes by start time
         const sortedNotes = [...notes].sort((a, b) => a.startTime - b.startTime);
         // Log first 5 and last 5 notes for debugging
         console.log('🔍 [MIDIRenderer] First 5 notes (seconds):');
@@ -142,7 +150,16 @@ export class MIDIRenderer {
         for (const note of sortedNotes) {
             // Calcular tiempo de inicio absoluto y duración en ticks
             const noteStartTicks = this.secondsToTicks(note.startTime, tempo, true); // humanize timing
-            const durationTicks = this.secondsToTicks(note.duration, tempo, false); // NO humanize duration
+            let durationTicks = this.secondsToTicks(note.duration, tempo, false); // NO humanize duration
+            // 🔥 FASE 5.3 (SCHERZO QUIRÚRGICO): GUARDIA ANTI-NEGATIVOS
+            // Prevenir RangeError de Tone.js por valores corruptos de punto flotante
+            if (!Number.isFinite(durationTicks) || durationTicks < 0) {
+                console.warn(`⚠️  [MIDIRenderer] CORRECTING invalid durationTicks: ${durationTicks} → 1 (note at ${note.startTime}s)`);
+                durationTicks = 1; // Mínimo 1 tick (prevenir crash)
+            }
+            if (!Number.isFinite(noteStartTicks) || noteStartTicks < 0) {
+                console.warn(`⚠️  [MIDIRenderer] CORRECTING invalid noteStartTicks: ${noteStartTicks} → 0 (note pitch ${note.pitch})`);
+            }
             // Log detailed calculation for first 3 notes
             if (notesAdded < 3) {
                 console.log(`🔍 [MIDIRenderer] Note ${notesAdded}:`);

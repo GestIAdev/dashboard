@@ -12,10 +12,21 @@ export class MelodyEngine {
         this.random = new SeededRandom(seed);
     }
     /**
-     * Generar melodía completa
-     * ✅ REFACTORIZADO: Recibe section completa, respeta section.duration
+     * Generar melodía completa con selección dinámica de instrumento
+     * 🎸 FRENTE #5.2: SELECCIÓN DINÁMICA (Cerebro)
+     *
+     * ARQUITECTURA:
+     * - Devuelve { notes, instrumentKey } (no solo notas)
+     * - instrumentKey seleccionado basado en section.type + intensity
+     *
+     * IMPROVISACIÓN:
+     * - chorus + intensity > 0.8 → synth-lead/pulse-buzz-lead (láser cyberpunk)
+     * - intro/outro atmospheric → vocal-chops/angelicalvoice (etéreo)
+     * - verse/pre-chorus moderado → electric-piano/MED (suave, orgánico)
+     * - bridge/buildup → synth-lead/pulse-buzz-lead (drama, tensión)
+     *
      * @param options Opciones de generación
-     * @returns Notas melódicas MIDI
+     * @returns { notes, instrumentKey }
      */
     generateMelody(options) {
         const { section, key, mode, complexity, contour, range, seed } = options;
@@ -26,8 +37,11 @@ export class MelodyEngine {
             : 120; // Fallback
         // 🔥 DETERMINISMO: Re-inicializar random con el seed proporcionado
         this.random = new SeededRandom(seed);
+        // 🎸 FRENTE #5.2: SELECCIÓN DINÁMICA DE INSTRUMENTO
+        const instrumentKey = this.selectInstrument(section);
+        console.log(`🎸 [MELODY ENGINE] Section '${section.type}' (intensity=${section.profile?.intensity?.toFixed(2) || 0.5}) → Instrumento: ${instrumentKey}`);
         // Generar motivo base
-        const motif = this.generateMotif(key, mode, complexity, tempo);
+        const motif = this.generateMotif(key, mode, complexity, tempo, section);
         // Aplicar transformaciones según complejidad
         const transformedMotif = this.applyTransformations(motif, complexity);
         // Desarrollar motivo en frase completa
@@ -52,7 +66,36 @@ export class MelodyEngine {
         melody.slice(0, 5).forEach((note, i) => {
             console.log(`  [${i}] pitch=${note.pitch}, startTime=${note.startTime.toFixed(3)}s, duration=${note.duration.toFixed(3)}s`);
         });
-        return melody;
+        // 🎸 FRENTE #5.2: Devolver notas + instrumentKey
+        return {
+            notes: melody,
+            instrumentKey
+        };
+    }
+    /**
+     * 🎨 IMPROVISACIÓN: Selección de instrumento basada en section.type + intensity
+     *
+     * Estrategia (Cyberpunk-Ambient):
+     * - HIGH INTENSITY (chorus, climax): synth-lead/pulse-buzz-lead (láser cortante)
+     * - ATMOSPHERIC (intro, outro): vocal-chops/angelicalvoice (etéreo, espacial)
+     * - MODERATE (verse, pre-chorus): electric-piano/MED (orgánico, suave)
+     * - TENSION (bridge, buildup): synth-lead/pulse-buzz-lead (drama)
+     */
+    selectInstrument(section) {
+        const intensity = section.profile?.intensity ?? 0.5;
+        const sectionType = section.type;
+        // 🔥 IMPROVISACIÓN: 3 categorías de instrumentos
+        // 1. SYNTH-LEAD: High intensity, drama, tensión
+        if (intensity > 0.8 || sectionType === 'chorus' || sectionType === 'drop' || sectionType === 'buildup') {
+            return 'synth-lead/pulse-buzz-lead'; // Láser cyberpunk
+        }
+        // 2. VOCAL-CHOPS: Atmospheric, etéreo
+        if (sectionType === 'intro' || sectionType === 'outro' || sectionType === 'interlude') {
+            return 'vocal-chops/angelicalvoice'; // Etéreo, espacial
+        }
+        // 3. ELECTRIC-PIANO: Moderate, orgánico, safe
+        // verse, pre-chorus, bridge (intensity < 0.8)
+        return 'electric-piano/MED'; // Suave, orgánico
     }
     /**
      * Generar motivo melódico base
@@ -63,31 +106,68 @@ export class MelodyEngine {
 
 ables)
      */
-    generateMotif(key, mode, complexity, tempo) {
+    generateMotif(key, mode, complexity, tempo, section) {
+        const intensity = section.profile?.intensity ?? 0.5;
+        const sectionType = section.type;
         // 🔥 ARQUITECTO-33A: Motivos más cortos (3-4 notas, no 4-8)
         const motifLength = complexity > 0.7 ? 4 : 3;
         const motif = [];
-        // 🔥 ARQUITECTO-33A: Escala RESTRICTIVA (pentatónica para cyberpunk)
-        // Pentatónica = solo 5 notas (saltos más pequeños, más cantable)
-        const scale = this.getRestrictiveScale(key, mode);
+        // 🎨 FRENTE #5.5: Selección de escala dinámica basada en intensidad
+        let scale;
+        let MAX_MELODIC_INTERVAL;
+        if (intensity > 0.8 || sectionType === 'chorus' || sectionType === 'drop' || sectionType === 'bridge') {
+            // 🔥 DIATÓNICA (7 notas): Tensión, drama, chorus explosivo
+            scale = this.getDiatonicScale(key, mode);
+            MAX_MELODIC_INTERVAL = 12; // Hasta 8va (salto dramático)
+            console.log(`🎵 [MELODY MOTIF] DIATÓNICA (intensity=${intensity.toFixed(2)}, section=${sectionType}) → max salto: 8va`);
+        }
+        else if (intensity >= 0.5 && intensity <= 0.8) {
+            // 🎶 PENTATÓNICA + 5ta: Moderado, pre-chorus, buildup
+            scale = this.getRestrictiveScale(key, mode);
+            MAX_MELODIC_INTERVAL = 7; // Hasta 5ta (salto moderado)
+            console.log(`🎵 [MELODY MOTIF] PENTATÓNICA (intensity=${intensity.toFixed(2)}, section=${sectionType}) → max salto: 5ta`);
+        }
+        else {
+            // 🎹 PENTATÓNICA: Safe, cantable, verse/intro tranquilo
+            scale = this.getRestrictiveScale(key, mode);
+            MAX_MELODIC_INTERVAL = 5; // Max 4ta (salto conservador)
+            console.log(`🎵 [MELODY MOTIF] PENTATÓNICA CONSERVADORA (intensity=${intensity.toFixed(2)}, section=${sectionType}) → max salto: 4ta`);
+        }
         let currentTime = 0;
         let previousPitch = this.random.choice(scale) + (4 * 12); // Octava 4
         for (let i = 0; i < motifLength; i++) {
-            // 🔥 ARQUITECTO-33A: RESTRICCIÓN DE SALTO MELÓDICO (max 5 semitonos = 4ta justa)
-            const MAX_MELODIC_INTERVAL = 5; // 5 semitonos (4ta justa)
-            // Generar pitch cercano al anterior (evitar saltos de campanitas)
+            // 🎨 FRENTE #5.5: SILENCIOS (Rests) entre frases
+            // 20% probabilidad de silencio en lugar de nota (excepto primera nota)
+            if (i > 0 && this.random.next() < 0.2) {
+                const restDuration = this.getFibonacciDuration(i, motifLength, sectionType);
+                console.log(`🎵 [MELODY MOTIF] Silencio (rest) insertado: ${restDuration.toFixed(2)}s`);
+                currentTime += restDuration;
+                continue; // Saltar generación de nota
+            }
+            // Generar pitch con restricción de salto
             let pitch;
             let attempts = 0;
             do {
                 pitch = this.random.choice(scale) + (4 * 12); // Octava 4
                 attempts++;
+                // 🎨 FRENTE #5.5: SALTOS DRAMÁTICOS en momentos de alta intensidad
+                // Si intensity > 0.8 y es el último pitch (climax del motivo), permitir salto dramático
+                const isClimax = (i === motifLength - 1) && (intensity > 0.8);
+                if (isClimax && attempts < 3) {
+                    // Forzar salto dramático (6ta, 7ma, 8va)
+                    const dramaticIntervals = [9, 10, 11, 12]; // 6ta mayor, 7ma menor, 7ma mayor, 8va
+                    const interval = this.random.choice(dramaticIntervals);
+                    pitch = previousPitch + (this.random.next() > 0.5 ? interval : -interval);
+                    console.log(`🎵 [MELODY MOTIF] SALTO DRAMÁTICO: ${interval} semitonos (climax)`);
+                    break;
+                }
                 if (attempts > 10) {
                     // Fallback: usar pitch anterior ± 2 semitonos
                     pitch = previousPitch + this.random.choice([-2, -1, 0, 1, 2]);
                     break;
                 }
             } while (Math.abs(pitch - previousPitch) > MAX_MELODIC_INTERVAL);
-            const durationSeconds = this.getFibonacciDuration(i, motifLength, 'verse');
+            const durationSeconds = this.getFibonacciDuration(i, motifLength, sectionType);
             // Calculate velocity with musical intelligence
             const baseVelocity = 80;
             const contourVelocity = this.calculateDynamicVelocity(i, motifLength);
@@ -104,6 +184,24 @@ ables)
             currentTime += durationSeconds;
         }
         return motif;
+    }
+    /**
+     * 🎨 FRENTE #5.5: Obtener escala DIATÓNICA completa (7 notas)
+     * Usado en chorus/bridge para crear tensión y drama
+     */
+    getDiatonicScale(key, mode) {
+        const scales = {
+            'major': [0, 2, 4, 5, 7, 9, 11], // Diatónica mayor (7 notas)
+            'minor': [0, 2, 3, 5, 7, 8, 10], // Diatónica menor natural (7 notas)
+            'dorian': [0, 2, 3, 5, 7, 9, 10], // Dorian completo (7 notas)
+            'phrygian': [0, 1, 3, 5, 7, 8, 10], // Phrygian completo (7 notas)
+            'lydian': [0, 2, 4, 6, 7, 9, 11], // Lydian completo (7 notas, 4ta aumentada)
+            'mixolydian': [0, 2, 4, 5, 7, 9, 10], // Mixolydian completo (7 notas)
+            'pentatonic': [0, 2, 4, 7, 9], // Fallback pentatónica
+            'blues': [0, 3, 5, 6, 7, 10] // Blues (6 notas)
+        };
+        const intervals = scales[mode] || scales['major'];
+        return intervals.map(interval => key + interval);
     }
     /**
      * 🔥 ARQUITECTO-33A: Escalas RESTRICTIVAS (pentatónicas y blues)
@@ -127,8 +225,11 @@ ables)
     }
     /**
      * Obtener duración basada en secuencia Fibonacci
+     * 🔧 CIRUGÍA P0: Mapeo robusto de sectionType → durationPool
      */
     getFibonacciDuration(position, totalLength, context = 'verse') {
+        // 🔧 MAPEO ROBUSTO: Convertir cualquier sectionType a un pool válido
+        const contextNormalized = this.normalizeSectionContext(context);
         // Context-aware duration pools
         const durationPools = {
             intro: [1.0, 1.5, 2.0, 3.0], // Notas largas, espaciadas
@@ -136,7 +237,7 @@ ables)
             climax: [0.25, 0.5, 0.75, 1.0], // Notas más rápidas
             outro: [1.5, 2.0, 3.0, 4.0] // Muy largas, decayendo
         };
-        const durations = durationPools[context];
+        const durations = durationPools[contextNormalized];
         // Use Fibonacci for organic variation within context
         const fib = [1, 1, 2, 3, 5, 8];
         const fibIndex = position % fib.length;
@@ -145,6 +246,37 @@ ables)
         const baseDuration = durations[durationIndex];
         const microVariation = 1 + (this.random.next() * 0.2 - 0.1); // Usa SeededRandom
         return baseDuration * microVariation;
+    }
+    /**
+     * 🔧 CIRUGÍA P0: Normalizar sectionType a un durationPool válido
+     * Mapea cualquier SectionType a uno de los 4 pools disponibles
+     */
+    normalizeSectionContext(sectionType) {
+        // Mapeo exhaustivo de TODOS los SectionType posibles
+        switch (sectionType.toLowerCase()) {
+            case 'intro':
+            case 'interlude':
+            case 'ambient':
+                return 'intro';
+            case 'verse':
+            case 'pre-chorus':
+            case 'post-chorus':
+                return 'verse';
+            case 'chorus':
+            case 'drop':
+            case 'buildup':
+            case 'bridge':
+            case 'climax':
+                return 'climax';
+            case 'outro':
+            case 'breakdown':
+            case 'fade':
+                return 'outro';
+            default:
+                // Fallback seguro: verse (duración moderada)
+                console.warn(`⚠️ [MELODY ENGINE] SectionType desconocido: "${sectionType}" → Fallback a 'verse'`);
+                return 'verse';
+        }
     }
     /**
      * Calculate dynamic velocity based on melodic contour

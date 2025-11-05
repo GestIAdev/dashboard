@@ -41,49 +41,87 @@ class MIDIPlayer {
             // Remove automatic Tone.start() call - will be called on user interaction
             console.log('🎹 Tone.js initialized (AudioContext deferred)')
 
-            // FASE 2.B: CARGAR PRESET CON SAMPLELOADER
+            // 🔥 FRENTE #2: ARSENAL DINÁMICO - Cargar instrumentos desde config.json
             console.log(`🔧 Loading preset: ${presetName}...`)
             this.currentPreset = presetName
             
+            // 1. Cargar config del preset
             await this.sampleLoader.loadPreset(presetName)
-            console.log(`✅ Preset "${presetName}" config loaded`)
+            const config = this.sampleLoader.presets[presetName]
 
-            // CARGAR INSTRUMENTOS POR TRACK
-            console.log('🎹 Loading instruments...')
-            
-            // Track 0: Melody - Electric Piano (85 samples cromáticos)
-            this.instruments.melody = await this.sampleLoader.getInstrument('melody', 'electric-piano/MED')
-            console.log('✅ Melody instrument loaded: electric-piano/MED (85 samples)')
+            if (!config) {
+                console.error(`[MIDIPlayer] ❌ Fallo al cargar config del preset: ${presetName}`)
+                this.isInitialized = false
+                return
+            }
 
-            // Track 2: Harmony - Warm Pad (21 samples)
-            this.instruments.harmony = await this.sampleLoader.getInstrument('harmony', 'pads/CeeVoice_Pad')
-            console.log('✅ Harmony instrument loaded: pads/CeeVoice_Pad (21 samples)')
+            console.log(`[MIDIPlayer] 🎛️ Inicializando arsenal dinámico para preset: ${presetName}`)
 
-            // Track 4: Bass - Sub Bass (17 samples)
-            this.instruments.bass = await this.sampleLoader.getInstrument('bass', 'sub-bass/Blau_Bass')
-            console.log('✅ Bass instrument loaded: sub-bass/Blau_Bass (17 samples)')
+            // 2. Iterar sobre los tracks definidos en el config
+            const trackNames = Object.keys(config.tracks)
+            let totalSamplesLoaded = 0
+            let totalInstrumentsLoaded = 0
 
-            // Track 5: Rhythm - Drums (16 samples General MIDI)
-            this.instruments.rhythm = await this.sampleLoader.getInstrument('rhythm', 'drums')
-            console.log('✅ Rhythm instrument loaded: drums (16 samples, General MIDI)')
+            // 🔥 FRENTE #5.1: ARSENAL COMPLETO - Cargar TODOS los instrumentos (no solo el primero)
+            for (const trackName of trackNames) {
+                const trackConfig = config.tracks[trackName]
+                
+                // 3. Obtener TODOS los instrumentos definidos para ese track
+                const instrumentKeys = Object.keys(trackConfig.instruments)
 
-            // Track 6/7: Pad - Ambient Pad (21 samples)
-            this.instruments.pad = await this.sampleLoader.getInstrument('pad', 'ambient-pads/Ciao_Pad')
-            console.log('✅ Pad instrument loaded: ambient-pads/Ciao_Pad (21 samples)')
+                if (instrumentKeys.length === 0) {
+                    console.warn(`[MIDIPlayer] ⚠️ No se encontraron instrumentos para el track: ${trackName}`)
+                    continue
+                }
 
-            // Inicializar DrumPatternEngine (se usa en generateRhythmLayer del backend)
-            // Aquí solo lo creamos para que esté disponible si se necesita
-            this.drumEngine = new DrumPatternEngine(this.instruments.rhythm, 70)
-            console.log('✅ DrumPatternEngine initialized at 70 BPM')
+                // 🎨 IMPROVISACIÓN: Estructura anidada this.instruments[trackName][instrumentKey]
+                this.instruments[trackName] = {}
 
-            console.log('🎛️ Sample library loaded! 635 samples ready.')
-            console.log('📊 Instruments:', {
-                melody: 'electric-piano/MED (85)',
-                harmony: 'pads/CeeVoice_Pad (21)',
-                bass: 'sub-bass/Blau_Bass (17)',
-                rhythm: 'drums (16)',
-                pad: 'ambient-pads/Ciao_Pad (21)'
-            })
+                console.log(`[MIDIPlayer] 🔧 Cargando ${instrumentKeys.length} instrumentos para track '${trackName}'...`)
+
+                for (const instrumentKey of instrumentKeys) {
+                    try {
+                        // 4. Cargar CADA sampler dinámicamente
+                        const sampler = await this.sampleLoader.getInstrument(trackName, instrumentKey)
+                        this.instruments[trackName][instrumentKey] = sampler
+                        
+                        const sampleCount = Object.keys(trackConfig.instruments[instrumentKey].samples).length
+                        totalSamplesLoaded += sampleCount
+                        totalInstrumentsLoaded++
+                        
+                        console.log(`[MIDIPlayer]   ✅ Instrumento '${instrumentKey}': ${sampleCount} samples cargados`)
+
+                    } catch (error) {
+                        console.error(`[MIDIPlayer]   ❌ Fallo al cargar instrumento '${instrumentKey}' para track '${trackName}'`, error)
+                    }
+                }
+
+                console.log(`[MIDIPlayer] 🎸 Track '${trackName}' completo: ${Object.keys(this.instruments[trackName]).length} instrumentos disponibles`)
+            }
+
+            // 5. Validar y actualizar el DrumEngine
+            if (this.instruments['rhythm']) {
+                // 🔥 FRENTE #5.1: Usar el PRIMER instrumento de rhythm para DrumEngine
+                // this.instruments['rhythm'] ahora es un objeto { instrumentKey: sampler }
+                const rhythmInstrumentKeys = Object.keys(this.instruments['rhythm'])
+                
+                if (rhythmInstrumentKeys.length > 0) {
+                    const firstRhythmInstrument = rhythmInstrumentKeys[0]
+                    const rhythmSampler = this.instruments['rhythm'][firstRhythmInstrument]
+                    
+                    // Inicializar DrumPatternEngine con el sampler de rhythm cargado dinámicamente
+                    const globalTempo = 70 // TODO: obtener del config o StylePreset
+                    this.drumEngine = new DrumPatternEngine(rhythmSampler, globalTempo)
+                    console.log(`[MIDIPlayer] 🥁 DrumPatternEngine inicializado con sampler '${firstRhythmInstrument}' a ${globalTempo} BPM`)
+                } else {
+                    console.warn("[MIDIPlayer] ⚠️ El track 'rhythm' no tiene instrumentos cargados. DrumEngine no inicializado.")
+                }
+            } else {
+                console.warn("[MIDIPlayer] ⚠️ El track 'rhythm' no se cargó. DrumEngine no inicializado.")
+            }
+
+            console.log(`🎛️ [MIDIPlayer] Arsenal dinámico cargado. ${totalInstrumentsLoaded} instrumentos (${totalSamplesLoaded}+ samples) listos.`)
+            console.log(`📊 [MIDIPlayer] Tracks cargados: ${Object.keys(this.instruments).join(', ')}`)
 
             this.isInitialized = true
         } catch (error) {
@@ -309,57 +347,121 @@ class MIDIPlayer {
             
             console.log(`🎵 Track ${trackIndex} pitch range: ${pitchRange.min}-${pitchRange.max} (${Tone.Frequency(pitchRange.min, 'midi').toNote()} to ${Tone.Frequency(pitchRange.max, 'midi').toNote()})`)
 
-            // 🔥 HOTFIX 26B: Mapear por trackIndex (posición), NO por track.channel
-            // @tonejs/midi re-asigna channels aleatoriamente al parsear MIDI
-            // Backend genera tracks secuenciales: 0,1,2,3,4 pero midi-writer-js crea gaps (0, vacío, 2, vacío, 4, 5, vacío, 7)
-            // Frontend debe mapear por POSICIÓN en el array parseado (trackIndex)
-            let instrument
-            switch (trackIndex) {
-                case 0: // Melody (Backend Track 0)
-                    instrument = this.instruments.melody
-                    console.log(`🎵 Track ${trackIndex} (Melody) → electric-piano/MED`)
-                    break
-                case 2: // Harmony (Backend Track 1, frontend index 2)
-                    instrument = this.instruments.harmony
-                    console.log(`🎵 Track ${trackIndex} (Harmony) → pads/CeeVoice Pad`)
-                    break
-                case 4: // Bass (Backend Track 2, frontend index 4)
-                    instrument = this.instruments.bass
-                    console.log(`🎵 Track ${trackIndex} (Bass) → sub-bass/Blau Bass`)
-                    break
-                case 5: // Rhythm (Backend Track 3, frontend index 5)
-                    instrument = this.instruments.rhythm
-                    console.log(`🎵 Track ${trackIndex} (Rhythm) → drums (16 samples, GM)`)
-                    break
-                case 7: // Pad (Backend Track 4, frontend index 7)
-                    instrument = this.instruments.pad
-                    console.log(`🎵 Track ${trackIndex} (Pad) → ambient-pads/Ciao Pad`)
-                    break
-
-                default:
-                    console.log(`⚠️ Track ${trackIndex} has no assigned instrument, skipping`)
-                    return // Skip tracks (1, 3, 6 están vacíos)
+            // 🔧 FASE 3.12 (CONTRATO POR ÍNDICE): MAPEO VÍA ÍNDICE DE TRACK
+            // 
+            // ARQUITECTURA (Blueprint actualizado - Workaround para @tonejs/midi bug):
+            // 1. Validar que track tiene notas (skip si vacío)
+            // 2. Obtener trackType usando ÍNDICE DEL TRACK (no canal ni nombre)
+            // 3. Verificar si reconocemos este trackType
+            // 4. Seleccionar primer instrumento disponible
+            // 5. Skip si no reconocido
+            // 
+            // MAPPING POR ÍNDICE:
+            // - Track 0 = tempo (skip - no tiene notas)
+            // - Track 1 = melody
+            // - Track 2 = harmony
+            // - Track 3 = bass
+            // - Track 4 = rhythm (drums)
+            // - Track 5 = pad
+            //
+            // NOTA: @tonejs/midi y midi-writer-js son incompatibles.
+            // midi-writer-js escribe 6 tracks (1 tempo + 5 música) pero
+            // @tonejs/midi los parsea como 8 tracks con algunos vacíos.
+            // Solución: mapear por índice y skip tracks vacíos.
+            // 
+            // ROBUSTEZ:
+            // - NUNCA crashea
+            // - Logging claro para debugging
+            
+            let instrument = null
+            
+            // 1️⃣ VALIDACIÓN: Skip si track vacío
+            if (!track.notes || track.notes.length === 0) {
+                console.log(`⚠️ Track ${trackIndex} (${track.name || 'Vacío'}) no tiene notas, saltando.`)
+                return
             }
+            
+            // 2️⃣ OBTENER TRACK TYPE usando el ÍNDICE del track (orden predecible)
+            // @tonejs/midi parsea de forma rara: algunos tracks vacíos intercalados
+            // Empiricamente observado (logs del navegador):
+            // Track 0 → melody (115 notes)
+            // Track 1 → vacío (skip)
+            // Track 2 → harmony (456 notes)
+            // Track 3 → vacío (skip)
+            // Track 4 → bass (86 notes)
+            // Track 5 → rhythm (242 notes)
+            // Track 6 → vacío (skip)
+            // Track 7 → pad (100 notes)
+            let trackType = ''
+            const trackMapping = [
+                'melody',   // Track 0 (primer track con notas)
+                'skip',     // Track 1 (vacío)
+                'harmony',  // Track 2
+                'skip',     // Track 3 (vacío)
+                'bass',     // Track 4
+                'rhythm',   // Track 5
+                'skip',     // Track 6 (vacío)
+                'pad'       // Track 7
+            ]
+            
+            trackType = trackMapping[trackIndex] || 'melody' // fallback a melody
+            
+            // Skip si es un track fantasma
+            if (trackType === 'skip') {
+                console.log(`⚠️ Track ${trackIndex} es un track fantasma (bug @tonejs/midi), saltando.`)
+                return
+            }
+            
+            console.log(`🔍 Track ${trackIndex} detected by INDEX → trackType "${trackType}" (${track.notes.length} notes)`)
+            
+            // 3️⃣ VERIFICAR SI RECONOCEMOS ESTE TRACKTYPE
+            if (this.instruments[trackType]) {
+                
+                // 4️⃣ SELECCIONAR EL INSTRUMENTO (Lógica FRENTE #5)
+                // Por ahora, seleccionamos el *primero* disponible.
+                // (El backend aún no nos dice cuál usar, FRENTE #5.3 falló)
+                
+                const instrumentKey = Object.keys(this.instruments[trackType])[0]
+
+                if (instrumentKey) {
+                    instrument = this.instruments[trackType][instrumentKey]
+                    console.log(`🎵 Track ${trackIndex} (${track.name}) → ${instrumentKey} (Mapeo Simple)`)
+                } else {
+                    console.error(`❌ Track ${trackIndex} (${track.name}) reconocido, pero no tiene instrumentos cargados.`)
+                }
+
+            } else {
+                // 5️⃣ SI NO SE RECONOCE, SALTAR
+                console.warn(`⚠️ Track ${trackIndex} (${track.name || 'Vacío'}) no reconocido o no mapeado. Saltando.`)
+            }
+            
+            // 6️⃣ SKIP SI NO HAY INSTRUMENTO
+            if (!instrument) {
+                return
+            }
+            
+            // 🔥 Determinar si es track de rhythm (para conversión MIDI → note name)
+            const mappedTrack = trackType || 'melody' // Fallback a melody si no se determinó
 
             // Crear Tone.Part para este track
             const part = new Tone.Part((time, event) => {
-                // 🔥 BUG #24 FIX: Si es Track 5 (Rhythm), convertir MIDI a NOTE NAME
+                // 🔥 BUG #24 FIX: Si es Rhythm track, convertir MIDI a NOTE NAME
                 // Drums usan General MIDI mapping (36=kick, 38=snare, 42=hihat)
                 // Tone.Sampler espera NOTE NAMES ("C2", "D2") para mapear correctamente
                 // MIDI numbers o strings causan pitch-shifting y todos suenan como kick
-                if (trackIndex === 5) {
+                if (mappedTrack === 'rhythm') {
                     // Convertir MIDI number a note name
                     const noteName = Tone.Frequency(event.midi, 'midi').toNote()
                     
                     // 🔊 BOOST: Amplificar velocity de drums (snare/hihat muy bajos en samples)
-                    // Mantener kick (36) normal, amplificar otros drums x1.5
+                    // Mantener kick (36) normal, amplificar otros drums x2.5 (FASE 3.12 - más volumen!)
                     let velocityBoost = event.velocity
                     if (event.midi !== 36) {
-                        velocityBoost = Math.min(1.0, event.velocity * 1.5) // Max 1.0 (normalizado)
+                        velocityBoost = Math.min(1.0, event.velocity * 2.5) // Max 1.0 (normalizado)
                     }
                     // Solo log primeros 5 drums para no spammear consola
                     if (events.indexOf(event) < 5) {
-                        console.log(`🥁 Track 5 - Drum MIDI ${event.midi} → ${noteName} → velocity ${velocityBoost.toFixed(2)}`)
+                        console.log(`🥁 Rhythm track - Drum MIDI ${event.midi} → ${noteName} → velocity ${velocityBoost.toFixed(2)} (boost x2.5)`)
                     }
                     // CRITICAL: Pasar noteName (ej. "C2"), NO event.midi
                     instrument.triggerAttackRelease(noteName, event.duration, time, velocityBoost)

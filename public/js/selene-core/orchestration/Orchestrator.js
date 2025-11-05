@@ -36,9 +36,19 @@ export class Orchestrator {
     }
     /**
      * Generar capa de armonía
-     * ✅ BUG #23 FIX RADICAL (ARQUITECTO-34A): DURACIÓN MÁXIMA ABSOLUTA DE 6 SEGUNDOS
-     * No importa chord.duration - Harmony NUNCA debe exceder 6s por nota
-     * Estrategia: "Staccato Chords" (6s max, con re-articulation cada 6s)
+     * 🎭 FRENTE #4 "SCHERZO ARMÓNICO": Fraseo Coral (Océano → Respiración)
+     *
+     * ARQUITECTURA:
+     * - Duración máxima: 3.5s (límite de pulmón humano real)
+     * - Fraseo inteligente basado en section.type e intensity
+     * - Staccato (corto) en verse/intro (1-2s)
+     * - Sostenuto (largo) en chorus/climax (3-3.5s)
+     * - Respiración entre frases (gaps de 0.3-0.5s)
+     *
+     * IMPROVISACIÓN:
+     * - Intensity < 0.5: "Staccato Respiratorio" (1-2s, gaps 0.5s)
+     * - Intensity 0.5-0.8: "Sostenuto Moderado" (2-3s, gaps 0.3s)
+     * - Intensity > 0.8: "Sostenuto Dramático" (3-3.5s, overlap legato)
      */
     generateHarmonyLayer(chords, config, section, prng) {
         if (!config)
@@ -46,8 +56,34 @@ export class Orchestrator {
         const notes = [];
         const totalChords = chords.length;
         const sectionEndTime = section.startTime + section.duration;
-        // 🔥 ARQUITECTO-34A: DURACIÓN MÁXIMA ABSOLUTA (no negociable)
-        const MAX_HARMONY_DURATION = 6.0; // 6 segundos MAX (re-articulation cada 6s)
+        // 🎭 SCHERZO ARMÓNICO: Duración máxima basada en intensidad
+        // Pulmón humano real: 3-4 segundos de aire
+        const intensity = section.profile?.intensity ?? 0.5;
+        let MAX_BREATH_DURATION;
+        let BREATH_GAP;
+        let articulationStyle;
+        // 🎨 IMPROVISACIÓN: 3 niveles de fraseo coral
+        if (intensity < 0.5) {
+            // STACCATO RESPIRATORIO (verso tranquilo, intro)
+            MAX_BREATH_DURATION = 1.8; // Notas cortas (1-2s)
+            BREATH_GAP = 0.5; // Respiración larga
+            articulationStyle = 'staccato';
+            console.log(`🎭 [HARMONY] Fraseo Coral: STACCATO RESPIRATORIO (intensity=${intensity.toFixed(2)})`);
+        }
+        else if (intensity >= 0.5 && intensity <= 0.8) {
+            // SOSTENUTO MODERADO (pre-chorus, buildup)
+            MAX_BREATH_DURATION = 2.8; // Notas medias (2-3s)
+            BREATH_GAP = 0.3; // Respiración corta
+            articulationStyle = 'sostenuto';
+            console.log(`🎭 [HARMONY] Fraseo Coral: SOSTENUTO MODERADO (intensity=${intensity.toFixed(2)})`);
+        }
+        else {
+            // SOSTENUTO DRAMÁTICO (chorus, climax)
+            MAX_BREATH_DURATION = 3.5; // Notas largas (3-3.5s)
+            BREATH_GAP = 0.1; // Casi sin gaps (overlap legato)
+            articulationStyle = 'legato';
+            console.log(`🎭 [HARMONY] Fraseo Coral: SOSTENUTO DRAMÁTICO (intensity=${intensity.toFixed(2)})`);
+        }
         for (let chordIndex = 0; chordIndex < chords.length; chordIndex++) {
             const chord = chords[chordIndex];
             // Musical phrasing (crescendo/diminuendo)
@@ -55,29 +91,31 @@ export class Orchestrator {
                 ? chordIndex / (totalChords - 1)
                 : 0.5;
             const phrasingDynamic = this.calculatePhrasingDynamic(phraseProgress, section.type);
-            // 🔥 ARQUITECTO-34A: Subdividir acordes largos en re-articulations de 6s
-            // Si chord.duration > 6s, generar múltiples acordes de 6s (overlap legato)
-            const numArticulations = Math.ceil(chord.duration / MAX_HARMONY_DURATION);
-            for (let artIndex = 0; artIndex < numArticulations; artIndex++) {
-                const artStartTime = chord.startTime + (artIndex * MAX_HARMONY_DURATION);
-                // Validar que la articulación inicia dentro de la sección y del acorde
-                if (artStartTime >= sectionEndTime || artStartTime >= chord.startTime + chord.duration) {
+            // 🎭 RESPIRACIÓN CORAL: Subdividir acordes largos con gaps
+            // Ciclo respiratorio: MAX_BREATH_DURATION + BREATH_GAP
+            const breathCycle = MAX_BREATH_DURATION + BREATH_GAP;
+            const numBreaths = Math.ceil(chord.duration / breathCycle);
+            for (let breathIndex = 0; breathIndex < numBreaths; breathIndex++) {
+                const breathStartTime = chord.startTime + (breathIndex * breathCycle);
+                // Validar que la respiración inicia dentro de la sección y del acorde
+                if (breathStartTime >= sectionEndTime || breathStartTime >= chord.startTime + chord.duration) {
                     break;
                 }
-                // Calcular duración de esta articulación
-                const timeLeftInChord = (chord.startTime + chord.duration) - artStartTime;
-                const timeLeftInSection = sectionEndTime - artStartTime;
-                let baseDuration = Math.min(MAX_HARMONY_DURATION, timeLeftInChord, timeLeftInSection);
-                // Aplicar noteDuration y articulation
+                // Calcular duración de esta respiración
+                const timeLeftInChord = (chord.startTime + chord.duration) - breathStartTime;
+                const timeLeftInSection = sectionEndTime - breathStartTime;
+                let baseDuration = Math.min(MAX_BREATH_DURATION, timeLeftInChord, timeLeftInSection);
+                // Aplicar articulación según estilo
                 let duration = baseDuration * config.noteDuration;
-                if (config.articulation === 'staccato') {
-                    duration *= 0.5;
+                if (articulationStyle === 'staccato') {
+                    duration *= 0.6; // Staccato: 60% de duración (más corto)
                 }
-                else if (config.articulation === 'legato') {
-                    duration *= 1.2; // Overlap con siguiente articulación
+                else if (articulationStyle === 'legato') {
+                    duration *= 1.15; // Legato: 115% (overlap con siguiente)
                 }
-                // Asegurar mínimo audible (0.2s)
-                if (duration < 0.2) {
+                // sostenuto: sin modificación (100%)
+                // Asegurar mínimo audible (0.3s para choir)
+                if (duration < 0.3) {
                     break;
                 }
                 for (const pitch of chord.notes) {
@@ -93,8 +131,8 @@ export class Orchestrator {
                     notes.push({
                         pitch: Math.max(0, Math.min(127, adjustedPitch)),
                         velocity: Math.max(0, Math.min(127, Math.floor(velocity))),
-                        startTime: artStartTime,
-                        duration, // ✅ MAX 6 SEGUNDOS (re-articulado)
+                        startTime: breathStartTime,
+                        duration, // ✅ MAX 3.5 SEGUNDOS (respiración humana)
                         channel: config.channel || 1
                     });
                 }

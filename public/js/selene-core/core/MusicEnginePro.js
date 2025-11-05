@@ -8,7 +8,7 @@ import { MelodyEngine } from '../harmony/MelodyEngine.js';
 import { VitalsIntegrationEngine } from '../vitals/VitalsIntegrationEngine.js';
 import { Orchestrator } from '../orchestration/Orchestrator.js';
 import { MIDIRenderer } from '../render/MIDIRenderer.js';
-import { DrumPatternEngine } from '../rhythm/DrumPatternEngine.js'; // ← IMPORT
+import { DrumPatternEngine } from '../rhythm/DrumPatternEngine.js';
 export class MusicEnginePro {
     styleEngine;
     structureEngine;
@@ -17,7 +17,11 @@ export class MusicEnginePro {
     vitalsEngine;
     orchestrator;
     renderer;
-    drumEngine = null; // ← INSTANCIA ÚNICA
+    drumEngine = null;
+    // 🎸 FASE 5.9: PALETA SÓNICA DETERMINISTA
+    // Creada UNA VEZ al inicio de generate(), contiene instrumentos fijos (harmony/melody)
+    // y pools dinámicos (rhythm/bass) para toda la canción
+    sonicPalette = null;
     constructor() {
         this.styleEngine = new StyleEngine();
         this.structureEngine = new StructureEngine();
@@ -53,10 +57,33 @@ export class MusicEnginePro {
             this.drumEngine = new DrumPatternEngine(tempo, params.seed || 42);
             console.log(`🔧 [MUSIC ENGINE PRO] DrumPatternEngine created (tempo=${tempo}, seed=${params.seed || 42})`);
         }
+        // 🎸 FASE 5.9: CREAR PALETA SÓNICA DETERMINISTA (UNA SOLA VEZ)
+        // Decide vibe global (chill/dubchill), elige instrumentos fijos (harmony/melody),
+        // y copia pools dinámicos (rhythm/bass) para toda la canción
+        this.sonicPalette = this.createSonicPalette(params.seed || 42, modifiedStyle);
         // 5. Generar contenido por sección (ARQUITECTURA RADICAL: Section como SSOT)
         const allNotes = [];
         const tracks = new Map();
+        // 🎨 SCHERZO SÓNICO - Fase 4.1: Rastrear selección de instrumentos por sección
+        const instrumentSelections = new Map();
+        instrumentSelections.set('melody', []);
+        instrumentSelections.set('harmony', []);
+        instrumentSelections.set('bass', []);
+        instrumentSelections.set('rhythm', []);
+        instrumentSelections.set('pad', []);
         for (const section of structure.sections) {
+            // 🎨 SCHERZO SÓNICO - Fase 4.1: Seleccionar instrumentos dinámicamente
+            const melodyInstrument = this.selectInstrumentForSection(section, 'melody', modifiedStyle);
+            const harmonyInstrument = this.selectInstrumentForSection(section, 'harmony', modifiedStyle);
+            const bassInstrument = this.selectInstrumentForSection(section, 'bass', modifiedStyle);
+            const rhythmInstrument = this.selectInstrumentForSection(section, 'rhythm', modifiedStyle);
+            const padInstrument = this.selectInstrumentForSection(section, 'pad', modifiedStyle);
+            // Rastrear selecciones (necesario para construir metadata JSON después)
+            instrumentSelections.get('melody').push(melodyInstrument);
+            instrumentSelections.get('harmony').push(harmonyInstrument);
+            instrumentSelections.get('bass').push(bassInstrument);
+            instrumentSelections.get('rhythm').push(rhythmInstrument);
+            instrumentSelections.get('pad').push(padInstrument);
             // ✅ PASO 1: Generar Harmony PRIMERO (para calcular densidad real)
             const harmonyOptions = {
                 seed: params.seed + section.index,
@@ -81,7 +108,10 @@ export class MusicEnginePro {
                 range: { min: 4, max: 6 } // Octavas 4-6 (C4-C6)
                 // ❌ NO pasar tempo, duration - están en section
             };
-            const melody = this.melodyEngine.generateMelody(melodyOptions);
+            // 🎸 FRENTE #5.2: Desestructurar MelodyResult { notes, instrumentKey }
+            const melodyResult = this.melodyEngine.generateMelody(melodyOptions);
+            const melody = melodyResult.notes;
+            const melodyInstrumentKey = melodyResult.instrumentKey;
             // ✅ PASO 4: Calcular TOTALLOAD REAL (basado en notas generadas)
             const harmonyDensity = chords.flat().length / section.duration; // notas/segundo
             const melodyDensity = melody.length / section.duration; // notas/segundo
@@ -102,13 +132,19 @@ export class MusicEnginePro {
                 allNotes.push(...layers.rhythm);
             if (layers.pad)
                 allNotes.push(...layers.pad);
-            // ✅ PASO 7: Separar en tracks
-            this.addToTrack(tracks, 'Melody', melody);
-            this.addToTrack(tracks, 'Harmony', layers.harmony || []);
-            this.addToTrack(tracks, 'Bass', layers.bass || []);
-            this.addToTrack(tracks, 'Rhythm', layers.rhythm || []);
-            if (layers.pad)
-                this.addToTrack(tracks, 'Pad', layers.pad);
+            // 🔧 FASE 3.10 (Contrato Definitivo): Nombres simples lowercase (sin ::)
+            // El formato :: falló. Backend DEBE escribir nombres simples que el frontend entienda.
+            // 
+            // FORMATO: "tracktype" (lowercase, una palabra, sin separadores)
+            // - melody, harmony, bass, pad, rhythm
+            // El frontend seleccionará el instrumento dinámicamente basado en este nombre.
+            this.addToTrack(tracks, 'melody', melody);
+            this.addToTrack(tracks, 'harmony', layers.harmony || []);
+            this.addToTrack(tracks, 'bass', layers.bass || []);
+            this.addToTrack(tracks, 'rhythm', layers.rhythm || []);
+            if (layers.pad) {
+                this.addToTrack(tracks, 'pad', layers.pad);
+            }
         }
         // Generate transition fills between sections
         for (let i = 0; i < structure.sections.length - 1; i++) {
@@ -122,15 +158,57 @@ export class MusicEnginePro {
         // 6. Generar Poesía (placeholder)
         const poetry = await this.generatePoetry(params.seed, structure);
         // 7. Orquestar y mezclar (Orchestrator.separateIntoTracks, Orchestrator.applyMixing)
-        const separatedTracks = this.orchestrator.separateIntoTracks(tracks.get('Melody') || [], {
-            harmony: tracks.get('Harmony') || [],
-            bass: tracks.get('Bass') || [],
-            rhythm: tracks.get('Rhythm') || [],
-            pad: tracks.get('Pad')
+        // 🔧 FASE 3.11 (Reparación del Ensamblaje): Leer tracks con nombres lowercase
+        // Bug: Escribíamos 'melody' pero leíamos 'Melody' → undefined → 0 notas al MIDIRenderer
+        const melodyTrack = tracks.get('melody') || [];
+        const separatedTracks = this.orchestrator.separateIntoTracks(melodyTrack, {
+            harmony: tracks.get('harmony') || [],
+            bass: tracks.get('bass') || [],
+            rhythm: tracks.get('rhythm') || [],
+            pad: tracks.get('pad')
         }, modifiedStyle);
         const mixedTracks = this.orchestrator.applyMixing(separatedTracks, modifiedStyle);
         // 8. Renderizar MIDI (MIDIRenderer.renderMultiTrack)
         const midiBuffer = this.renderer.renderMultiTrack(mixedTracks, structure, modifiedStyle);
+        // 🎨 SCHERZO SÓNICO - Fase 4.1: Construir Metadata JSON
+        // Mapping empírico: [melody=0, skip=1, harmony=2, skip=3, bass=4, rhythm=5, skip=6, pad=7]
+        const trackMetadata = [];
+        const empiricalMapping = {
+            'melody': 0,
+            'harmony': 2,
+            'bass': 4,
+            'rhythm': 5,
+            'pad': 7
+        };
+        // Para cada layer, usar el PRIMER instrumento seleccionado (sección intro)
+        // El frontend usará esto como el instrumento para todo el track
+        // (En el futuro, podríamos soportar cambios de instrumento por sección)
+        const layerOrder = [
+            'melody', 'harmony', 'bass', 'rhythm', 'pad'
+        ];
+        for (const layer of layerOrder) {
+            const selections = instrumentSelections.get(layer) || [];
+            if (selections.length === 0) {
+                console.log(`⚠️ [MusicEnginePro] No hay selección de instrumento para layer '${layer}', saltando metadata.`);
+                continue;
+            }
+            // Usar el primer instrumento seleccionado (intro/primera sección)
+            const firstSelection = selections[0];
+            const empiricalIndex = empiricalMapping[layer];
+            // 🥁 FASE 5.2: Incluir samples map si es drumkit
+            const metadataEntry = {
+                empiricalIndex,
+                trackType: layer,
+                instrumentKey: firstSelection.key,
+                instrumentType: firstSelection.type
+            };
+            if (firstSelection.type === 'drumkit' && firstSelection.samples) {
+                metadataEntry.samples = firstSelection.samples;
+                console.log(`🥁 [MusicEnginePro] Drumkit metadata: ${firstSelection.key} con ${Object.keys(firstSelection.samples).length} samples`);
+            }
+            trackMetadata.push(metadataEntry);
+            console.log(`📊 [MusicEnginePro] Metadata: Track ${empiricalIndex} (${layer}) → ${firstSelection.key} (${firstSelection.type})`);
+        }
         // 9. Construir MusicEngineOutput
         const output = {
             midi: {
@@ -142,7 +220,9 @@ export class MusicEnginePro {
                     channel: index,
                     notes: track,
                     volume: 100
-                }))
+                })),
+                // 🎨 SCHERZO SÓNICO - Fase 4.1: Añadir metadata JSON
+                trackMetadata
             },
             poetry,
             metadata: {
@@ -191,9 +271,138 @@ export class MusicEnginePro {
             beauty: result.beauty || 0.5,
             complexity: result.complexity || 0.5,
             duration: result.duration || 120,
-            stylePreset: result.stylePreset || 'cyberpunk-ambient',
+            stylePreset: result.stylePreset || 'cyberpunkpreset', // 🎨 FASE 4.4 - Reparación "Gregoriano"
             mode: result.mode || 'entropy'
         };
+    }
+    /**
+     * � FASE 5.9: CREAR PALETA SÓNICA DETERMINISTA
+     *
+     * Crea la paleta completa de instrumentos para la canción:
+     * - Decide el VIBE global (chill vs dubchill) basado en seed
+     * - Elige UN instrumento de harmony (se queda toda la canción)
+     * - Elige UN instrumento de melody (se queda toda la canción)
+     * - Copia los pools completos de rhythm/bass (para elegir según intensity)
+     *
+     * LLAMAR UNA SOLA VEZ al inicio de generate(), antes del loop de secciones.
+     */
+    createSonicPalette(seed, preset) {
+        if (!preset.instruments) {
+            console.log(`⚠️ [MusicEnginePro] Preset '${preset.id}' no tiene configuración de instrumentos. Usando fallback.`);
+            return {
+                vibe: 'chill',
+                harmonyInstrument: { key: 'default', type: 'oneshot' },
+                melodyInstrument: { key: 'default', type: 'oneshot' },
+                rhythmPalette: [],
+                bassPalette: []
+            };
+        }
+        // Acceder al PRNG (ya seteado en generate())
+        // ⚠️ MIDIRenderer.random es private, pero lo accedemos con bracket notation
+        const prng = this.renderer['random'];
+        // Validar que el PRNG esté inicializado
+        if (!prng || typeof prng.next !== 'function') {
+            console.error(`❌ [MusicEnginePro] PRNG no inicializado. Usando fallback con vibe 'chill'.`);
+            return {
+                vibe: 'chill',
+                harmonyInstrument: { key: 'default', type: 'oneshot' },
+                melodyInstrument: { key: 'default', type: 'oneshot' },
+                rhythmPalette: preset.instruments.rhythm_chill || [],
+                bassPalette: preset.instruments.bass_chill || []
+            };
+        }
+        // 1. Decidir VIBE global (50/50 chill vs dubchill basado en seed)
+        const vibe = prng.next() < 0.5 ? 'chill' : 'dubchill';
+        console.log(`🎸 [MusicEnginePro] VIBE GLOBAL decidido (seed=${seed}): ${vibe}`);
+        // 2. Elegir harmony (según vibe)
+        const harmonyPool = vibe === 'chill'
+            ? (preset.instruments.harmony_chill || [])
+            : (preset.instruments.harmony_dubchill || []);
+        const harmonyInstrument = harmonyPool.length > 0
+            ? prng.choice(harmonyPool)
+            : { key: 'default-harmony', type: 'oneshot' };
+        // 3. Elegir melody (según vibe)
+        const melodyPool = vibe === 'chill'
+            ? (preset.instruments.melody_chill || [])
+            : (preset.instruments.melody_dubchill || []);
+        const melodyInstrument = melodyPool.length > 0
+            ? prng.choice(melodyPool)
+            : { key: 'default-melody', type: 'oneshot' };
+        // 4. Copiar pools completos para rhythm/bass (según vibe)
+        const rhythmPalette = vibe === 'chill'
+            ? (preset.instruments.rhythm_chill || [])
+            : (preset.instruments.rhythm_dubchill || []);
+        const bassPalette = vibe === 'chill'
+            ? (preset.instruments.bass_chill || [])
+            : (preset.instruments.bass_dubchill || []);
+        console.log(`🎨 [MusicEnginePro] PALETA CREADA:`);
+        console.log(`  → Harmony: ${harmonyInstrument.key} (${harmonyInstrument.type})`);
+        console.log(`  → Melody: ${melodyInstrument.key} (${melodyInstrument.type})`);
+        console.log(`  → Rhythm pool: ${rhythmPalette.length} instrumentos`);
+        console.log(`  → Bass pool: ${bassPalette.length} instrumentos`);
+        return {
+            vibe,
+            harmonyInstrument,
+            melodyInstrument,
+            rhythmPalette,
+            bassPalette
+        };
+    }
+    /**
+     * 🎨 SCHERZO SÓNICO - Fase 4.1: Selección Dinámica de Instrumentos
+     * 🎸 FASE 5.9: REFACTORIZADO para usar SonicPalette
+     *
+     * COMPORTAMIENTO:
+     * - Harmony/Melody: SIEMPRE retornar el instrumento fijo de la paleta (no cambia)
+     * - Rhythm/Bass: Elegir del pool según intensity de la sección (cambia dinámicamente)
+     *
+     * @param section - Sección actual (contiene intensity en profile)
+     * @param layer - Layer musical ('melody', 'harmony', 'bass', 'rhythm', 'pad')
+     * @param stylePreset - Preset de estilo con arsenal de instrumentos
+     * @returns InstrumentSelection con key y type, o fallback
+     */
+    selectInstrumentForSection(section, layer, stylePreset) {
+        // 🎸 FASE 5.9: Verificar que la paleta esté creada
+        if (!this.sonicPalette) {
+            console.log(`⚠️ [MusicEnginePro] sonicPalette NO CREADA. Llamar createSonicPalette() primero.`);
+            return { key: 'default', type: 'oneshot' };
+        }
+        const intensity = section.profile?.intensity ?? 0.5;
+        const sectionType = section.type;
+        // � FASE 5.9: IDENTIDAD ESTÁTICA - Harmony y Melody NO CAMBIAN
+        if (layer === 'harmony') {
+            console.log(`🎨 [MusicEnginePro] Section '${sectionType}' (intensity=${intensity.toFixed(2)}): ${layer} → ${this.sonicPalette.harmonyInstrument.key} (FIJO)`);
+            return this.sonicPalette.harmonyInstrument;
+        }
+        if (layer === 'melody') {
+            console.log(`🎨 [MusicEnginePro] Section '${sectionType}' (intensity=${intensity.toFixed(2)}): ${layer} → ${this.sonicPalette.melodyInstrument.key} (FIJO)`);
+            return this.sonicPalette.melodyInstrument;
+        }
+        // � FASE 5.9: ENERGÍA DINÁMICA - Rhythm y Bass CAMBIAN según intensity
+        let selectionPool = [];
+        if (layer === 'bass') {
+            selectionPool = this.sonicPalette.bassPalette;
+        }
+        else if (layer === 'rhythm') {
+            selectionPool = this.sonicPalette.rhythmPalette;
+        }
+        else if (layer === 'pad') {
+            // PAD: Lógica legacy (no está en paleta todavía)
+            const padInstruments = stylePreset.instruments?.pad || [];
+            selectionPool = padInstruments;
+        }
+        // ⚠️ VALIDACIÓN: Pool vacío
+        if (!selectionPool || selectionPool.length === 0) {
+            console.log(`⚠️ [MusicEnginePro] No hay instrumentos disponibles para layer '${layer}'. Usando fallback.`);
+            return { key: 'default', type: 'oneshot' };
+        }
+        // � SELECCIÓN DETERMINISTA según intensity
+        // Mapear intensity [0-1] a índice en el pool
+        const index = Math.floor(intensity * selectionPool.length);
+        const clampedIndex = Math.min(index, selectionPool.length - 1);
+        const selection = selectionPool[clampedIndex];
+        console.log(`🎨 [MusicEnginePro] Section '${sectionType}' (intensity=${intensity.toFixed(2)}): ${layer} → ${selection.key} (${selection.type}) [pool index ${clampedIndex}/${selectionPool.length}]`);
+        return selection;
     }
     addToTrack(tracks, trackName, notes) {
         if (!tracks.has(trackName)) {

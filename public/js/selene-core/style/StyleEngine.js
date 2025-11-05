@@ -109,7 +109,7 @@ export class StyleEngine {
     generateStyleFromSeed(seed, beauty) {
         // TODO: Implementar generación procedural
         // Por ahora retornar cyberpunk como fallback
-        return this.loadPreset('cyberpunk-ambient');
+        return this.loadPreset('cyberpunkpreset'); // 🎨 FASE 4.4 - Reparación "Gregoriano"
     }
     /**
      * Aplicar overrides del usuario

@@ -3,8 +3,8 @@
  * "CÓDIGO = ARTE = BELLEZA = FUNCIONALIDAD"
  */
 
-// 🔧 BUG #24 FIX: Import from aura-player-v2.js to force cache-bust
-import { MIDIPlayer } from './aura-player-v2.js'
+// 🎨 SCHERZO SÓNICO - Fase 4.4: Importar MIDIPlayerV3 (Metadata JSON)
+import { MIDIPlayerV3 } from './aura-player-v3.js'
 
 // Global state
 const state = {
@@ -28,9 +28,9 @@ async function init() {
     console.log('🎸 Initializing Music Engine UI...')
 
     try {
-        // 1. Initialize MIDI player
-        midiPlayer = new MIDIPlayer()
-        await midiPlayer.init()
+        // 1. Initialize MIDI player (V3 - Scherzo Sónico)
+        midiPlayer = new MIDIPlayerV3()
+        await midiPlayer.init('cyberpunkpreset')  // Set active preset
 
         // 2. Setup event listeners
         setupEventListeners()
@@ -377,9 +377,14 @@ async function displayMIDIOutput(result) {
     document.getElementById('lastKey').textContent = result.output.metadata?.key || 'Unknown'
     document.getElementById('lastSeed').textContent = result.output.metadata?.seed || 'Unknown'
 
-    // Load MIDI into player
-    await midiPlayer.loadMIDI(result.output.midi.buffer)
-    document.getElementById('totalTime').textContent = MIDIPlayer.formatTime(midiPlayer.duration)
+    // 🎯 FASE 4.5: Load MIDI + Metadata (V3 format with trackMetadata wrapper)
+    await midiPlayer.loadMIDI({
+        midi: result.output.midi.buffer,
+        metadata: {
+            trackMetadata: result.output.midi.trackMetadata  // ✅ Wrap en objeto metadata
+        }
+    })
+    document.getElementById('totalTime').textContent = MIDIPlayerV3.formatTime(midiPlayer.duration)  // 🎨 FASE 4.5 - Refactor clase
 
     // Remove glitch animation
     setTimeout(() => output.classList.remove('glitch-on-load'), 500)
@@ -436,7 +441,7 @@ function renderHistory() {
  * Play MIDI
  */
 async function playMIDI() {
-    if (!midiPlayer.getState().hasMidi) {
+    if (!midiPlayer.currentMidi) {  // 🎯 FASE 4.5: V3 usa currentMidi en lugar de getState()
         showError('No MIDI loaded')
         return
     }
@@ -461,7 +466,7 @@ function pauseMIDI() {
  * Stop MIDI
  */
 function stopMIDI() {
-    midiPlayer.stopPlayback()
+    midiPlayer.stop()  // 🎯 FASE 4.5: V3 usa stop() en lugar de stopPlayback()
 
     document.getElementById('playBtn').style.display = 'inline-block'
     document.getElementById('pauseBtn').style.display = 'none'
@@ -474,7 +479,7 @@ function stopMIDI() {
  */
 function onPlayerProgress(data) {
     document.getElementById('timelineProgress').style.width = `${data.progress * 100}%`
-    document.getElementById('currentTime').textContent = MIDIPlayer.formatTime(data.currentTime)
+    document.getElementById('currentTime').textContent = MIDIPlayerV3.formatTime(data.currentTime)  // 🎨 FASE 4.5 - Refactor clase
 }
 
 /**

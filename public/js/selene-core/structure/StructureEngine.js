@@ -35,8 +35,8 @@ export class StructureEngine {
      * Seleccionar forma musical según duración
      */
     selectForm(duration, style, prng) {
-        // Duraciones cortas (< 60s)
-        if (duration < 60) {
+        // Duraciones cortas (<= 60s) - 🔥 BUG #18.B FIX: Frontera lógica corregida
+        if (duration <= 60) {
             if (style.temporal.loopable) {
                 // Loop simple: A-B-A o A-A-B
                 return prng.next() < 0.5
@@ -88,7 +88,9 @@ export class StructureEngine {
     }
     calculateSectionDurations(form, totalDuration, style, prng) {
         const fadeTime = style.temporal.fadeIn + style.temporal.fadeOut;
-        const usableDuration = totalDuration - fadeTime;
+        // 🔥 BUG #18 FIX DEFINITIVO (DIRECTIVA ARQUITECTO): NO restar fadeTime para presupuesto
+        // La totalDuration solicitada debe ser la base para el cálculo del presupuesto de compases musicales
+        const usableDuration = totalDuration; // ✅ CORRECTO: usar totalDuration completa
         const beatsPerBar = style.musical.timeSignature[0];
         const bpm = style.musical.tempo;
         const secondsPerBar = (60 / bpm) * beatsPerBar;
@@ -154,7 +156,10 @@ export class StructureEngine {
                 profile: null,
                 transition: null
             });
+            // 🔥 FASE 5.3 (SCHERZO QUIRÚRGICO): Prevenir drift de precisión flotante
+            // IEEE 754 acumula errores en cada suma. Redondear a 12 decimales (picosegundos)
             currentTime += sectionDuration;
+            currentTime = Math.round(currentTime * 1e12) / 1e12;
             console.log(`[STRUCTURE ENGINE] Section ${i + 1} (${sectionType}): ${barsForThisSection} bars = ${sectionDuration.toFixed(2)}s. Remaining bars: ${barsRemaining}`);
         }
         // VALIDACIÓN

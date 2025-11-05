@@ -395,6 +395,39 @@ export class DrumPatternEngine {
                     { beat: 8, midi: 36, velocity: 118 }, // Kick (máximo)
                     { beat: 8, midi: 49, velocity: 112 } // Crash (épico)
                 ]
+            },
+            // 🌌 FASE 6.0 - FRENTE #C: TRON LEGACY PATTERNS
+            // Minimalismo atmosférico: crashes con reverb largo, kicks espaciados, NO snares/hihats
+            tron_minimal: {
+                bars: 4,
+                complexity: 'low',
+                notes: [
+                    // Bar 1: Crash + Kick
+                    { beat: 1, midi: 49, velocity: 100 }, // Crash (beat 1, reverb largo)
+                    { beat: 1, midi: 36, velocity: 108 }, // Kick
+                    // Bar 2: Solo kick
+                    { beat: 5, midi: 36, velocity: 105 }, // Kick beat 5
+                    // Bar 3: Silencio atmosférico
+                    // Bar 4: Kick final
+                    { beat: 13, midi: 36, velocity: 110 } // Kick beat 13
+                ]
+            },
+            tron_epic: {
+                bars: 4,
+                complexity: 'medium',
+                notes: [
+                    // Bar 1: Crash épico + Kick potente
+                    { beat: 1, midi: 49, velocity: 115 }, // Crash (máximo reverb)
+                    { beat: 1, midi: 36, velocity: 118 }, // Kick (máximo)
+                    // Bar 2: Kick + ghost kick
+                    { beat: 5, midi: 36, velocity: 110 }, // Kick
+                    { beat: 6.5, midi: 36, velocity: 75 }, // Ghost kick (sutil)
+                    // Bar 3: Crash secundario
+                    { beat: 9, midi: 49, velocity: 95 }, // Crash (menor intensidad)
+                    { beat: 9, midi: 36, velocity: 105 }, // Kick
+                    // Bar 4: Resolución
+                    { beat: 13, midi: 36, velocity: 115 } // Kick final
+                ]
             }
         };
     }
@@ -556,7 +589,17 @@ export class DrumPatternEngine {
      */
     selectPattern(section) {
         const { type, profile, index } = section;
-        // Mapeo de tipos base
+        // 🌌 FASE 6.0 - FRENTE #C: Detectar contexto atmosférico para patrones Tron
+        // Si la intensidad es muy baja (< 0.4), usar minimalismo Tron Legacy
+        const intensity = profile?.intensity || 0.5;
+        if (intensity < 0.4) {
+            // Alternar entre tron_minimal (más común) y tron_epic (ocasional)
+            const useTronEpic = this.prng.next() > 0.75; // 25% chance de epic
+            const tronPattern = useTronEpic ? 'tron_epic' : 'tron_minimal';
+            console.log(`[RHYTHM DIVINE] 🌌 Contexto atmosférico detectado (Intensity: ${intensity.toFixed(2)}) → Patrón Tron: '${tronPattern}'`);
+            return tronPattern;
+        }
+        // Mapeo de tipos base (patrones tradicionales)
         const baseMapping = {
             'intro': 'intro',
             'verse': 'verse',

@@ -146,24 +146,25 @@ export const CYBERPUNK_PRESET = {
             { key: 'melody/strings/Contra Bass', type: 'multisample' }
         ],
         // 🎸 MELODY CHILL: Vocal Chops (16) + Plucks oneshots (3) + Pluck MAX multisample (84 notas)
+        // 🔥 FASE 6.0: VOCAL CHOPS REALES (16 samples de Radwulf)
         melody_chill: [
-            // 16 Vocal Chops oneshots
-            { key: 'melody/vocal-chops/vocal-1', type: 'oneshot' },
-            { key: 'melody/vocal-chops/vocal-2', type: 'oneshot' },
-            { key: 'melody/vocal-chops/vocal-3', type: 'oneshot' },
-            { key: 'melody/vocal-chops/vocal-4', type: 'oneshot' },
-            { key: 'melody/vocal-chops/vocal-5', type: 'oneshot' },
-            { key: 'melody/vocal-chops/vocal-6', type: 'oneshot' },
-            { key: 'melody/vocal-chops/vocal-7', type: 'oneshot' },
-            { key: 'melody/vocal-chops/vocal-8', type: 'oneshot' },
-            { key: 'melody/vocal-chops/vocal-9', type: 'oneshot' },
-            { key: 'melody/vocal-chops/vocal-10', type: 'oneshot' },
-            { key: 'melody/vocal-chops/vocal-11', type: 'oneshot' },
-            { key: 'melody/vocal-chops/vocal-12', type: 'oneshot' },
-            { key: 'melody/vocal-chops/vocal-13', type: 'oneshot' },
-            { key: 'melody/vocal-chops/vocal-14', type: 'oneshot' },
-            { key: 'melody/vocal-chops/vocal-15', type: 'oneshot' },
-            { key: 'melody/vocal-chops/vocal-16', type: 'oneshot' },
+            // 16 Vocal Chops oneshots (REALES)
+            { key: 'melody/vocal-chops/chop-1-oneshot', type: 'oneshot' },
+            { key: 'melody/vocal-chops/chop-2-oneshot', type: 'oneshot' },
+            { key: 'melody/vocal-chops/chop-3-oneshot', type: 'oneshot' },
+            { key: 'melody/vocal-chops/chop-4-oneshot', type: 'oneshot' },
+            { key: 'melody/vocal-chops/chop-5-oneshot', type: 'oneshot' },
+            { key: 'melody/vocal-chops/chop-6-oneshot', type: 'oneshot' },
+            { key: 'melody/vocal-chops/chop-7-oneshot', type: 'oneshot' },
+            { key: 'melody/vocal-chops/chop-8-oneshot', type: 'oneshot' },
+            { key: 'melody/vocal-chops/chop-9-oneshot', type: 'oneshot' },
+            { key: 'melody/vocal-chops/chop-10-oneshot', type: 'oneshot' },
+            { key: 'melody/vocal-chops/chop-11-oneshot', type: 'oneshot' },
+            { key: 'melody/vocal-chops/chop-12-oneshot', type: 'oneshot' },
+            { key: 'melody/vocal-chops/chop-13-oneshot', type: 'oneshot' },
+            { key: 'melody/vocal-chops/chop-14-oneshot', type: 'oneshot' },
+            { key: 'melody/vocal-chops/chop-15-oneshot', type: 'oneshot' },
+            { key: 'melody/vocal-chops/chop-16-oneshot', type: 'oneshot' },
             // 3 Plucks oneshots (primitivos)
             { key: 'melody/pluck/pluck1', type: 'oneshot' },
             { key: 'melody/pluck/pluck2', type: 'oneshot' },
@@ -226,6 +227,7 @@ export const CYBERPUNK_PRESET = {
         ],
         // 🥁 RHYTHM CHILL (Intensity < 0.7): Soft kicks, closed hats, gentle snares
         // 🔥 FASE 5.2: Rediseñado como 'drumkit' con mapeo MIDI explícito
+        // 🔥 FASE 6.0: AMBIENT-KIT-1 (16 samples de Radwulf - TRON LEGACY STYLE)
         rhythm_chill: [
             {
                 key: 'chill-kit-1',
@@ -236,6 +238,28 @@ export const CYBERPUNK_PRESET = {
                     42: 'rythm/closehat1', // Hi-hat closed (F#2)
                     46: 'rythm/shortopenhat', // Hi-hat open (A#2)
                     49: 'rythm/closehat2' // Crash cymbal = closed hat variant (C#3)
+                }
+            },
+            {
+                key: 'ambient-kit-1',
+                type: 'drumkit',
+                samples: {
+                    36: 'rythm/ambient-kit-1/sub-kick1', // Kick (C2) - Sub-bass pesado
+                    35: 'rythm/ambient-kit-1/sub-kick2', // Kick alt (B1)
+                    33: 'rythm/ambient-kit-1/sub-kick3', // Kick variant (A1)
+                    41: 'rythm/ambient-kit-1/sub-kick4', // Low tom = Kick 4 (F2)
+                    38: 'rythm/ambient-kit-1/snare1', // Snare (D2)
+                    40: 'rythm/ambient-kit-1/snare2', // Snare alt (E2)
+                    37: 'rythm/ambient-kit-1/snare3', // Rim shot = Snare 3 (C#2)
+                    39: 'rythm/ambient-kit-1/snare4', // Clap = Snare 4 (D#2)
+                    42: 'rythm/ambient-kit-1/closehat1', // Hi-hat closed (F#2)
+                    44: 'rythm/ambient-kit-1/closehat2', // Hi-hat pedal = Closehat 2 (G#2)
+                    49: 'rythm/ambient-kit-1/crash-long1', // Crash 1 (C#3) - REVERB LARGO (Tron!)
+                    52: 'rythm/ambient-kit-1/crash-long2', // Crash 2 (E3) - REVERB LARGO
+                    55: 'rythm/ambient-kit-1/crash-long3', // Splash = Crash 3 (G3) - REVERB LARGO
+                    51: 'rythm/ambient-kit-1/ride-atmos1', // Ride 1 (D#3) - Atmosférico
+                    59: 'rythm/ambient-kit-1/ride-atmos2', // Ride 2 (B3) - Atmosférico
+                    43: 'rythm/ambient-kit-1/snare-reverb' // Tom low = Snare reverb (G2)
                 }
             }
         ],
@@ -282,6 +306,71 @@ export const CYBERPUNK_PRESET = {
         fadeIn: 4.0,
         fadeOut: 6.0,
         loopable: true
+    },
+    // 🎸 FASE 6.0 - FRENTE #A: ARQUITECTURA MULTICAPA
+    // Sistema de pools temáticos para selección simultánea de 2-4 capas melódicas
+    // Implementa AND logic (strings + plucks + vocals + leads tocando juntos)
+    melodicLayerPools: {
+        // POOL 1: STRINGS (atmósfera sostenida)
+        strings: [
+            { key: 'melody/strings/Cello', type: 'multisample' },
+            { key: 'melody/strings/Viola', type: 'multisample' },
+            { key: 'melody/strings/Horn', type: 'multisample' },
+            { key: 'melody/strings/Violin', type: 'multisample' },
+            { key: 'melody/strings/Contra Bass', type: 'multisample' }
+        ],
+        // POOL 2: PLUCKS (melodía percusiva)
+        plucks: [
+            { key: 'melody/pluck/pluck1', type: 'oneshot' },
+            { key: 'melody/pluck/pluck2', type: 'oneshot' },
+            { key: 'melody/pluck/pluck3', type: 'oneshot' },
+            { key: 'melody/pluck/MAX', type: 'multisample' }
+        ],
+        // POOL 3: VOCALS (humanidad + emoción)
+        vocals: [
+            { key: 'melody/vocal-chops/chop-1-oneshot', type: 'oneshot' },
+            { key: 'melody/vocal-chops/chop-2-oneshot', type: 'oneshot' },
+            { key: 'melody/vocal-chops/chop-3-oneshot', type: 'oneshot' },
+            { key: 'melody/vocal-chops/chop-4-oneshot', type: 'oneshot' },
+            { key: 'melody/vocal-chops/chop-5-oneshot', type: 'oneshot' },
+            { key: 'melody/vocal-chops/chop-6-oneshot', type: 'oneshot' },
+            { key: 'melody/vocal-chops/chop-7-oneshot', type: 'oneshot' },
+            { key: 'melody/vocal-chops/chop-8-oneshot', type: 'oneshot' },
+            { key: 'melody/vocal-chops/chop-9-oneshot', type: 'oneshot' },
+            { key: 'melody/vocal-chops/chop-10-oneshot', type: 'oneshot' },
+            { key: 'melody/vocal-chops/chop-11-oneshot', type: 'oneshot' },
+            { key: 'melody/vocal-chops/chop-12-oneshot', type: 'oneshot' },
+            { key: 'melody/vocal-chops/chop-13-oneshot', type: 'oneshot' },
+            { key: 'melody/vocal-chops/chop-14-oneshot', type: 'oneshot' },
+            { key: 'melody/vocal-chops/chop-15-oneshot', type: 'oneshot' },
+            { key: 'melody/vocal-chops/chop-16-oneshot', type: 'oneshot' }
+        ],
+        // POOL 4: LEADS (energía + protagonismo)
+        leads: [
+            { key: 'melody/synth-lead/classic-moog-brass', type: 'multisample' },
+            { key: 'melody/synth-lead/classic-sync', type: 'multisample' },
+            { key: 'melody/synth-lead/pulse-buzz-lead', type: 'multisample' },
+            { key: 'melody/synth-lead/sawtedlead', type: 'multisample' },
+            { key: 'melody/synth-lead/shrill', type: 'multisample' },
+            { key: 'melody/synth-lead/softsawz', type: 'multisample' },
+            { key: 'melody/synth-lead/wave-layer', type: 'multisample' }
+        ]
+    },
+    // 🎸 FASE 6.0 - FRENTE #A: ESTRATEGIAS DE CAPAS POR VIBE
+    // Define cuántas capas y qué pools usar según el vibe (chill vs dubchill)
+    layerStrategies: {
+        chill: {
+            minLayers: 2,
+            maxLayers: 3,
+            pools: ['strings', 'plucks', 'vocals'], // Atmosférico: strings base + plucks o vocals
+            weights: [0.4, 0.3, 0.3] // Preferencia strings (40%), resto balanceado
+        },
+        dubchill: {
+            minLayers: 3,
+            maxLayers: 4,
+            pools: ['strings', 'plucks', 'vocals', 'leads'], // Más denso: agregar leads
+            weights: [0.25, 0.25, 0.25, 0.25] // Balanceado (todos 25%)
+        }
     }
 };
 //# sourceMappingURL=cyberpunkpreset.js.map

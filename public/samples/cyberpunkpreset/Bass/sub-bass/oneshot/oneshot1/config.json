@@ -1,11 +1,16 @@
 {
-  "A1": "sub-bass-a1.wav",
-  "A2": "sub-bass-a2.wav",
-  "C1": "sub-bass-c1.wav",
-  "C2": "sub-bass-c2.wav",
-  "C3": "sub-bass-c3.wav",
-  "D#1": "sub-bass-d#1.wav",
-  "D#2": "sub-bass-d#2.wav",
-  "F#1": "sub-bass-f#1.wav",
-  "F#2": "sub-bass-f#2.wav"
+  "loopable": false,
+  "samples": {
+    "A1": "sub-bass-a1.wav",
+    "A2": "sub-bass-a2.wav",
+    "C1": "sub-bass-c1.wav",
+    "C2": "sub-bass-c2.wav",
+    "C3": "sub-bass-c3.wav",
+    "D#1": "sub-bass-d#1.wav",
+    "D#2": "sub-bass-d#2.wav",
+    "F#1": "sub-bass-f#1.wav",
+    "F#2": "sub-bass-f#2.wav"
+  },
+  "generated_by": "create-multisample-configs.cjs v2.0 (FASE 6.0)",
+  "timestamp": "2025-11-05T04:54:46.078Z"
 }

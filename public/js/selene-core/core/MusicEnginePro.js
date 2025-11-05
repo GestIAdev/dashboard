@@ -9,6 +9,7 @@ import { VitalsIntegrationEngine } from '../vitals/VitalsIntegrationEngine.js';
 import { Orchestrator } from '../orchestration/Orchestrator.js';
 import { MIDIRenderer } from '../render/MIDIRenderer.js';
 import { DrumPatternEngine } from '../rhythm/DrumPatternEngine.js';
+import { SeededRandom } from '../utils/SeededRandom.js'; // 🎸 FASE 6.0 - FRENTE #A
 export class MusicEnginePro {
     styleEngine;
     structureEngine;
@@ -22,6 +23,9 @@ export class MusicEnginePro {
     // Creada UNA VEZ al inicio de generate(), contiene instrumentos fijos (harmony/melody)
     // y pools dinámicos (rhythm/bass) para toda la canción
     sonicPalette = null;
+    // 🎸 FASE 6.0 - FRENTE #A: CAPAS MELÓDICAS MULTICAPA
+    // Array de 2-4 instrumentos melódicos seleccionados una vez al inicio (AND logic)
+    melodicLayers = [];
     constructor() {
         this.styleEngine = new StyleEngine();
         this.structureEngine = new StructureEngine();
@@ -61,6 +65,11 @@ export class MusicEnginePro {
         // Decide vibe global (chill/dubchill), elige instrumentos fijos (harmony/melody),
         // y copia pools dinámicos (rhythm/bass) para toda la canción
         this.sonicPalette = this.createSonicPalette(params.seed || 42, modifiedStyle);
+        // 🎸 FASE 6.0 - FRENTE #A: SELECCIONAR CAPAS MELÓDICAS MULTICAPA (UNA SOLA VEZ)
+        // En lugar de 1 instrumento melódico, elegir 2-4 capas simultáneas usando pools temáticos
+        const prngForLayers = new SeededRandom(params.seed || 42);
+        this.melodicLayers = this.selectMelodicLayers(modifiedStyle, prngForLayers);
+        console.log(`🎸 [MUSIC ENGINE PRO] Capas melódicas seleccionadas: ${this.melodicLayers.length} instrumentos`);
         // 5. Generar contenido por sección (ARQUITECTURA RADICAL: Section como SSOT)
         const allNotes = [];
         const tracks = new Map();
@@ -97,33 +106,37 @@ export class MusicEnginePro {
             const chords = this.harmonyEngine.generateChordSequence(harmonyOptions);
             // ✅ PASO 2: Convertir chords a ResolvedChord[]
             const resolvedChords = this.convertToResolvedChords(chords, section);
-            // ✅ PASO 3: Generar Melody
-            const melodyOptions = {
-                seed: params.seed + section.index,
-                section: section, // ✅ PASAR SECTION COMPLETA
-                key: 0, // C major
-                mode: modifiedStyle.musical.mode,
-                complexity: params.complexity,
-                contour: 'arched',
-                range: { min: 4, max: 6 } // Octavas 4-6 (C4-C6)
-                // ❌ NO pasar tempo, duration - están en section
-            };
-            // 🎸 FRENTE #5.2: Desestructurar MelodyResult { notes, instrumentKey }
-            const melodyResult = this.melodyEngine.generateMelody(melodyOptions);
-            const melody = melodyResult.notes;
-            const melodyInstrumentKey = melodyResult.instrumentKey;
-            // ✅ PASO 4: Calcular TOTALLOAD REAL (basado en notas generadas)
-            const harmonyDensity = chords.flat().length / section.duration; // notas/segundo
-            const melodyDensity = melody.length / section.duration; // notas/segundo
-            const totalLoad = harmonyDensity + melodyDensity;
-            console.log(`[MUSIC ENGINE] Section ${section.index} (${section.type}): harmonyDensity=${harmonyDensity.toFixed(2)}, melodyDensity=${melodyDensity.toFixed(2)}, totalLoad=${totalLoad.toFixed(2)}`);
+            // ✅ PASO 3: Generar MÚLTIPLES Melodías (AND logic multicapa - FASE 6.0)
+            const melodyLayers = [];
+            let totalMelodyDensity = 0;
+            for (let layerIndex = 0; layerIndex < this.melodicLayers.length; layerIndex++) {
+                const layer = this.melodicLayers[layerIndex];
+                const melodyOptions = {
+                    seed: params.seed + section.index + layerIndex * 1000, // Seed diferente por capa
+                    section: section,
+                    key: 0, // C major
+                    mode: modifiedStyle.musical.mode,
+                    complexity: params.complexity,
+                    contour: 'arched',
+                    range: { min: 4, max: 6 } // Octavas 4-6 (C4-C6)
+                };
+                const melodyResult = this.melodyEngine.generateMelody(melodyOptions);
+                const melody = melodyResult.notes;
+                melodyLayers.push(melody);
+                totalMelodyDensity += melody.length / section.duration;
+                console.log(`  🎸 [Capa ${layerIndex + 1}/${this.melodicLayers.length}] ${layer.key}: ${melody.length} notas generadas`);
+            }
+            // ✅ PASO 4: Calcular TOTALLOAD REAL (basado en notas generadas + TODAS las capas)
+            const harmonyDensity = chords.flat().length / section.duration;
+            const totalLoad = harmonyDensity + totalMelodyDensity;
+            console.log(`[MUSIC ENGINE] Section ${section.index} (${section.type}): harmonyDensity=${harmonyDensity.toFixed(2)}, totalMelodyDensity=${totalMelodyDensity.toFixed(2)} (${this.melodicLayers.length} capas), totalLoad=${totalLoad.toFixed(2)}`);
             // ✅ PASO 5: Generar capas (Orchestrator usa totalLoad REAL)
-            const layers = this.orchestrator.generateLayers(section, resolvedChords, melody, // ✅ NO ajustar startTime aquí - Orchestrator lo respeta
-            modifiedStyle, params.seed + section.index, mode, totalLoad, // ✅ PASAR CARGA REAL
-            this.drumEngine // 🔥 BUG #25 FIX: Pasar instancia única
-            );
-            // ✅ PASO 6: Recopilar todas las notas
-            allNotes.push(...melody); // ✅ Melody ya tiene startTime correcto
+            const layers = this.orchestrator.generateLayers(section, resolvedChords, melodyLayers[0], // ✅ Pasar primera capa como referencia (Orchestrator legacy)
+            modifiedStyle, params.seed + section.index, mode, totalLoad, this.drumEngine);
+            // ✅ PASO 6: Recopilar TODAS las notas (incluyendo TODAS las capas melódicas)
+            for (const melodyLayer of melodyLayers) {
+                allNotes.push(...melodyLayer);
+            }
             if (layers.harmony)
                 allNotes.push(...layers.harmony);
             if (layers.bass)
@@ -132,13 +145,12 @@ export class MusicEnginePro {
                 allNotes.push(...layers.rhythm);
             if (layers.pad)
                 allNotes.push(...layers.pad);
-            // 🔧 FASE 3.10 (Contrato Definitivo): Nombres simples lowercase (sin ::)
-            // El formato :: falló. Backend DEBE escribir nombres simples que el frontend entienda.
-            // 
-            // FORMATO: "tracktype" (lowercase, una palabra, sin separadores)
-            // - melody, harmony, bass, pad, rhythm
-            // El frontend seleccionará el instrumento dinámicamente basado en este nombre.
-            this.addToTrack(tracks, 'melody', melody);
+            // 🔧 FASE 6.0 - FRENTE #A: Agregar TODAS las capas melódicas como tracks separados
+            // En lugar de 1 track 'melody', crear 'melody1', 'melody2', 'melody3', 'melody4'
+            for (let layerIndex = 0; layerIndex < melodyLayers.length; layerIndex++) {
+                const trackName = layerIndex === 0 ? 'melody' : `melody${layerIndex + 1}`;
+                this.addToTrack(tracks, trackName, melodyLayers[layerIndex]);
+            }
             this.addToTrack(tracks, 'harmony', layers.harmony || []);
             this.addToTrack(tracks, 'bass', layers.bass || []);
             this.addToTrack(tracks, 'rhythm', layers.rhythm || []);
@@ -349,7 +361,73 @@ export class MusicEnginePro {
         };
     }
     /**
-     * 🎨 SCHERZO SÓNICO - Fase 4.1: Selección Dinámica de Instrumentos
+     * � FASE 6.0 - FRENTE #A: Selección Multicapa (AND logic)
+     *
+     * En lugar de elegir 1 solo instrumento melódico, elige 2-4 capas simultáneas
+     * usando los pools temáticos (strings, plucks, vocals, leads) según estrategia del vibe.
+     *
+     * COMPORTAMIENTO:
+     * - Chill: 2-3 capas (strings base + plucks/vocals)
+     * - Dubchill: 3-4 capas (strings + plucks + vocals + leads)
+     * - Selección determinista usando SeededRandom
+     * - Sin repetir instrumentos en la misma canción
+     *
+     * @param preset - StylePreset con melodicLayerPools y layerStrategies
+     * @param prng - SeededRandom para selección determinista
+     * @returns Array de 2-4 InstrumentSelection (capas simultáneas)
+     */
+    selectMelodicLayers(preset, prng) {
+        // Verificar que el preset tenga las nuevas estructuras
+        if (!preset.melodicLayerPools || !preset.layerStrategies) {
+            console.warn(`⚠️ [MusicEnginePro] Preset sin melodicLayerPools/layerStrategies. Usando fallback legacy.`);
+            // Fallback: usar melody_chill o melody_dubchill (1 sola capa)
+            const vibe = this.sonicPalette?.vibe || 'chill';
+            const legacyPool = vibe === 'chill'
+                ? (preset.instruments?.melody_chill || [])
+                : (preset.instruments?.melody_dubchill || []);
+            const legacyInstrument = legacyPool.length > 0
+                ? prng.choice(legacyPool)
+                : { key: 'default-melody', type: 'oneshot' };
+            return [legacyInstrument];
+        }
+        const vibe = this.sonicPalette?.vibe || 'chill';
+        const strategy = preset.layerStrategies[vibe];
+        const pools = preset.melodicLayerPools;
+        // Determinar cantidad de capas (minLayers a maxLayers)
+        const numLayers = prng.range(strategy.minLayers, strategy.maxLayers + 1);
+        console.log(`🎸 [MusicEnginePro] Seleccionando ${numLayers} capas melódicas (vibe: ${vibe})`);
+        const selectedLayers = [];
+        const usedPoolNames = [];
+        // Seleccionar capas según weights (pools con mayor weight tienen más probabilidad)
+        for (let i = 0; i < numLayers; i++) {
+            // Filtrar pools no usados
+            const availablePools = strategy.pools.filter(p => !usedPoolNames.includes(p));
+            if (availablePools.length === 0)
+                break; // No hay más pools disponibles
+            // Seleccionar pool usando weights (weighted choice)
+            const poolWeights = availablePools.map(p => {
+                const index = strategy.pools.indexOf(p);
+                return strategy.weights[index] || 0.25;
+            });
+            const selectedPoolName = prng.weightedChoice(availablePools, poolWeights);
+            usedPoolNames.push(selectedPoolName);
+            // Seleccionar instrumento del pool elegido
+            const pool = pools[selectedPoolName];
+            if (pool && pool.length > 0) {
+                const instrument = prng.choice(pool);
+                selectedLayers.push(instrument);
+                console.log(`  → Capa ${i + 1}: ${instrument.key} (pool: ${selectedPoolName}, type: ${instrument.type})`);
+            }
+        }
+        // Fallback: si no se seleccionó nada, usar default
+        if (selectedLayers.length === 0) {
+            console.warn(`⚠️ [MusicEnginePro] No se pudo seleccionar capas. Usando fallback.`);
+            return [{ key: 'default-melody', type: 'oneshot' }];
+        }
+        return selectedLayers;
+    }
+    /**
+     * �🎨 SCHERZO SÓNICO - Fase 4.1: Selección Dinámica de Instrumentos
      * 🎸 FASE 5.9: REFACTORIZADO para usar SonicPalette
      *
      * COMPORTAMIENTO:

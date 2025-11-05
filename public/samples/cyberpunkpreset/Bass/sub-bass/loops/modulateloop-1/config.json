@@ -1,11 +1,16 @@
 {
-  "A1": "loop-a1.wav",
-  "A2": "loop-a2.wav",
-  "C1": "loop-c1.wav",
-  "C2": "loop-c2.wav",
-  "C3": "loop-c3.wav",
-  "D#1": "loop-d#1.wav",
-  "D#2": "loop-d#2.wav",
-  "F#1": "loop-f#1.wav",
-  "F#2": "loop-f#2.wav"
+  "loopable": true,
+  "samples": {
+    "A1": "loop-a1.wav",
+    "A2": "loop-a2.wav",
+    "C1": "loop-c1.wav",
+    "C2": "loop-c2.wav",
+    "C3": "loop-c3.wav",
+    "D#1": "loop-d#1.wav",
+    "D#2": "loop-d#2.wav",
+    "F#1": "loop-f#1.wav",
+    "F#2": "loop-f#2.wav"
+  },
+  "generated_by": "create-multisample-configs.cjs v2.0 (FASE 6.0)",
+  "timestamp": "2025-11-05T04:54:46.074Z"
 }

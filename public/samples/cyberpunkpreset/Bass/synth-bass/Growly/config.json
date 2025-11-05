@@ -1,11 +1,16 @@
 {
-  "A1": "a1-max.wav",
-  "A2": "a2-max.wav",
-  "C1": "c1-max.wav",
-  "C2": "c2-max.wav",
-  "C3": "c3-max.wav",
-  "D#1": "d#1-max.wav",
-  "D#2": "d#2-max.wav",
-  "F#1": "f#1-max.wav",
-  "F#2": "f#2-max.wav"
+  "loopable": false,
+  "samples": {
+    "A1": "a1-max.wav",
+    "A2": "a2-max.wav",
+    "C1": "c1-max.wav",
+    "C2": "c2-max.wav",
+    "C3": "c3-max.wav",
+    "D#1": "d#1-max.wav",
+    "D#2": "d#2-max.wav",
+    "F#1": "f#1-max.wav",
+    "F#2": "f#2-max.wav"
+  },
+  "generated_by": "create-multisample-configs.cjs v2.0 (FASE 6.0)",
+  "timestamp": "2025-11-05T04:54:46.079Z"
 }

@@ -119,25 +119,50 @@ export class SampleLoaderV4 {
         // 🔥 FASE 5.11 - BUG #2 REPARADO: Leer config.json
         const configPath = `${folderPath}/config.json`
         
-        let sampleMap
+        let config
         try {
             const response = await fetch(configPath)
             if (!response.ok) {
                 throw new Error(`config.json not found: ${configPath}`)
             }
-            sampleMap = await response.json()
-            console.log(`✅ [SampleLoader V4] Loaded config.json: ${Object.keys(sampleMap).length} samples`)
+            config = await response.json()
+            
+            // 🔥 FASE 6.0: Soporte para formato nuevo (loopable + samples) o legacy (solo samples)
+            const sampleMap = config.samples || config  // Legacy: config era el map directo
+            const isLoopable = config.loopable || false  // FASE 6.0: flag loopable
+            
+            console.log(`✅ [SampleLoader V4] Loaded config.json: ${Object.keys(sampleMap).length} samples${isLoopable ? ' (LOOPABLE)' : ''}`)
         } catch (error) {
             console.error(`❌ [SampleLoader V4] Cannot read config.json: ${configPath}`, error)
             throw new Error(`Multisample config.json missing for ${instrumentKey}. Run create-multisample-configs.js first.`)
         }
+        
+        const sampleMap = config.samples || config
+        const isLoopable = config.loopable || false
 
         // Crear Tone.Sampler con mapeo del JSON
         const sampler = new Tone.Sampler({
-            urls: sampleMap,        // { "C2": "cello-c2.wav", "D2": "cello-d2.wav", ... }
+            urls: sampleMap,        // { "C2": "loop-c2.wav", "D2": "loop-d2.wav", ... }
             baseUrl: `${folderPath}/`,
             release: 1,
             onload: () => {
+                // 🔥 FASE 6.0: Activar looping si el config lo indica
+                if (isLoopable) {
+                    console.log(`🔁 [SampleLoader V4] Activating loop for ${instrumentKey}...`)
+                    
+                    // Acceder a los buffers internos de Tone.Sampler
+                    // sampler._buffers es un Map de notas → ToneAudioBuffer
+                    if (sampler._buffers && sampler._buffers._buffers) {
+                        Object.values(sampler._buffers._buffers).forEach(buffer => {
+                            if (buffer && buffer._buffer) {
+                                // Activar loop en el AudioBuffer interno
+                                buffer._buffer.loop = true
+                                console.log(`   ✅ Loop enabled for buffer`)
+                            }
+                        })
+                    }
+                }
+                
                 console.log(`✅ [SampleLoader V4] Multisample loaded: ${instrumentKey}`)
             },
             onerror: (error) => {

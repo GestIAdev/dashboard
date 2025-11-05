@@ -40,5 +40,40 @@ export class SeededRandom {
         }
         return result;
     }
+    /**
+     * 🎸 FASE 6.0 - FRENTE #A: Número en rango [min, max)
+     * Similar a nextInt() pero para rangos flotantes
+     */
+    range(min, max) {
+        return Math.floor(this.next() * (max - min)) + min;
+    }
+    /**
+     * 🎸 FASE 6.0 - FRENTE #A: Selección ponderada (weighted choice)
+     * Elige un elemento del array usando pesos (weights)
+     * @param array - Array de elementos
+     * @param weights - Array de pesos (debe sumar ~1.0, pero se normaliza internamente)
+     * @returns Elemento seleccionado
+     */
+    weightedChoice(array, weights) {
+        if (array.length === 0)
+            throw new Error('Array vacío en weightedChoice');
+        if (array.length !== weights.length)
+            throw new Error('Array y weights deben tener mismo tamaño');
+        // Normalizar weights (por si no suman 1.0)
+        const sum = weights.reduce((a, b) => a + b, 0);
+        const normalized = weights.map(w => w / sum);
+        // Generar número random 0-1
+        const rand = this.next();
+        // Acumular pesos hasta superar rand
+        let cumulative = 0;
+        for (let i = 0; i < normalized.length; i++) {
+            cumulative += normalized[i];
+            if (rand < cumulative) {
+                return array[i];
+            }
+        }
+        // Fallback (no debería llegar aquí, pero por si rounding errors)
+        return array[array.length - 1];
+    }
 }
 //# sourceMappingURL=SeededRandom.js.map

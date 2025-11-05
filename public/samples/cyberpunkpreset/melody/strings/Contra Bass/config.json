@@ -1,14 +1,19 @@
 {
-  "A1": "contra-bass-a1.wav",
-  "B1": "contra-bass-b1.wav",
-  "C1": "contra-bass-c1.wav",
-  "C2": "contra-bass-c2.wav",
-  "D1": "contra-bass-d1.wav",
-  "D2": "contra-bass-d2.wav",
-  "E1": "contra-bass-e1.wav",
-  "E2": "contra-bass-e2.wav",
-  "F1": "contra-bass-f1.wav",
-  "F2": "contra-bass-f2.wav",
-  "G1": "contra-bass-g1.wav",
-  "G2": "contra-bass-g2.wav"
+  "loopable": false,
+  "samples": {
+    "A1": "contra-bass-a1.wav",
+    "B1": "contra-bass-b1.wav",
+    "C1": "contra-bass-c1.wav",
+    "C2": "contra-bass-c2.wav",
+    "D1": "contra-bass-d1.wav",
+    "D2": "contra-bass-d2.wav",
+    "E1": "contra-bass-e1.wav",
+    "E2": "contra-bass-e2.wav",
+    "F1": "contra-bass-f1.wav",
+    "F2": "contra-bass-f2.wav",
+    "G1": "contra-bass-g1.wav",
+    "G2": "contra-bass-g2.wav"
+  },
+  "generated_by": "create-multisample-configs.cjs v2.0 (FASE 6.0)",
+  "timestamp": "2025-11-05T04:54:46.085Z"
 }
